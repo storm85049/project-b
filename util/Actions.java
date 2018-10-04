@@ -1,6 +1,9 @@
 package util;
 
 public class Actions {
+
+
+
     public static final String ACTION_LOGIN_REQUEST = "action_login_request";
     public static final String ACTION_LOGIN_RESPONSE = "action_login_response";
     public static final String ACTION_LOGIN_GRANTED = "action_login_granted";

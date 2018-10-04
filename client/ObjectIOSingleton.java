@@ -13,7 +13,7 @@ import java.util.Observable;
 public class ObjectIOSingleton extends Observable{
 
     private static ObjectIOSingleton instance;
-    private Socket socket;
+    public Socket socket;
     public ObjectOutputStream out;
     public ObjectInputStream in;
 

@@ -4,9 +4,11 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -84,6 +86,18 @@
       </VBox>
    </center>
    <bottom>
-      <HBox alignment="CENTER" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" BorderPane.alignment="CENTER" />
+      <HBox alignment="CENTER" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" BorderPane.alignment="CENTER">
+         <children>
+            <AnchorPane minWidth="30.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Circle fx:id="statusCIrcle" fill="#2ead00" radius="5.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                  <Text fx:id="status" layoutX="-295.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Status: " textOrigin="TOP" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="8.0">
+                     <font>
+                        <Font name="Monospaced Regular" size="14.0" />
+                     </font>
+                  </Text>
+               </children>
+            </AnchorPane>
+         </children></HBox>
    </bottom>
 </BorderPane>
