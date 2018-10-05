@@ -17,7 +17,7 @@ import java.util.Random;
  */
 public class RSA implements IAsymmetricEncryption {
     private static final BigInteger UNITY = new BigInteger("1");
-    private static final BigInteger TWO = new BigInteger("2");
+    //private static final BigInteger TWO = new BigInteger("2");
     private int standardSize = 2048;
     // Encryption: Uses external Public key
     @Override
@@ -42,24 +42,25 @@ public class RSA implements IAsymmetricEncryption {
     public Map<String, String> calculateKeyPair() {
         Map<String, String> keyPair = new HashMap<String, String>();
         // Generate p and q
-        BigInteger q = BigInteger.probablePrime(standardSize/2, new Random());
-        BigInteger p = BigInteger.probablePrime(standardSize/2, new Random());
+        BigInteger q = BigInteger.probablePrime(standardSize/2 - 1, new Random()); // Off by one
+        BigInteger p = BigInteger.probablePrime(standardSize/2 - 1, new Random());
         // Check if the numbers are equal: Generate new p until they are not.
         while(p.compareTo(q) == 0){
-            p = BigInteger.probablePrime(standardSize/2, new Random());
+            p = BigInteger.probablePrime(standardSize/2 - 1, new Random());
         }
         // Generate n: Multiply q and p. And phiN: (p-1)(q-1)
         BigInteger n = p.multiply(q);
         BigInteger phiN = (p.subtract(UNITY)).multiply(q.subtract(UNITY));
         // Generate e and d (Public and private keys)
-        BigInteger e = new BigInteger(standardSize, new Random());
-        while (e.compareTo(TWO.pow(standardSize-1)) == -1 || e.gcd(phiN).compareTo(UNITY) != 0){
+        BigInteger e = new BigInteger(standardSize - 1, new Random());
+        while (e.compareTo(phiN) == 1 || e.compareTo(phiN) == 0|| e.gcd(phiN).compareTo(UNITY) != 0
+        ){
             // Checks that e is bigger than 2^2047, being smaller than 2^2048
+            // and being smaller than phiN
             // Also checks if e and phiN are coprime
-            e = new BigInteger(standardSize, new Random());
+            e = new BigInteger(standardSize - 1, new Random());
         }
         BigInteger d = e.modInverse(phiN);
-        System.out.println(e.compareTo(phiN));
         keyPair.put("public_key", e.toString());
         keyPair.put("private_key", d.toString());
         keyPair.put("modulo", n.toString());

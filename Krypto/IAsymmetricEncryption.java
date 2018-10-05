@@ -1,5 +1,4 @@
 package Krypto;
-
 import java.util.Map;
 
 public interface IAsymmetricEncryption {
