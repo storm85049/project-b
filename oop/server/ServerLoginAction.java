@@ -39,7 +39,7 @@ public class ServerLoginAction implements ServerActionResolver {
             serverMain.sendToClients(jsonOut,receiver);
             notifyChatStatus(serverMain);
         }else{
-            jsonOut= JSONUtil.getLoginResponseJSON(name,id,null,null,Actions.ACTION_LOGIN_FAILED,null);
+            jsonOut= JSONUtil.getLoginResponseJSON(name,id,null,null,Actions.ACTION_LOGIN_FAILED,serverMain.getConnectedClients());
             serverMain.sendToClients(jsonOut,out);
         }
     }

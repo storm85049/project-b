@@ -3,6 +3,8 @@ package oop.client;
 import client.ClientData;
 import client.ObjectIOSingleton;
 import controller.MainViewController;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import org.json.simple.JSONObject;
 import util.Actions;
 import util.ModalUtil;
@@ -16,9 +18,17 @@ public class LoginAction implements ActionResolver {
 
         switch (status){
             case Actions.ACTION_LOGIN_GRANTED:
-                initSuccesfullUserLogin(jsonObject,mainViewController);break;
+                initSuccesfullUserLogin(jsonObject,mainViewController);
+                break;
             case Actions.ACTION_LOGIN_FAILED:
                 ModalUtil.modal(jsonObject);
+
+                ImageView spinner = (ImageView) mainViewController.mainAnchorPane.lookup("#spinnerImage");
+                TextField textField = (TextField) mainViewController.mainAnchorPane.lookup("#inputField");
+                spinner.setVisible(false);
+                textField.setText("");
+
+                break;
         }
 
     }
