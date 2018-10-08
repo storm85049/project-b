@@ -30,8 +30,10 @@ public class JSONUtil {
         jsonObject.put("publicRSAKey",publicRSAKey);
         jsonObject.put("publicELGamalKey",publicELGamalKey);
 
-        HashMap<String,String> activeUsers = JSONUtil.getConnectedClientsHashMap(connectedClients);
-        jsonObject.put("activeUsers",activeUsers);
+        if(!connectedClients.isEmpty()){
+            HashMap<String,String> activeUsers = JSONUtil.getConnectedClientsHashMap(connectedClients);
+            jsonObject.put("activeUsers",activeUsers);
+        }
         return jsonObject;
     }
 

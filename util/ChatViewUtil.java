@@ -14,7 +14,7 @@ import java.util.Map;
 public class ChatViewUtil {
 
 
-    public static VBox updateChatView(HashMap<String,String> users, VBox list,MainViewController mainViewController) {
+    public static VBox updateChatView(HashMap<String,String> users, VBox list, MainViewController mainViewController) {
         VBox tmp = list;
         tmp.getChildren().clear();
 

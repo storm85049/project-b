@@ -1,9 +1,12 @@
 package util;
 
+import javafx.application.Application;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Dialog;
+import javafx.stage.Stage;
 import org.json.simple.JSONObject;
 
-public class ModalUtil {
+public class ModalUtil{
 
     private static ModalUtil instance;
 
@@ -16,9 +19,15 @@ public class ModalUtil {
 
 
     public static void modal(JSONObject json){
-/*
-        Dialog d  = new Dialog();
-        d.showAndWait();*/
+
+        //nur ein beispiel
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information Dialog");
+        alert.setHeaderText("den namen gibt es schon");
+        alert.setContentText("......");
+
+        alert.showAndWait();
 
     }
 
