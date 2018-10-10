@@ -5,41 +5,69 @@ import java.util.Map;
 import java.util.Random;
 
 /*
-        IAsymmetricEncryption try1 = new RSA();
-        String tryString = "1231234";
-        Map<String, String> keyPair = try1.calculateKeyPair();
-        String tryStringEncrypt = try1.encrypt(tryString, keyPair);
+       ///////////////// IMPLEMENTATION ////////////////////////////
+       A ----> Local Client
+       B ----> Remote Client
+       IAsymmetricEncryption rsaA = new RSA();
+       IAsymmetricEncryption rsaB = new RSA();
 
-        System.out.println(tryString);
-        System.out.println(tryStringEncrypt);
-        System.out.println(try1.decrypt(tryStringEncrypt, keyPair));
+       String encryptStringA = "123456789101010";
+       String encryptStringB = "020252368945";
 
+       String encryptMessageA = rsaA.encrypt(encryptStringA, rsaB.getPublicKeyMap());
+        String encryptMessageB = rsaB.encrypt(encryptStringB, rsaA.getPublicKeyMap());
+
+        System.out.println("Encryption A ---> B");
+       System.out.println(encryptMessageA);
+        System.out.println("Decryption B");
+       System.out.println(rsaB.decrypt(encryptMessageA) );
+
+        System.out.println("Encryption B ---> A");
+        System.out.println(encryptMessageB);
+        System.out.println("Decryption A");
+        System.out.println(rsaA.decrypt(encryptMessageB) );
+        ////////////////////////////////////////////////////////////
  */
+
 public class RSA implements IAsymmetricEncryption {
     private static final BigInteger UNITY = new BigInteger("1");
     //private static final BigInteger TWO = new BigInteger("2");
     private int standardSize = 2048;
+    private Map<String, String> publicKeyMap;
+    private String privateKey, publicKey, modulo;
+
+    // Constructor
+    public RSA (){
+        publicKeyMap = calculateKeyPair();
+        privateKey = publicKeyMap.get("private_key");
+        publicKey = publicKeyMap.get("public_key");
+        modulo = publicKeyMap.get("modulo");
+        publicKeyMap.remove("private_key"); // Key Pair has all the Data that´s Public
+
+    }
+
     // Encryption: Uses external Public key
     @Override
     public String encrypt(String m, Map<String, String> keys){
+    //    Map<String, String> returnValues = new HashMap<>();
         BigInteger mInt = new BigInteger(m);
         BigInteger keyInt = new BigInteger(keys.get("public_key"));
         BigInteger modInt = new BigInteger(keys.get("modulo"));
+     //   returnValues.put("encrypted_text",mInt.modPow(keyInt, modInt).toString());
         return mInt.modPow(keyInt, modInt).toString();
     }
 
     // Decryption: Uses private key
     @Override
-    public String decrypt(String c, Map<String, String> keys) {
+    public String decrypt(String c) {
         BigInteger cInt = new BigInteger(c);
-        BigInteger keyInt = new BigInteger(keys.get("private_key"));
-        BigInteger modInt = new BigInteger(keys.get("modulo"));
+        BigInteger keyInt = new BigInteger(privateKey);
+        BigInteger modInt = new BigInteger(modulo);
         return cInt.modPow(keyInt, modInt).toString();
     }
 
     // Calculates both Private and Public Key
-    @Override
-    public Map<String, String> calculateKeyPair() {
+    private Map<String, String> calculateKeyPair() {
         Map<String, String> keyPair = new HashMap<String, String>();
         // Generate p and q
         BigInteger q = BigInteger.probablePrime(standardSize/2 - 1, new Random()); // Off by one
@@ -69,10 +97,40 @@ public class RSA implements IAsymmetricEncryption {
 
     // Digital signature of the computer. Calculated with the private key
     @Override
-    public String sign(String signature, Map<String, String> keys) {
+    public String sign(String signature) {
             BigInteger signatureInt = new BigInteger(signature);
-            BigInteger keyInt = new BigInteger(keys.get("private_key"));
-            BigInteger modInt = new BigInteger(keys.get("modulo"));
+            BigInteger keyInt = new BigInteger(privateKey);
+            BigInteger modInt = new BigInteger(modulo);
             return signatureInt.modPow(keyInt, modInt).toString();
         }
+
+
+     // Getter Methods
+
+    public Map<String, String> getPublicKeyMap() {
+        // Returns the PUBLIC MAP
+        return publicKeyMap;
     }
+
+
+    public String getPrivateKey() {
+        return privateKey;
+    }
+
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public String getModulo() {
+        return modulo;
+    }
+
+    @Override
+    public String getGenerator() {
+        return null;
+    }
+
+    @Override
+    public void addExternalKeys(String keyJ) {}
+
+}
