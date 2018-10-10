@@ -3,6 +3,7 @@ package Krypto;
 /////////////// FIRST IMPLEMENTATION/ PROTOTYPE/////////////
 // Converts a String of ASCII characters into a String of int and viceversa (every 3 Digits representing an
 // ASCII Character)
+// For implementation: Look at ---> CLASS ElGamal
 public class StringAndIntTransformation {
     public static String remakeStringFromAscii(String text){
         while(text.length() % 3 != 0){
