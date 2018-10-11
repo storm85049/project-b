@@ -24,15 +24,15 @@ public class StringAndIntTransformation {
         char[] charArrayEncryptStringA = text.toCharArray();
         text = "";
         for (char character : charArrayEncryptStringA) {
-            if (character < 100 && character > 10) {
-                text += "0" + (int) character;
-            } else if (character < 10) {
-                text += "00" + (int) character;
-            } else if (character == 0) {
-                text += "000";
-            } else {
-                text += (int) character;
-            }
+                if (character < 100 && character > 10) {
+                    text += "0" + (int) character;
+                } else if (character < 10) {
+                    text += "00" + (int) character;
+                } else if (character == 0) {
+                    text += "000";
+                } else {
+                    text += (int) character;
+                }
         }
         return text;
     }
