@@ -5,7 +5,7 @@ package Krypto;
 // ASCII Character)
 // For implementation: Look at ---> CLASS ElGamal
 public class StringAndIntTransformation {
-    public static String remakeStringFromAscii(String text){
+    public static String intToAscii(String text){
         while(text.length() % 3 != 0){
             text = "0" + text;
         }

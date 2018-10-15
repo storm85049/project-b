@@ -6,21 +6,19 @@ import java.util.Random;
 
 /*
        ///////////////// IMPLEMENTATION ////////////////////////////
-       A ----> Local Client
-       B ----> Remote Client
-       IAsymmetricEncryption rsaA = new RSA();
-       IAsymmetricEncryption rsaB = new RSA();
+        IAsymmetricEncryption rsaA = new RSA();
+        IAsymmetricEncryption rsaB = new RSA();
 
-       String encryptStringA = "123456789101010";
-       String encryptStringB = "020252368945";
+        String encryptStringA = "Hello World!";
+        String encryptStringB = "What´s up? Hi, how are you? Simon Hoyos Cadavid ||||||";
 
-       String encryptMessageA = rsaA.encrypt(encryptStringA, rsaB.getPublicKeyMap());
+        String encryptMessageA = rsaA.encrypt(encryptStringA, rsaB.getPublicKeyMap());
         String encryptMessageB = rsaB.encrypt(encryptStringB, rsaA.getPublicKeyMap());
 
         System.out.println("Encryption A ---> B");
-       System.out.println(encryptMessageA);
+        System.out.println(encryptMessageA);
         System.out.println("Decryption B");
-       System.out.println(rsaB.decrypt(encryptMessageA) );
+        System.out.println(rsaB.decrypt(encryptMessageA) );
 
         System.out.println("Encryption B ---> A");
         System.out.println(encryptMessageB);
@@ -50,20 +48,22 @@ public class RSA implements IAsymmetricEncryption {
     @Override
     public String encrypt(String m, Map<String, String> keys){
     //    Map<String, String> returnValues = new HashMap<>();
+        m = StringAndIntTransformation.asciiToInt(m);
         BigInteger mInt = new BigInteger(m);
         BigInteger keyInt = new BigInteger(keys.get("public_key"));
         BigInteger modInt = new BigInteger(keys.get("modulo"));
      //   returnValues.put("encrypted_text",mInt.modPow(keyInt, modInt).toString());
-        return mInt.modPow(keyInt, modInt).toString();
+        return StringAndIntTransformation.intToAscii(mInt.modPow(keyInt, modInt).toString());
     }
 
     // Decryption: Uses private key
     @Override
     public String decrypt(String c) {
+        c = StringAndIntTransformation.asciiToInt(c);
         BigInteger cInt = new BigInteger(c);
         BigInteger keyInt = new BigInteger(privateKey);
         BigInteger modInt = new BigInteger(modulo);
-        return cInt.modPow(keyInt, modInt).toString();
+        return StringAndIntTransformation.intToAscii(cInt.modPow(keyInt, modInt).toString());
     }
 
     // Calculates both Private and Public Key

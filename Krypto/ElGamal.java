@@ -11,22 +11,19 @@ import java.util.Random;
         IAsymmetricEncryption elGamalB = new ElGamal();
 
         String encryptStringA = "Simon Hoyos Cadavid";
-        System.out.println("OG Text: " +  encryptStringA);
-        String encryptStringB = "020252368945";
-
-        encryptStringA = StringAndIntTransformation.asciiToInt(encryptStringA);
+        System.out.println("OG Text 1: " +  encryptStringA);
+        String encryptStringB = "This is a test";
+        System.out.println("OG Text 2: " + encryptStringB);
 
         String encryptMessageA = elGamalA.encrypt(encryptStringA, elGamalB.getPublicKeyMap());
         String encryptMessageB = elGamalB.encrypt(encryptStringB, elGamalA.getPublicKeyMap());
 
-        System.out.println("OG: " + encryptStringA);
         System.out.println("Encryption A ---> B");
         System.out.println(encryptMessageA);
         System.out.println("Decryption B");
         elGamalB.addExternalKeys(elGamalA.getPublicKeyMap().get("public_key_j"));
         String decryptedMessageB = elGamalB.decrypt(encryptMessageA);
         System.out.println(decryptedMessageB);
-        System.out.println(StringAndIntTransformation.remakeStringFromAscii(decryptedMessageB));
 
         System.out.println("OG: " + encryptStringB);
         System.out.println("Encryption B ---> A");
@@ -58,6 +55,7 @@ public class ElGamal implements IAsymmetricEncryption {
     }
     @Override
     public String encrypt(String m, Map<String, String> keys) {
+        m = StringAndIntTransformation.asciiToInt(m);
         BigInteger moduloInt = new BigInteger(keys.get("modulo"));
         BigInteger iInt = new BigInteger(keys.get("public_key"));
         BigInteger gInt = new BigInteger(keys.get("generator"));
@@ -67,18 +65,21 @@ public class ElGamal implements IAsymmetricEncryption {
         BigInteger j = gInt.modPow(y, moduloInt);
         publicKeyMap.put("public_key_j",j.toString());
 
-        return mTextInt.multiply(iInt.modPow(y, moduloInt)).toString();
+        return StringAndIntTransformation.intToAscii(mTextInt.multiply(iInt.modPow(y,
+                moduloInt)).toString());
     }
 
     @Override
     public String decrypt(String c) {
+        c = StringAndIntTransformation.asciiToInt(c);
         BigInteger jInt = new BigInteger(externalPublicKeyJ);
         BigInteger xInt = new BigInteger(privateKey);
         BigInteger moduloInt = new BigInteger(modulo);
         BigInteger cTextInt = new BigInteger(c);
 
-        return (cTextInt.multiply(jInt.modPow(moduloInt.subtract(UNITY).subtract(xInt), moduloInt))).
-                mod(moduloInt).toString();
+        return StringAndIntTransformation.intToAscii((cTextInt.multiply(
+                jInt.modPow(moduloInt.subtract(UNITY).subtract(xInt), moduloInt))).
+                mod(moduloInt).toString());
     }
 
     private Map<String, String> calculateKeyPair() {
