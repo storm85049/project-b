@@ -2,10 +2,13 @@ package controller;
 
 import client.ObjectIOSingleton;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.input.InputEvent;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import oop.client.ActionManager;
 import oop.client.ChatViewAction;
@@ -26,6 +29,7 @@ public class MainViewController implements Initializable,Observer{
     public static  String LOGIN_VIEW = BASEPATH + "login.fxml";
     public static  String CHAT_VIEW = BASEPATH + "chatview.fxml";
     public static  String CHATBUBBLE = BASEPATH + "chatbubble.fxml";
+    public static  String BUBBLE = BASEPATH + "bubble.fxml";
 
     ActionManager actionManager = new ActionManager();
 

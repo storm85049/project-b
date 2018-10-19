@@ -6,11 +6,17 @@
 .loginButton:hover{
 		-fx-background-color: #214a74 !important;
 }
+
+.btn:hover{
+	-fx-background-color: #aaa !important;
+}
+
 .edgy{
 	  -fx-background-radius: 0px;
 }
-
-
+.btn.grey{
+	-fx-background-color: #ddd;
+}
 .darkBlue{
 	-fx-background-color: #0B3867 !important;
 }
@@ -31,4 +37,16 @@
    -fx-border-width: 0px 0px 0px 5px;
 } 
  
-
+.textfield:focused{
+    -fx-faint-focus-color: transparent;
+    -fx-focus-color:rgba(255,0,0,0.2); 
+}
+.textfield{
+	-fx-background-insets:0px;
+}
+.lightgrey{
+	-fx-background-color: #999;
+}
+.roundBorder{
+	-fx-background-radius: 20 20 20 0;
+}
