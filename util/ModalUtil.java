@@ -28,7 +28,6 @@ public class ModalUtil{
         alert.setContentText("......");
 
         alert.showAndWait();
-
     }
 
 }
