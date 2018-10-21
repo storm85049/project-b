@@ -21,7 +21,7 @@ public class LoginAction implements ActionResolver {
                 initSuccesfullUserLogin(jsonObject,mainViewController);
                 break;
             case Actions.ACTION_LOGIN_FAILED:
-                ModalUtil.modal(jsonObject);
+                ModalUtil.showLoginError(jsonObject);
 
                 ImageView spinner = (ImageView) mainViewController.mainAnchorPane.lookup("#spinnerImage");
                 TextField textField = (TextField) mainViewController.mainAnchorPane.lookup("#inputField");

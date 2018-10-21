@@ -1,8 +1,6 @@
 package oop.client;
 
 import controller.MainViewController;
-import javafx.fxml.FXML;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.json.simple.JSONObject;
 import util.ChatViewUtil;
