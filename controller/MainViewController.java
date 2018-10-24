@@ -25,7 +25,7 @@ public class MainViewController implements Initializable,Observer{
     public static  String BASEPATH = "gui/";
     public static  String LOGIN_VIEW = BASEPATH + "login.fxml";
     public static  String CHAT_VIEW = BASEPATH + "chatview.fxml";
-    public static  String CHATBUBBLE = BASEPATH + "chatbubble.fxml";
+    public static  String CHATBUBBLE = BASEPATH + "available_chat_left.fxml";
 
     ActionManager actionManager = new ActionManager();
 

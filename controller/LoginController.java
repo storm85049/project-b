@@ -2,14 +2,20 @@ package controller;
 
 import client.ObjectIOSingleton;
 import com.sun.deploy.util.StringUtils;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import org.json.simple.JSONObject;
 import util.JSONUtil;
 
-public class LoginController  {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class LoginController implements Initializable {
 
     @FXML
     private TextField inputField;
@@ -26,12 +32,17 @@ public class LoginController  {
         io.sendToServer(json);
     }
 
-    public void setupKeyListener(){
-        inputField.getScene().setOnKeyPressed(e->{
-            if(e.getCode() == KeyCode.ENTER){
-                sendLoginRequest();
+
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        inputField.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(event.getCode() == KeyCode.ENTER){
+                    sendLoginRequest();
+                }
             }
         });
     }
-
 }
