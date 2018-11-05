@@ -1,5 +1,6 @@
 package oop.client;
 
+import controller.IController;
 import controller.MainViewController;
 import org.json.simple.JSONObject;
 
@@ -11,7 +12,7 @@ public class ActionManager implements ActionResolver{
     }
 
     @Override
-    public void resolve(JSONObject jsonObject, MainViewController mainViewController) {
-        this.actionResolver.resolve(jsonObject,mainViewController);
+    public  void resolve(JSONObject jsonObject, IController controller) {
+        this.actionResolver.resolve(jsonObject,controller);
     }
 }

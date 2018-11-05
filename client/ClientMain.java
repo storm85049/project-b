@@ -36,8 +36,10 @@ public class ClientMain extends Application{
             JSONObject json = JSONUtil.shutDownConnectionJSON(id);
             ObjectIOSingleton.getInstance().sendToServer(json);
             try {
-                ObjectIOSingleton.getInstance().in.close();
+                ObjectIOSingleton.getInstance().socket.close();
+                ObjectIOSingleton.getInstance().stopReading = true;
                 ObjectIOSingleton.getInstance().out.close();
+                ObjectIOSingleton.getInstance().in.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }

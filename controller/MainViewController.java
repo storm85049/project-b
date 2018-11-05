@@ -1,40 +1,43 @@
 package controller;
 
-import client.ObjectIOSingleton;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
-import oop.client.ActionManager;
-import oop.client.ChatViewAction;
-import oop.client.LoginAction;
-import org.json.simple.JSONObject;
-import util.Actions;
-
+import javafx.scene.layout.Pane;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.ResourceBundle;
 
 
-public class MainViewController implements Initializable,Observer{
+public class MainViewController  implements Initializable, IController{
 
     public static  String BASEPATH = "gui/";
     public static  String LOGIN_VIEW = BASEPATH + "login.fxml";
     public static  String CHAT_VIEW = BASEPATH + "chatview.fxml";
     public static  String CHATBUBBLE = BASEPATH + "available_chat_left.fxml";
 
-    ActionManager actionManager = new ActionManager();
-
     @FXML
     public AnchorPane mainAnchorPane;
 
+    public static MainViewController instance;
+    public static MainViewController getInstance(){
+        if(MainViewController.instance == null){
+            MainViewController.instance = new MainViewController();
+        }
+        return MainViewController.instance;
+    }
+
+    public MainViewController(){
+        if(MainViewController.instance == null){
+            MainViewController.instance = this;
+        }
+    }
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ObjectIOSingleton.getInstance().addObserver(this);
         loadUI(LOGIN_VIEW);
     }
 
@@ -53,10 +56,10 @@ public class MainViewController implements Initializable,Observer{
         mainAnchorPane.getChildren().add(root);
     }
 
-    public Parent loadComponent(String path) {
+    public static Parent loadComponent(Class calledClass,String path) {
         Parent node = null;
         try {
-            node = FXMLLoader.load(getClass().getClassLoader().getResource(path));
+            node = FXMLLoader.load(calledClass.getClassLoader().getResource(path));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,23 +68,9 @@ public class MainViewController implements Initializable,Observer{
 
 
     @Override
-    public void update(Observable o, Object arg) {
-        JSONObject json = (JSONObject)arg;
-        String action = (String) json.get("action");
+    public Pane getPane() {
 
-        Platform.runLater(()->{
-            switch (action){
-                case (Actions.ACTION_LOGIN_RESPONSE):
-                    actionManager.setActionResolver(new LoginAction());
-                    break;
-                case(Actions.ACTION_UPDATE_CHAT_VIEW):
-                    actionManager.setActionResolver(new ChatViewAction());
-                    break;
-
-            }
-            actionManager.resolve(json,this);
-        });
-
+        return this.mainAnchorPane;
     }
 
 }

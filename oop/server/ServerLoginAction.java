@@ -37,7 +37,6 @@ public class ServerLoginAction implements ServerActionResolver {
             ArrayList<ConnectedClient> receiver = new ArrayList<>();
             receiver.add(client);
             serverMain.sendToClients(jsonOut,receiver);
-            notifyChatStatus(serverMain);
         }else{
             jsonOut= JSONUtil.getLoginResponseJSON(name,id,null,null,Actions.ACTION_LOGIN_FAILED,serverMain.getConnectedClients());
             serverMain.sendToClients(jsonOut,out);
@@ -52,11 +51,6 @@ public class ServerLoginAction implements ServerActionResolver {
             }
         }return true;
     }
-    private static void notifyChatStatus(ServerMain serverMain){
 
-        HashMap<String,String> updatedUsers = JSONUtil.getConnectedClientsHashMap(serverMain.getConnectedClients());
-        JSONObject jsonObject = JSONUtil.getUpdatedChatViewJSON(updatedUsers);
-        serverMain.sendToClients(jsonObject,serverMain.getConnectedClients());
-    }
 
 }

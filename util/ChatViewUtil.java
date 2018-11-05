@@ -1,6 +1,7 @@
 package util;
 
 import client.ClientData;
+import controller.IController;
 import controller.MainViewController;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -14,7 +15,7 @@ import java.util.Map;
 public class ChatViewUtil {
 
 
-    public static VBox updateChatView(HashMap<String,String> users, VBox list, MainViewController mainViewController) {
+    public static VBox updateChatView(HashMap<String,String> users, VBox list, IController controller) {
         VBox tmp = list;
         tmp.getChildren().clear();
 
@@ -23,7 +24,7 @@ public class ChatViewUtil {
             String name = entry.getKey();
             String id = entry.getValue();
             if (id.equals(ClientData.getInstance().getId())) continue;
-            Button button = (Button) mainViewController.loadComponent(MainViewController.CHATBUBBLE);
+            Button button = (Button) MainViewController.loadComponent(controller.getClass(),MainViewController.CHATBUBBLE);
             button.setText(name);
             button.setId(id);
             tmp.getChildren().add(button);
