@@ -42,7 +42,10 @@ import java.util.Observer;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ChatController implements Initializable{
+public class ChatController implements Initializable, Observer, IController {
+
+    @FXML
+    BorderPane mainPane;
 
     @FXML
     HBox logoHBox;
@@ -65,11 +68,20 @@ public class ChatController implements Initializable{
     @FXML
     VBox chatBox;
 
+    private ActionManager actionManager;
 
     @FXML
     Button sendButton;
 
+    public ChatController(){
 
+        ObjectIOSingleton.getInstance().addObserver(this);
+        actionManager = new ActionManager();
+
+        JSONObject json = new JSONObject();
+        json.put("action",Actions.ACTION_REQUEST_CHAT_STATUS);
+        ObjectIOSingleton.getInstance().sendToServer(json);
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -152,4 +164,28 @@ public class ChatController implements Initializable{
 
     }
 
+
+    public void update(Observable o, Object arg) {
+        JSONObject json = (JSONObject)arg;
+        String action = (String) json.get("action");
+        AtomicBoolean execute = new AtomicBoolean(false);
+
+        Platform.runLater(()->{
+            switch (action){
+                case (Actions.ACTION_UPDATE_CHAT_VIEW):
+                    actionManager.setActionResolver(new ChatViewAction());
+                    execute.set(true);
+                    break;
+            }
+            if(execute.get())
+                actionManager.resolve(json,this);
+        });
+
+    }
+
+
+    @Override
+    public Pane getPane() {
+        return this.mainPane;
+    }
 }

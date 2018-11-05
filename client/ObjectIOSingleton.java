@@ -16,6 +16,7 @@ public class ObjectIOSingleton extends Observable{
     public Socket socket;
     public ObjectOutputStream out;
     public ObjectInputStream in;
+    public boolean stopReading = false;
 
     public void init(){
         try{
@@ -24,7 +25,7 @@ public class ObjectIOSingleton extends Observable{
         new Thread(()->{
             try {
                 this.in = new ObjectInputStream(socket.getInputStream());
-                while (true){
+                while (true && !stopReading){
                     Object o  = in.readObject();
                     notifyControllerObservers(o);
                 }

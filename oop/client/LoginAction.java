@@ -2,6 +2,7 @@ package oop.client;
 
 import client.ClientData;
 import client.ObjectIOSingleton;
+import controller.IController;
 import controller.MainViewController;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -12,19 +13,18 @@ import java.util.HashMap;
 
 public class LoginAction implements ActionResolver {
     @Override
-    public void resolve(JSONObject jsonObject, MainViewController mainViewController) {
+    public  void resolve(JSONObject jsonObject, IController controller) {
 
         String status = jsonObject.get("status").toString();
 
         switch (status){
             case Actions.ACTION_LOGIN_GRANTED:
-                initSuccesfullUserLogin(jsonObject,mainViewController);
+                initSuccesfullUserLogin(jsonObject);
                 break;
             case Actions.ACTION_LOGIN_FAILED:
-                ModalUtil.showLoginError(jsonObject);
 
-                ImageView spinner = (ImageView) mainViewController.mainAnchorPane.lookup("#spinnerImage");
-                TextField textField = (TextField) mainViewController.mainAnchorPane.lookup("#inputField");
+                ImageView spinner = (ImageView) controller.getPane().lookup("#spinnerImage");
+                TextField textField = (TextField) controller.getPane().lookup("#inputField");
                 spinner.setVisible(false);
                 textField.setText("");
 
@@ -34,15 +34,13 @@ public class LoginAction implements ActionResolver {
     }
 
 
-    private void initSuccesfullUserLogin(JSONObject jsonObject, MainViewController mainViewController) {
+    private void initSuccesfullUserLogin(JSONObject jsonObject ) {
 
         ClientData.getInstance().setName((String)jsonObject.get("name"));
         ClientData.getInstance().setId((String)jsonObject.get("id"));
         ClientData.getInstance().setServerAdress(ObjectIOSingleton.getInstance().socket.getInetAddress());
 
-
-        HashMap<String,String> activeUsers = (HashMap<String, String>) jsonObject.get("activeUsers");
-        mainViewController.loadUI(MainViewController.CHAT_VIEW);
+        MainViewController.getInstance().loadUI(MainViewController.CHAT_VIEW);
 
     }
 

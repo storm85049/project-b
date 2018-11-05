@@ -3,6 +3,7 @@ package server;
 import oop.server.ServerLogoutAction;
 import oop.server.ServerActionManager;
 import oop.server.ServerLoginAction;
+import oop.server.ServerSendOpenChats;
 import org.json.simple.JSONObject;
 import util.Actions;
 
@@ -56,6 +57,8 @@ public class ServerMain{
                 serverActionManager.setServerActionResolver(new ServerLoginAction(out));break;
             case (Actions.ACTION_CLOSE_APPLICATION):
                 serverActionManager.setServerActionResolver(new ServerLogoutAction());break;
+            case(Actions.ACTION_REQUEST_CHAT_STATUS):
+                serverActionManager.setServerActionResolver(new ServerSendOpenChats());break;
 
         }
         serverActionManager.resolve(json,this);
