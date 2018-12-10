@@ -5,9 +5,7 @@ import animatefx.animation.SlideInLeft;
 import client.ClientData;
 import client.ClientMain;
 import client.ObjectIOSingleton;
-import com.sun.deploy.util.StringUtils;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -21,21 +19,24 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import oop.client.ActionManager;
 import oop.client.ChatViewAction;
+import oop.client.LoginAction;
 import org.json.simple.JSONObject;
+import sun.misc.IOUtils;
 import util.Actions;
-import util.ChatViewUtil;
-import util.JSONUtil;
+
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
+import java.security.Key;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
@@ -56,6 +57,9 @@ public class ChatController implements Initializable, Observer, IController {
     TextField textInput;
 
     @FXML
+    ListView chat;
+
+    @FXML
     VBox chatlist;
 
     @FXML
@@ -73,6 +77,7 @@ public class ChatController implements Initializable, Observer, IController {
 
         ObjectIOSingleton.getInstance().addObserver(this);
         actionManager = new ActionManager();
+
         JSONObject json = new JSONObject();
         json.put("action",Actions.ACTION_REQUEST_CHAT_STATUS);
         ObjectIOSingleton.getInstance().sendToServer(json);
@@ -82,6 +87,7 @@ public class ChatController implements Initializable, Observer, IController {
     public void initialize(URL location, ResourceBundle resources) {
 
         InetAddress inetAddress = ClientData.getInstance().getServerAdress();
+
         String preText = status.getText();
         String text = inetAddress == null ? "not connected" : "connected to " + inetAddress;
         status.setText(preText + text);

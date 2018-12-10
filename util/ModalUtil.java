@@ -1,30 +1,26 @@
 package util;
 
+import Krypto.ElGamal;
+import Krypto.IAsymmetricEncryption;
+import Krypto.RSA;
+import controller.MainViewController;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.RadioButton;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+import javafx.scene.transform.MatrixType;
 import javafx.stage.Stage;
 import org.json.simple.JSONObject;
 
+import java.io.IOException;
+
 public class ModalUtil{
-
-    @FXML
-    private static Text symmetricKey;
-
-    @FXML
-    private static ChoiceBox asymmetricEncryption;
-
-    @FXML
-    private static ChoiceBox symmetricEncryption;
-
-    @FXML
-    private static ChoiceBox operationsMode;
-
 
     private static ModalUtil instance;
 
@@ -52,17 +48,18 @@ public class ModalUtil{
 
     }
 
-    public static void showEncryptionOptions(){
-        //openModalBox();
-        // hier kommt Code hin, der sich alle ausgewählten Elemente raussucht. Muss erst mal auf Matzes GUI Implementierung warten, damit ich die IDs weiß.
+    public static void showEncryptionOptions(Class callingClass) {
+        try {
+            Parent root = FXMLLoader.load(callingClass.getClassLoader().getResource(MainViewController.ENCRYPTION_DIALOG_MAIN));
+            Stage secondStage = new Stage();
+            Scene scene = new Scene(root);
+            secondStage.setScene(scene);
+            secondStage.setTitle("Test");
+            secondStage.show();
 
-
-        String symkey = symmetricKey.getText();
-        String asymMode = asymmetricEncryption.getValue().toString();
-        String smyMode = symmetricEncryption.getValue().toString();
-        String opMode = operationsMode.getValue().toString();
-
-        startEncryption(asymMode, smyMode, symkey, opMode);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     private static void startEncryption(String asymMode, String symMode, String symKey, String opMode){

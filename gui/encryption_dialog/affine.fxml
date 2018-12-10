@@ -7,15 +7,14 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-
-<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label text="var t" textFill="WHITE">
          <font>
             <Font name="Agency FB" size="18.0" />
          </font>
       </Label>
-      <TextField>
+       <TextField fx:id="affinTField">
          <styleClass>
             <String fx:value="edgy" />
             <String fx:value="mediumBlue" />
@@ -29,7 +28,7 @@
             <Font name="Agency FB" size="18.0" />
          </font>
       </Label>
-      <TextField>
+       <TextField fx:id="affinKField">
          <styleClass>
             <String fx:value="edgy" />
             <String fx:value="mediumBlue" />
