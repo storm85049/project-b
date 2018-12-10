@@ -7,10 +7,13 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.json.simple.JSONObject;
 import util.JSONUtil;
+import util.ModalUtil;
 
 import java.io.IOException;
 
 public class ClientMain extends Application{
+
+    ModalUtil util;
 
     public static void main(String[] args) {
         System.out.println("Hallo Welt");

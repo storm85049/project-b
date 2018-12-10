@@ -32,6 +32,7 @@ import oop.client.LoginAction;
 import org.json.simple.JSONObject;
 import sun.misc.IOUtils;
 import util.Actions;
+import util.ModalUtil;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -103,6 +104,7 @@ public class ChatController implements Initializable, Observer, IController {
                 }
             });
 
+        ModalUtil.showEncryptionOptions(this.getClass());
       
 
     }
