@@ -1,6 +1,5 @@
 package Krypto;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -9,7 +8,7 @@ import java.util.Random;
         ISymmetricEncryption rc4B = new RC4();
 
         // A --------> Sends Key to B
-        rc4B.changeSelectedKeys(rc4A.getKeyMap());
+        rc4B.setSelectedKeys(rc4A.getKeyMap());
         // A --------> Sends Encrypted message to B
         String encryptedMA = rc4A.encrypt("Hello world, It´s a me, MARIO!");
         System.out.println("Encrypted message A ----> B " + encryptedMA);
@@ -20,7 +19,7 @@ import java.util.Random;
         rc4B.generateRandomKey();
 
         // B --------> Sends Key to B
-        rc4A.changeSelectedKeys(rc4B.getKeyMap());
+        rc4A.setSelectedKeys(rc4B.getKeyMap());
         // A --------> Sends Encrypted message to B
         String encryptedMB = rc4B.encrypt("I´m answering with a RANDOM KEY // 154786==!`())()()()??");
         System.out.println("Encrypted message B ----> A " + encryptedMB);
@@ -42,7 +41,7 @@ public class RC4 implements ISymmetricEncryption{
     public RC4(String key){
         keyMap.put("key", key);
         keyMap.put("is_key_random", "false");
-        changeSelectedKeys(keyMap);
+        setSelectedKeys(keyMap);
     }
 
     // Empty Constructor for later addition of keys/ Random generation of key
@@ -66,7 +65,7 @@ public class RC4 implements ISymmetricEncryption{
     }
 
     @Override
-    public void changeSelectedKeys(Map<String, String> keyMap) {
+    public void setSelectedKeys(Map<String, String> keyMap) {
         for(short i = 0; i < s.length; i++){s[i] = i;} // Generate sequencial s
         if(keyMap.get("is_key_random").equalsIgnoreCase("false")){
             k = calculateKArray(keyMap.get("key"));
@@ -79,7 +78,7 @@ public class RC4 implements ISymmetricEncryption{
     }
 
     @Override
-    public void selectAlphabetMode(String mode) {}
+    public void setAlphabetMode(String mode) {}
 
     @Override
     public Map<String, String> getKeyMap() {

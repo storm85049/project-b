@@ -13,12 +13,11 @@ import java.util.Map;
         String mode = vA.getMode();                   // -------> B
 
         // B gets the mode and the keys
-        vB.changeSelectedKeys(symmKey);
-        vB.selectAlphabetMode(mode);
+        vB.setSelectedKeys(symmKey);
+        vB.setAlphabetMode(mode);
         // B sends encrypted Message
         String messageB = "hello A, HOW ARE YOU.... THIS IS not sparta, but lower case tho! --$$ NOT";
         System.out.println("OG Message: " + messageB);
-        //messageB = StringAndIntTransformation.asciiToInt(messageB);
         // System.out.println("OG Message Number: " + messageB);
         messageB = vB.encrypt(messageB); // -----> A
         System.out.println("Encrypted message: " + messageB);
@@ -33,7 +32,7 @@ public class VigenereCipher implements ISymmetricEncryption {
     private String mode;
     private Map<String, String> keyMap = new HashMap<>();
     public VigenereCipher(String key, String mode){ // Mode should be: ASCII or ABC
-        selectAlphabetMode(mode);
+        setAlphabetMode(mode);
         this.key = key;
         keyMap.put("key", key);
         this.mode = mode;
@@ -42,7 +41,7 @@ public class VigenereCipher implements ISymmetricEncryption {
 
     public VigenereCipher(String mode){ // Constructor for generation of a Random key
         this.mode = mode;
-        selectAlphabetMode(mode);
+        setAlphabetMode(mode);
         generateRandomKey();
         System.out.println("");
     }
@@ -123,13 +122,13 @@ public class VigenereCipher implements ISymmetricEncryption {
     }
 
     @Override
-    public void changeSelectedKeys(Map<String, String> keyMap) {
+    public void setSelectedKeys(Map<String, String> keyMap) {
         key = keyMap.get("key");
         this.keyMap.put("key", key);
     }
 
     @Override
-    public void selectAlphabetMode(String mode) {
+    public void setAlphabetMode(String mode) {
         if(mode.equalsIgnoreCase("ASCII")){ p = new BigInteger("256"); this.mode = mode;}
         else if(mode.equalsIgnoreCase(("ABC"))){ p = new BigInteger("26"); this.mode = mode;}
         else{System.out.println("Not an integrated Alphabet");}

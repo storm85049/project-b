@@ -11,4 +11,6 @@ public class Actions {
     public static final String ACTION_CLOSE_APPLICATION = "action_close_application";
     public static final String ACTION_UPDATE_CHAT_VIEW = "action_update_chat_view";
     public static final String ACTION_REQUEST_CHAT_STATUS= "action_request_chat_status";
+
+
 }

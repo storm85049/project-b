@@ -14,8 +14,8 @@ import java.util.Random;
         String mode = affA.getMode();                   // -------> B
 
         // B gets the mode and the keys
-        affB.changeSelectedKeys(symmKey);
-        affB.selectAlphabetMode(mode);
+        affB.setSelectedKeys(symmKey);
+        affB.setAlphabetMode(mode);
         // B sends encrypted Message
         String messageB = "hello A, HOW ARE YOU.... THIS IS not sparta, but lower case tho! --$$ NOT";
         System.out.println("OG Message: " + messageB);
@@ -36,7 +36,7 @@ public class AffineCipher implements ISymmetricEncryption {
     private Map<String, String> keyMap = new HashMap<>();
 
     public AffineCipher(String k, String t, String mode){ // Mode should be: ASCII or ABC
-        selectAlphabetMode(mode);
+        setAlphabetMode(mode);
         this.k = new BigInteger(k);
         this.t = new BigInteger(t);
         if(mode.equalsIgnoreCase("ABC")){
@@ -51,7 +51,7 @@ public class AffineCipher implements ISymmetricEncryption {
 
     public AffineCipher(String mode){ // Constructor for generation of a Random key
         this.mode = mode;
-        selectAlphabetMode(mode);
+        setAlphabetMode(mode);
         generateRandomKey();
         System.out.println("");
     }
@@ -123,7 +123,7 @@ public class AffineCipher implements ISymmetricEncryption {
 
     // Changes the keys
     @Override
-    public void changeSelectedKeys(Map<String, String> keyMap) {
+    public void setSelectedKeys(Map<String, String> keyMap) {
         k = new BigInteger(keyMap.get("key_k"));
         t = new BigInteger(keyMap.get("key_t"));
         this.keyMap.put("key_k", k.toString());
@@ -132,7 +132,7 @@ public class AffineCipher implements ISymmetricEncryption {
 
     // Changes selected Alphabet
     @Override
-    public void selectAlphabetMode(String mode){
+    public void setAlphabetMode(String mode){
         if(mode.equalsIgnoreCase("ASCII")){ p = new BigInteger("256"); this.mode = mode;}
         else if(mode.equalsIgnoreCase(("ABC"))){ p = new BigInteger("26"); this.mode = mode;}
         else{System.out.println("Not an integrated Alphabet");}
