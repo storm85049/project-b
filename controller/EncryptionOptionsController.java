@@ -94,27 +94,20 @@ public class EncryptionOptionsController implements IController, Initializable {
         asymmetricEncryption = (ComboBox) this.getPane().lookup("#asymmetricEncryptionComboBox");
         symmetricEncryption.setItems(symmetricEncryptionOptions);
         asymmetricEncryption.setItems(asymmetricEncryptionOptions);
-
-        Thread waitForSymmSelectionThread = new Thread(() -> {
-            while(true) {
-                symmetricEncryption.setOnAction((event -> {
-                    System.out.println(event);
-                    String selection = (String) symmetricEncryption.getSelectionModel().getSelectedItem();
-                    System.out.println(selection);
-                    try {
-                        node = FXMLLoader.load(getClass().getClassLoader().getResource(encryptionMap.get(selection)));
-                        mainPane.setCenter(node);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }));
+        symmetricEncryption.setOnAction(event -> {
+            System.out.println(event);
+            String selection = (String) symmetricEncryption.getSelectionModel().getSelectedItem();
+            System.out.println(selection);
+            System.out.println(encryptionMap.get(selection));
+            try{
+                node = FXMLLoader.load(getClass().getClassLoader().getResource(encryptionMap.get(selection)));
+                mainPane.setCenter(node);
             }
-        });
-        waitForSymmSelectionThread.start();
+            catch(IOException e){
+                e.printStackTrace();
+            }
 
-        Group currentViewItems = new Group();
-        currentViewItems.getChildren().add(node);
-        System.out.println(currentViewItems.getChildren().size());
+        });
     }
 
     private void buildJSONAndSendToEncryptionInterface(){
