@@ -1,14 +1,10 @@
 package util;
 
 import client.ClientData;
-import controller.ChatController;
 import controller.IController;
 import controller.MainViewController;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -28,7 +24,7 @@ public class ChatViewUtil {
             String name = entry.getKey();
             String id = entry.getValue();
             if (id.equals(ClientData.getInstance().getId())) continue;
-            Button button = (Button) MainViewController.loadComponent(controller.getClass(),MainViewController.CHATBUBBLE).getChildrenUnmodifiable().get(0);
+            Button button = (Button) MainViewController.loadComponent(controller.getClass(),MainViewController.CHATBUBBLE);
             button.setText(name);
             button.setId(id);
             tmp.getChildren().add(button);
@@ -44,8 +40,5 @@ public class ChatViewUtil {
         }
         return tmp;
     }
-
-
-
 
 }

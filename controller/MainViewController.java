@@ -52,8 +52,8 @@ public class MainViewController  implements Initializable, IController{
         AnchorPane.setTopAnchor(root,0.0);
         AnchorPane.setLeftAnchor(root,0.0);
         AnchorPane.setRightAnchor(root,0.0);
-        this.getPane().getChildren().clear();
-        this.getPane().getChildren().add(root);
+        mainAnchorPane.getChildren().clear();
+        mainAnchorPane.getChildren().add(root);
     }
 
     public static Parent loadComponent(Class calledClass,String path) {

@@ -5,9 +5,6 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class ClientData {
     public static ClientData instance;
@@ -15,7 +12,6 @@ public class ClientData {
     private String id = null;
     private String ip = null;
     private InetAddress serverAdress = null;
-
 
     public static ClientData getInstance() {
         if(ClientData.instance == null){
