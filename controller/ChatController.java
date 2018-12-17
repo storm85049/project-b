@@ -6,6 +6,7 @@ import client.ClientData;
 import client.ClientMain;
 import client.ObjectIOSingleton;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -180,7 +181,6 @@ public class ChatController implements Initializable, Observer, IController {
             if(execute.get())
                 actionManager.resolve(json,this);
         });
-
     }
 
 
@@ -188,4 +188,13 @@ public class ChatController implements Initializable, Observer, IController {
     public Pane getPane() {
         return this.mainPane;
     }
+
+
+
+
+
+
+
+
+
 }
