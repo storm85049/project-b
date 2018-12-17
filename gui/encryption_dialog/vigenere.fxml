@@ -14,7 +14,7 @@
             <Font name="Agency FB" size="18.0" />
          </font>
       </Label>
-      <TextField promptText="type in a key">
+       <TextField fx:id="vigenereKeyField" promptText="type in a key">
          <styleClass>
             <String fx:value="edgy" />
             <String fx:value="mediumBlue" />

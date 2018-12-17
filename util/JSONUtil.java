@@ -1,22 +1,19 @@
 package util;
 
-import com.sun.deploy.util.StringUtils;
 import org.json.simple.JSONObject;
 import server.ConnectedClient;
 
-import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Array;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 
 
 public class JSONUtil {
+
+    private static JSONObject encryptionObject = new JSONObject();
 
 
     public static JSONObject getLoginResponseJSON(String name, String id,
@@ -95,6 +92,14 @@ public class JSONUtil {
         return jsonObject;
     }
 
+    public static void setEncryptionOptions(String asymmEncryption, String symmEncryption, JSONObject symmMode) {
+        encryptionObject.put("asymmEncryption", asymmEncryption);
+        encryptionObject.put("symmEncryption", symmEncryption);
+        encryptionObject.put("symmMode", symmMode);
+        System.out.println(asymmEncryption + ", " + symmEncryption + ", " + symmMode);
+    }
 
-
+    public static JSONObject getEncryptionOptions() {
+        return null;
+    }
 }
