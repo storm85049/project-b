@@ -28,9 +28,8 @@
 }
 
 .chatbubble:hover, 
-.chatbubble:focus, 
-.chatbubble:active, 
-.chatbubble.active, 
+.chatbubble:focus,
+.chatbubble.active,
 .open .dropdown-toggle.chatbubble { 
    -fx-background-color: #214a74;
    -fx-border-color: #ccc;

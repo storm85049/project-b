@@ -1,20 +1,20 @@
 package client;
 
-import javafx.application.Platform;
-import javafx.fxml.FXML;
-import javafx.scene.layout.AnchorPane;
-
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
-public class ClientData {
-    public static ClientData instance;
+public class ClientData{
+    private static ClientData instance;
     private String name = null;
     private String id = null;
     private String ip = null;
     private InetAddress serverAdress = null;
+    private String idFromOpenChat = null;
+
+    /**
+     * first String represents id of remoteclient -> makes it easy to query for remoteclient
+     */
+    private HashMap<String, RemoteClient> availableChats = new HashMap<>();
 
 
     public static ClientData getInstance() {
@@ -26,6 +26,32 @@ public class ClientData {
 
     public InetAddress getServerAdress() {
         return serverAdress;
+    }
+
+    public String getIdFromOpenChat() {
+        return idFromOpenChat;
+    }
+
+
+
+    public RemoteClient getAvailableChatById(String id)
+    {
+        if(this.availableChats.containsKey(id)){
+            return this.availableChats.get(id);
+        }
+        return null;
+    }
+
+    public void addToAvailableChats(RemoteClient remoteClient)
+    {
+        if(!this.availableChats.containsKey(remoteClient.getId()))
+            this.availableChats.put(remoteClient.getId(), remoteClient);
+
+    }
+
+
+    public void setIdFromOpenChat(String idFromOpenChat) {
+        this.idFromOpenChat = idFromOpenChat;
     }
 
     public void setServerAdress(InetAddress serverAdress) {

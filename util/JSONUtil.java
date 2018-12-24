@@ -4,14 +4,19 @@ import com.sun.deploy.util.StringUtils;
 import org.json.simple.JSONObject;
 import server.ConnectedClient;
 
+import java.awt.event.ActionEvent;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Array;
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 
@@ -35,6 +40,28 @@ public class JSONUtil {
             jsonObject.put("activeUsers",activeUsers);
         }
         return jsonObject;
+    }
+
+
+
+
+    public static JSONObject getMessageSendingJSON(String message,String fromID, String toID)
+    {
+        JSONObject json = new JSONObject();
+        json.put("action", Actions.ACTION_SEND_MESSAGE);
+        json.put("message" , message);
+        json.put("fromID" , fromID);
+        json.put("toID" , toID);
+
+        Date date = new Date();
+        String strDateFormat = "hh:mm:ss a";
+        DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+        String formattedDate= dateFormat.format(date);
+        json.put("timestamp", formattedDate);
+
+
+        return json;
+
     }
 
     public static JSONObject getUpdatedChatViewJSON(HashMap<String,String> activeUsers){

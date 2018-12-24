@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import org.json.simple.JSONObject;
 import util.JSONUtil;
 
+import java.awt.*;
 import java.io.IOException;
 
 public class ClientMain extends Application{
@@ -23,8 +24,11 @@ public class ClientMain extends Application{
 
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("gui/maintemplate.fxml"));
 
-        Scene scene = new Scene(root);
+        double inititalWidth = 1460;
+        double inititalHeight = 720;
+        Scene scene = new Scene(root, inititalWidth, inititalHeight);
         primaryStage.setScene(scene);
+
         primaryStage.setTitle("Welcome to secure ChatClient");
         primaryStage.show();
     }

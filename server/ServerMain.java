@@ -1,18 +1,17 @@
 package server;
 
-import oop.server.ServerLogoutAction;
-import oop.server.ServerActionManager;
-import oop.server.ServerLoginAction;
-import oop.server.ServerSendOpenChats;
+import oop.server.*;
 import org.json.simple.JSONObject;
 import util.Actions;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ServerMain{
 
@@ -59,6 +58,8 @@ public class ServerMain{
                 serverActionManager.setServerActionResolver(new ServerLogoutAction());break;
             case(Actions.ACTION_REQUEST_CHAT_STATUS):
                 serverActionManager.setServerActionResolver(new ServerSendOpenChats());break;
+            case(Actions.ACTION_SEND_MESSAGE):
+                serverActionManager.setServerActionResolver(new SendMessageAction());break;
 
         }
         serverActionManager.resolve(json,this);
@@ -88,9 +89,32 @@ public class ServerMain{
         return connectedClients;
     }
 
+    public synchronized ArrayList<ConnectedClient> getConnectedClientsByID(ArrayList<String> ids)
+    {
+        ArrayList<ConnectedClient> tmpList = new ArrayList<>();
+
+        for (ConnectedClient connectedClient : this.connectedClients) {
+            String currentKey = connectedClient.getId();
+            if(ids.contains(currentKey)){
+                tmpList.add(connectedClient);
+            }
+        }
+
+        return tmpList;
+    }
+
     public synchronized void addClient(ConnectedClient c)
     {
         connectedClients.add(c);
+    }
+    public synchronized boolean hasClientById(String id )
+    {
+        for (ConnectedClient connectedClient : this.connectedClients) {
+            if(connectedClient.getId().equals(id)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public synchronized void deleteClient(ConnectedClient c){

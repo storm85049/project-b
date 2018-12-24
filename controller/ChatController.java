@@ -24,20 +24,16 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import oop.client.ActionManager;
 import oop.client.ChatViewAction;
-import oop.client.LoginAction;
 import org.json.simple.JSONObject;
-import sun.misc.IOUtils;
 import util.Actions;
-
-import java.io.IOException;
+import util.ChatViewUtil;
+import util.JSONUtil;
 import java.net.InetAddress;
 import java.net.URL;
-import java.security.Key;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
@@ -58,9 +54,6 @@ public class ChatController implements Initializable, Observer, IController {
     TextField textInput;
 
     @FXML
-    ListView chat;
-
-    @FXML
     VBox chatlist;
 
     @FXML
@@ -78,7 +71,6 @@ public class ChatController implements Initializable, Observer, IController {
 
         ObjectIOSingleton.getInstance().addObserver(this);
         actionManager = new ActionManager();
-
         JSONObject json = new JSONObject();
         json.put("action",Actions.ACTION_REQUEST_CHAT_STATUS);
         ObjectIOSingleton.getInstance().sendToServer(json);
@@ -88,7 +80,6 @@ public class ChatController implements Initializable, Observer, IController {
     public void initialize(URL location, ResourceBundle resources) {
 
         InetAddress inetAddress = ClientData.getInstance().getServerAdress();
-
         String preText = status.getText();
         String text = inetAddress == null ? "not connected" : "connected to " + inetAddress;
         status.setText(preText + text);
@@ -99,7 +90,7 @@ public class ChatController implements Initializable, Observer, IController {
                 @Override
                 public void handle(KeyEvent event) {
                     if(event.getCode() == KeyCode.ENTER){
-                        sendRequest();
+                        sendMessage(textInput.getText());
                     }
                 }
             });
@@ -112,56 +103,26 @@ public class ChatController implements Initializable, Observer, IController {
     }
 
 
-    int counter = 0;
 
-    public void sendRequest(){
-
-
-        /**
-         * das ist hier alles nur ein beispiel und kann von euch ignoriert werden.
-         * in dieser sendRequest methode muss das json zusammengebaut werden mit der jeweiligen anfrage an den server bzw es muss eine
-         * generelle validierung stattfinden also z.B
-         * "ist ein modus gesetzt ?" , "wie wird die zu versendende nachricht verschlüsselt ? symm oder asymm ? " usw usw.
-         *
-         */
-
-        if( textInput.getText().equals("")){
+    private void sendMessage(String message){
+        if( message.equals("")){
             return;
         }
 
-    counter ++;
-        Text text=new Text(textInput.getText());
-        text.getStyleClass().add("message");
 
-        TextFlow tempFlow=new TextFlow();
-        tempFlow.getChildren().add(text);
-        TextFlow flow=new TextFlow(tempFlow);
-        HBox hbox=new HBox(12);
+        //if no chat is selected throw an exception --> show err message in popup
 
-        if(counter % 2== 0  ){
-            tempFlow.getStyleClass().add("tempFlow");
-            flow.getStyleClass().add("textFlow");
-            hbox.setAlignment(Pos.BOTTOM_RIGHT);
-            hbox.getChildren().add(flow);
-        }
-        else{
-            tempFlow.getStyleClass().add("tempFlowFlipped");
-            flow.getStyleClass().add("textFlowFlipped");
-            chatBox.setAlignment(Pos.TOP_LEFT);
-            hbox.setAlignment(Pos.CENTER_LEFT);
-            hbox.getChildren().add(flow);
-        }
+        String from = ClientData.getInstance().getId();
+        String to =  ClientData.getInstance().getIdFromOpenChat();
 
-        tempFlow.maxWidthProperty().bind(scrollPane.widthProperty().divide(2));
-        flow.maxWidthProperty().bind(scrollPane.widthProperty().divide(2));
 
-        hbox.getStyleClass().add("hbox");
+        //encrypt message here
+        JSONObject json = JSONUtil.getMessageSendingJSON(message, from, to);
+        ObjectIOSingleton.getInstance().sendToServer(json);
+        ClientData.getInstance().getAvailableChatById(to).addMessageToChatHistory(json);
+        this.addMessageToCheckBox(json,Actions.ACTION_SENDING);
 
-        Platform.runLater(() -> chatBox.getChildren().addAll(hbox));
 
-        textInput.setText("");
-        textInput.requestFocus();
-        System.out.println("send message request");
 
     }
 
@@ -177,6 +138,9 @@ public class ChatController implements Initializable, Observer, IController {
                     actionManager.setActionResolver(new ChatViewAction());
                     execute.set(true);
                     break;
+                case (Actions.ACTION_SEND_MESSAGE):
+                    this.handleIncomingMessage(json);
+
             }
             if(execute.get())
                 actionManager.resolve(json,this);
@@ -184,13 +148,85 @@ public class ChatController implements Initializable, Observer, IController {
     }
 
 
+    //todo: ist der chat noch online ? bzw nachricht vom server senden, dass der chat offline gegangen ist und das fenster geschlossen wird.
+    //todo:messageCount verschönern, auch im fxml
+
     @Override
     public Pane getPane() {
         return this.mainPane;
     }
 
 
+    private void handleIncomingMessage(JSONObject json)
+    {
+        String openChatID = ClientData.getInstance().getIdFromOpenChat();
+        String fromID = (String)json.get("fromID");
 
+        ClientData.getInstance().getAvailableChatById(fromID).addMessageToChatHistory(json);
+
+        int unreadMessages = ClientData.getInstance().getAvailableChatById(fromID).getUnreadMessages();
+        String remoteName = ClientData.getInstance().getAvailableChatById(fromID).getName();
+        Button b = (Button)ChatViewUtil.find(fromID);
+        if(openChatID == null || !openChatID.equals(fromID)){
+            if(unreadMessages == 0 ){
+                new Flash(b).play();
+            }
+            b.setText(remoteName+ " " + ++unreadMessages );
+            ClientData.getInstance().getAvailableChatById(fromID).setUnreadMessages(unreadMessages);
+        }
+        else{
+            this.addMessageToCheckBox(json, Actions.ACTION_RECEIVING);
+        }
+
+
+    }
+
+
+
+    private void addMessageToCheckBox(JSONObject json, String sendingOrReceiving)
+    {
+
+        String message = (String) json.get("message");
+
+        Text t = (Text)(ChatViewUtil.find("welcomeText"));
+        if(t!= null){
+            t.setManaged(false);
+            t.setVisible(false);
+            Platform.runLater(()->chatBox.getChildren().clear());
+        }
+        Text text=new Text(message);
+        text.getStyleClass().add("message");
+
+        TextFlow tempFlow=new TextFlow();
+        tempFlow.getChildren().add(text);
+        TextFlow flow=new TextFlow(tempFlow);
+        HBox hbox=new HBox(12);
+
+        if(sendingOrReceiving.equals(Actions.ACTION_SENDING)){
+            tempFlow.getStyleClass().add("tempFlow");
+            flow.getStyleClass().add("textFlow");
+            hbox.setAlignment(Pos.BOTTOM_RIGHT);
+            hbox.getChildren().add(flow);
+            textInput.setText("");
+            textInput.requestFocus();
+        }
+        else if(sendingOrReceiving.equals(Actions.ACTION_RECEIVING)){
+            tempFlow.getStyleClass().add("tempFlowFlipped");
+            flow.getStyleClass().add("textFlowFlipped");
+            chatBox.setAlignment(Pos.TOP_LEFT);
+            hbox.setAlignment(Pos.CENTER_LEFT);
+            hbox.getChildren().add(flow);
+        }
+
+        tempFlow.maxWidthProperty().bind(scrollPane.widthProperty().divide(2));
+        flow.maxWidthProperty().bind(scrollPane.widthProperty().divide(2));
+
+        hbox.getStyleClass().add("hbox");
+
+        Platform.runLater(() -> chatBox.getChildren().addAll(hbox));
+
+
+    }
 
 
 
