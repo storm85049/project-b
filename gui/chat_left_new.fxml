@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<HBox fx:id="mainPane" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="280.0" styleClass="bubbleBackground" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BubbleController">
+   <children>
+      <ImageView fitHeight="13.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+         <image>
+            <Image url="@../img/user.png" />
+         </image>
+         <HBox.margin>
+            <Insets left="10.0" />
+         </HBox.margin>
+      </ImageView>
+      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="default" HBox.hgrow="ALWAYS">
+         <HBox.margin>
+            <Insets left="70.0" right="100.0" />
+         </HBox.margin>
+         <font>
+            <Font name="Agency FB" size="18.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" stroke="#4b72b5" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="OUTSIDE" strokeWidth="10.0" text="1" HBox.hgrow="ALWAYS">
+         <font>
+            <Font name="Agency FB" size="16.0" />
+         </font>
+      </Text>
+   </children>
+   <cursor>
+      <Cursor fx:constant="HAND" />
+   </cursor>
+</HBox>
