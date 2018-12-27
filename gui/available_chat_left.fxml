@@ -10,19 +10,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="mainPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BubbleController">
+<AnchorPane fx:id="mainPane" prefHeight="52.0" prefWidth="280.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
-      <HBox alignment="CENTER" styleClass="chatbubble" stylesheets="@css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox alignment="CENTER_LEFT" styleClass="bubbleBackground" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Text opacity="0.95" stroke="#006fd7" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeMiterLimit="50.0" strokeType="OUTSIDE" strokeWidth="10.0" text="5" wrappingWidth="28.93359375">
-               <font>
-                  <Font name="Agency FB" size="12.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="15.0" />
-               </HBox.margin>
-            </Text>
-            <Button fx:id="button" alignment="BASELINE_LEFT" depthTest="DISABLE" graphicTextGap="32.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="250.0" styleClass="chatbubble" stylesheets="@css/style.css" text="(default)" textFill="WHITE">
+            <Button fx:id="button" alignment="BASELINE_LEFT" depthTest="DISABLE" graphicTextGap="32.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="135.0" styleClass="chatbubble" stylesheets="@css/style.css" text="(default)" textFill="WHITE">
                <font>
                   <Font name="Agency FB" size="22.0" />
                </font>
@@ -34,7 +26,7 @@
                   </ImageView>
                </graphic>
                <opaqueInsets>
-                  <Insets />
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </opaqueInsets>
                <padding>
                   <Insets left="30.0" />
@@ -43,6 +35,14 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
+            <Text opacity="0.95" stroke="#006fd7" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeMiterLimit="50.0" strokeType="OUTSIDE" strokeWidth="10.0" text="5" wrappingWidth="6.93359375">
+               <font>
+                  <Font name="Agency FB" size="12.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="100.0" right="10.0" />
+               </HBox.margin>
+            </Text>
          </children>
       </HBox>
    </children>

@@ -2,6 +2,7 @@ package util;
 
 import client.ClientData;
 import client.RemoteClient;
+import controller.BubbleController;
 import controller.ChatController;
 import controller.IController;
 import controller.MainViewController;
@@ -48,16 +49,21 @@ public class ChatViewUtil {
             String name = entry.getKey();
             String id = entry.getValue();
             if (id.equals(ClientData.getInstance().getId())) continue;
-            HBox buttonBox = (HBox) MainViewController.loadComponent(controller.getClass(),MainViewController.CHATBUBBLE).getChildrenUnmodifiable().get(0);
-            Button button = (Button)buttonBox.getChildren().get(1);
-            button.setText(name);
-            button.setId(id);
+
+            HBox buttonBox  = (HBox) MainViewController.loadComponent(controller.getClass(),MainViewController.CHATBUBBLE);
+            buttonBox.setId(id);
+            Text nameText  = (Text) buttonBox.getChildren().get(BubbleController.NAME_INDEX);
+            nameText.setText(name);
+            Text messageCount = (Text)buttonBox.getChildren().get(BubbleController.COUNT_INDEX);
+            messageCount.setManaged(false);
+            messageCount.setVisible(false);
+
+
             String possibleOpenChat = ClientData.getInstance().getIdFromOpenChat();
             if(possibleOpenChat != null && possibleOpenChat.equals(id)){
-                button.getStyleClass().addAll("active");
+                buttonBox.getStyleClass().addAll("active");
             }
-            tmp.getChildren().add(button);
-
+            tmp.getChildren().add(buttonBox);
 
             RemoteClient remoteClient = new RemoteClient(id,name);
             ClientData.getInstance().addToAvailableChats(remoteClient);

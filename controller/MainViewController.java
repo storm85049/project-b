@@ -16,7 +16,7 @@ public class MainViewController  implements Initializable, IController{
     public static  String BASEPATH = "gui/";
     public static  String LOGIN_VIEW = BASEPATH + "login.fxml";
     public static  String CHAT_VIEW = BASEPATH + "chatview.fxml";
-    public static  String CHATBUBBLE = BASEPATH + "available_chat_left.fxml";
+    public static  String CHATBUBBLE = BASEPATH + "chat_left_new.fxml";
 
     @FXML
     public AnchorPane mainAnchorPane;

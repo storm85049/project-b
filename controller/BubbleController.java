@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -22,33 +23,34 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class BubbleController implements Initializable, IController{
+public class BubbleController implements Initializable{
 
 
-    public Pane mainPane;
-    public Button button;
+
+public HBox mainPane;
+    public static int COUNT_INDEX = 2;
+    public static int NAME_INDEX = 1;
 
 
-    @Override
-    public Pane getPane() {
-        return this.mainPane;
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-       button.setOnAction(new EventHandler<ActionEvent>() {
-           @Override
-           public void handle(ActionEvent e) {
-               handleButtonPress(button);
-           }
-       });
+
+        mainPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                handleButtonPress(mainPane);
+            }
+        });
     }
 
 
-    private void handleButtonPress(Button button)
+    private void handleButtonPress(HBox box)
     {
-        String requestedID = button.getId();
+
+        Text name = (Text)box.getChildren().get(NAME_INDEX);
+        String requestedID = box.getId();
         String activeID = ClientData.getInstance().getIdFromOpenChat();
         //if chat is open and a click is made on the open chat, ignore the request
         if(activeID!= null) {
@@ -57,11 +59,11 @@ public class BubbleController implements Initializable, IController{
             }
             ChatViewUtil.find(activeID).getStyleClass().remove("active");
         }
-        button.getStyleClass().add("active");
+        box.getStyleClass().add("active");
         //check if a mode is selected ... wait for max implementation
 
 
-        this.initChat(button);
+        this.initChat(box);
         //change out keys and shit
 
 
@@ -69,16 +71,15 @@ public class BubbleController implements Initializable, IController{
     }
 
 
-    private void initChat(Button button)
+    private void initChat(HBox box)
     {
-        String requestedID = button.getId();
+        String requestedID = box.getId();
 
-        /**
-         * die nächsten 3 zeilen sind ein bisschen rumgehacke, bis ich die messageCount bubble schön hinbekomme
-         */
-        ClientData.getInstance().getAvailableChatById(requestedID).setUnreadMessages(0);
         String otherClientsName = ClientData.getInstance().getAvailableChatById(requestedID).getName();
-        button.setText(otherClientsName);
+        ClientData.getInstance().getAvailableChatById(requestedID).setUnreadMessages(0);
+        Text messageCount = (Text) box.getChildren().get(COUNT_INDEX);
+        messageCount.setVisible(false);
+        messageCount.setManaged(false);
         ClientData.getInstance().setIdFromOpenChat(requestedID);
 
 
@@ -87,7 +88,8 @@ public class BubbleController implements Initializable, IController{
         //no chat available yet todo: set and send public/private key
 
         RemoteClient remoteClient = ClientData.getInstance().getAvailableChatById(requestedID);
-
+        Text topName = (Text) ChatViewUtil.find("topName");
+        topName.setText(otherClientsName);
 
         VBox chatBox = (VBox)ChatViewUtil.find("chatBox");
         chatBox.getChildren().clear();
@@ -96,12 +98,11 @@ public class BubbleController implements Initializable, IController{
             Text welcomeText = new Text("Type to start chatting with " + otherClientsName);
             welcomeText.setId("welcomeText");
             welcomeText.setFont(Font.font("Agency FB",20));
-            VBox vbox = new VBox();
-            vbox.setAlignment(Pos.CENTER);
-            vbox.getChildren().addAll(welcomeText);
-            chatBox.getChildren().addAll(vbox);
-            Text topName = (Text) ChatViewUtil.find("topName");
-            topName.setText(otherClientsName);
+
+            chatBox.setAlignment(Pos.CENTER);
+            chatBox.getChildren().addAll(welcomeText);
+
+
         }
         else{
             //load chat into view

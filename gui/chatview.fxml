@@ -20,7 +20,7 @@
    <left>
       <VBox prefHeight="400.0" prefWidth="250.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox fx:id="logoHBox" alignment="CENTER" maxHeight="50.0" minHeight="70.0" minWidth="70.0" onMouseEntered="#zoomIn" prefHeight="48.0" prefWidth="250.0" styleClass="darkBlue" stylesheets="@css/style.css" VBox.vgrow="ALWAYS">
+            <HBox fx:id="logoHBox" alignment="CENTER" maxHeight="50.0" minHeight="70.0" minWidth="70.0" prefHeight="48.0" prefWidth="250.0" styleClass="darkBlue" stylesheets="@css/style.css" VBox.vgrow="ALWAYS">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -104,7 +104,7 @@
             </BorderPane>
             <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <TextField fx:id="textInput" prefHeight="25.0" prefWidth="1000.0" stylesheets="@css/style.css">
+                  <TextField fx:id="textInput" prefHeight="25.0" prefWidth="2000.0" stylesheets="@css/style.css">
                      <styleClass>
                         <String fx:value="edgy" />
                         <String fx:value="textfield" />
@@ -112,7 +112,7 @@
                   </TextField>
                   <Button fx:id="sendButton" minWidth="60.0" mnemonicParsing="false" stylesheets="@css/style.css" text="Senden">
                      <styleClass>
-                        <String fx:value="grey" />
+                        <String fx:value="lightgrey" />
                         <String fx:value="btn" />
                         <String fx:value="edgy" />
                      </styleClass>

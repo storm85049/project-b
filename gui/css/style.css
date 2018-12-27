@@ -1,4 +1,5 @@
-.chatbubble { 
+
+.bubbleBackground{
   -fx-background-color: #375c82;
   -fx-background-radius: 0px;
 }
@@ -27,9 +28,8 @@
 	-fx-background-color: #375c82 !important;
 }
 
-.chatbubble:hover, 
-.chatbubble:focus,
-.chatbubble.active,
+.bubbleBackground.active,
+.bubbleBackground:hover,
 .open .dropdown-toggle.chatbubble { 
    -fx-background-color: #214a74;
    -fx-border-color: #ccc;

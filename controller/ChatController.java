@@ -5,6 +5,7 @@ import animatefx.animation.SlideInLeft;
 import client.ClientData;
 import client.ClientMain;
 import client.ObjectIOSingleton;
+import com.sun.deploy.util.StringUtils;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -20,6 +21,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -95,17 +97,18 @@ public class ChatController implements Initializable, Observer, IController {
                 }
             });
 
-      
-
+        sendButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                sendMessage(textInput.getText());
+            }
+        });
     }
-    public void zoomIn(){
-        new Flash(logoHBox).play();
-    }
-
 
 
     private void sendMessage(String message){
-        if( message.equals("")){
+
+        if(StringUtils.trimWhitespace(message).equals("")){
             return;
         }
 
@@ -148,8 +151,7 @@ public class ChatController implements Initializable, Observer, IController {
     }
 
 
-    //todo: ist der chat noch online ? bzw nachricht vom server senden, dass der chat offline gegangen ist und das fenster geschlossen wird.
-    //todo:messageCount verschönern, auch im fxml
+    //todo: ist der chat noch online ? bzw nachricht vom server senden, dass der chat offline gegangen ist und das fenster geschlossen wird, sonst kommt es zu einem bug
 
     @Override
     public Pane getPane() {
@@ -165,13 +167,16 @@ public class ChatController implements Initializable, Observer, IController {
         ClientData.getInstance().getAvailableChatById(fromID).addMessageToChatHistory(json);
 
         int unreadMessages = ClientData.getInstance().getAvailableChatById(fromID).getUnreadMessages();
-        String remoteName = ClientData.getInstance().getAvailableChatById(fromID).getName();
-        Button b = (Button)ChatViewUtil.find(fromID);
+        HBox box = (HBox)ChatViewUtil.find(fromID);
+        Text t = (Text) box.getChildren().get(BubbleController.COUNT_INDEX);
         if(openChatID == null || !openChatID.equals(fromID)){
             if(unreadMessages == 0 ){
-                new Flash(b).play();
+                new Flash(box).play();
             }
-            b.setText(remoteName+ " " + ++unreadMessages );
+            t.setVisible(true);
+            t.setManaged(true);
+            String unreadMessagesString = String.valueOf(++unreadMessages);
+            t.setText(unreadMessagesString);
             ClientData.getInstance().getAvailableChatById(fromID).setUnreadMessages(unreadMessages);
         }
         else{
@@ -192,7 +197,7 @@ public class ChatController implements Initializable, Observer, IController {
         if(t!= null){
             t.setManaged(false);
             t.setVisible(false);
-            Platform.runLater(()->chatBox.getChildren().clear());
+            chatBox.getChildren().clear();
         }
         Text text=new Text(message);
         text.getStyleClass().add("message");
