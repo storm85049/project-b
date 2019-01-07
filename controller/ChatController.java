@@ -5,6 +5,7 @@ import animatefx.animation.SlideInLeft;
 import client.ClientData;
 import client.ClientMain;
 import client.ObjectIOSingleton;
+import com.sun.deploy.util.StringUtils;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -19,6 +20,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -32,6 +34,8 @@ import oop.client.LoginAction;
 import org.json.simple.JSONObject;
 import sun.misc.IOUtils;
 import util.Actions;
+import util.ChatViewUtil;
+import util.JSONUtil;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -173,7 +177,7 @@ public class ChatController implements Initializable, Observer, IController {
         ClientData.getInstance().getAvailableChatById(fromID).addMessageToChatHistory(json);
 
         int unreadMessages = ClientData.getInstance().getAvailableChatById(fromID).getUnreadMessages();
-        HBox box = (HBox)ChatViewUtil.find(fromID);
+        HBox box = (HBox) ChatViewUtil.find(fromID);
         Text t = (Text) box.getChildren().get(BubbleController.COUNT_INDEX);
         if(openChatID == null || !openChatID.equals(fromID)){
             if(unreadMessages == 0 ){

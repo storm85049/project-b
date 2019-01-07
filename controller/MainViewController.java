@@ -18,7 +18,6 @@ public class MainViewController  implements Initializable, IController{
     public static  String LOGIN_VIEW = BASEPATH + "login.fxml";
     public static  String CHAT_VIEW = BASEPATH + "chatview.fxml";
     public static  String CHATBUBBLE = BASEPATH + "chat_left_new.fxml";
-    public static  String CHATBUBBLE = BASEPATH + "available_chat_left.fxml";
     public static  String ENCRYPTION_DIALOG_MAIN = ENCRYPTION_DIALOG + "main_encryption_template.fxml";
     public static  String ENCRYPTION_DIALOG_AFFIN = ENCRYPTION_DIALOG + "affine.fxml";
     public static  String ENCRYPTION_DIALOG_VIGENERE = ENCRYPTION_DIALOG + "vigenere.fxml";

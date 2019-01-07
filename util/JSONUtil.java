@@ -23,9 +23,6 @@ import java.util.HashMap;
 
 public class JSONUtil {
 
-    private static JSONObject encryptionObject = new JSONObject();
-
-
     public static JSONObject getLoginResponseJSON(String name, String id,
                                                   String publicRSAKey, String publicELGamalKey,
                                                   String status, ArrayList<ConnectedClient>connectedClients){
@@ -124,14 +121,13 @@ public class JSONUtil {
         return jsonObject;
     }
 
-    public static void setEncryptionOptions(String asymmEncryption, String symmEncryption, JSONObject symmMode) {
+    public static JSONObject getEncryptionOptions(String asymmEncryption, String symmEncryption, JSONObject symmMode) {
+        JSONObject encryptionObject = new JSONObject();
         encryptionObject.put("asymmEncryption", asymmEncryption);
         encryptionObject.put("symmEncryption", symmEncryption);
         encryptionObject.put("symmMode", symmMode);
         System.out.println(asymmEncryption + ", " + symmEncryption + ", " + symmMode);
+        return encryptionObject;
     }
 
-    public static JSONObject getEncryptionOptions() {
-        return null;
-    }
 }

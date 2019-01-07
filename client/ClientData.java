@@ -1,5 +1,7 @@
 package client;
 
+import org.json.simple.JSONObject;
+
 import java.net.InetAddress;
 import java.util.*;
 
@@ -10,6 +12,7 @@ public class ClientData{
     private String ip = null;
     private InetAddress serverAdress = null;
     private String idFromOpenChat = null;
+    private JSONObject encryptionData = null;
 
     /**
      * first String represents id of remoteclient -> makes it easy to query for remoteclient
@@ -80,5 +83,13 @@ public class ClientData{
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public JSONObject getEncryptionData() {
+        return encryptionData;
+    }
+
+    public void setEncryptionData(JSONObject encryptionData) {
+        this.encryptionData = encryptionData;
     }
 }

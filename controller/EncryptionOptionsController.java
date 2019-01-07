@@ -1,16 +1,19 @@
 package controller;
 
+import client.ClientData;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.scene.transform.MatrixType;
@@ -30,7 +33,6 @@ public class EncryptionOptionsController implements IController, Initializable {
     private static final String HILL_CHIFFRE = "Hill Chiffre";
     private static final String RSA = "RSA";
     private static final String ELGAMAL = "ElGamal";
-    private JSONObject symmEncryptionParameters = new JSONObject();
 
     private Map <String, String> encryptionMap = new HashMap<>();
 
@@ -47,38 +49,41 @@ public class EncryptionOptionsController implements IController, Initializable {
             );
 
     @FXML
-    private static Text test;
+    private Text test;
 
     @FXML
-    private static TextField vigenereKeyField;
+    private TextField vigenereKeyField;
 
     @FXML
-    private static TextField affinTField;
+    private TextField affinTField;
 
     @FXML
-    private static TextField affinKField;
+    private TextField affinKField;
 
-    private static MatrixType hillChiffreMatrix;
-
-    @FXML
-    private static ComboBox asymmetricEncryption;
+    private MatrixType hillChiffreMatrix;
 
     @FXML
-    private static ComboBox symmetricEncryption;
+    private ComboBox asymmetricEncryptionComboBox;
 
     @FXML
-    private static ChoiceBox operationsMode;
+    private ComboBox symmetricEncryptionComboBox;
 
     @FXML
-    private static Button abortButton;
+    private ChoiceBox operationsMode;
 
     @FXML
-    private static Button acceptButton;
+    private Button abortButton;
+
+    @FXML
+    private Button acceptButton;
 
     @FXML
     private BorderPane mainPane;
 
-    private Parent node;
+    @FXML
+    private HBox centerPane;
+
+    private HBox centerNode;
 
     @Override
     public Pane getPane() {
@@ -92,42 +97,36 @@ public class EncryptionOptionsController implements IController, Initializable {
         encryptionMap.put(VIGENERE_CHIFFRE, MainViewController.ENCRYPTION_DIALOG_VIGENERE);
         //encryptionMap.put(HILL_CHIFFRE, MainViewController.ENCRYPTION_DIALOG_HILL);   ---> fxml fehlt noch
 
-        symmetricEncryption = (ComboBox) this.getPane().lookup("#symmetricEncryptionComboBox");
-        asymmetricEncryption = (ComboBox) this.getPane().lookup("#asymmetricEncryptionComboBox");
-        acceptButton = (Button) this.getPane().lookup("#acceptButton");
-        abortButton = (Button) this.getPane().lookup("#abortButton");
-
-        symmetricEncryption.setItems(symmetricEncryptionOptions);
-        asymmetricEncryption.setItems(asymmetricEncryptionOptions);
-        symmetricEncryption.setOnAction(event -> {
+        symmetricEncryptionComboBox.setItems(symmetricEncryptionOptions);
+        asymmetricEncryptionComboBox.setItems(asymmetricEncryptionOptions);
+        symmetricEncryptionComboBox.setOnAction(event -> {
+            String symmSelection = (String) symmetricEncryptionComboBox.getSelectionModel().getSelectedItem();
             System.out.println(event);
-            String selection = (String) symmetricEncryption.getSelectionModel().getSelectedItem();
-            System.out.println(selection);
-            System.out.println(encryptionMap.get(selection));
+            System.out.println(symmSelection);
+            System.out.println(encryptionMap.get(symmSelection));
             try{
-                node = FXMLLoader.load(getClass().getClassLoader().getResource(encryptionMap.get(selection)));
-                mainPane.setCenter(node);
+                centerNode = FXMLLoader.load(getClass().getClassLoader().getResource(encryptionMap.get(symmSelection)));
+                mainPane.setCenter(centerNode);
             } catch(IOException e){
                 e.printStackTrace();
             }
         });
 
-        //abortButton deshalb, weil der acceptButton nicht klickbar ist. Natürlich sollte eigentlich hier der acceptButton diese Funktion ausführen.
         abortButton.setOnAction(event -> {
-            String asymmSelection = (String) asymmetricEncryption.getSelectionModel().getSelectedItem();
-            String symmSelection = (String) symmetricEncryption.getSelectionModel().getSelectedItem();
-            JSONUtil.setEncryptionOptions(asymmSelection, symmSelection, resolveSymmetricEncryptionParameters(symmSelection));
-            node.getScene().getWindow().hide();
+            String asymmSelection = (String) asymmetricEncryptionComboBox.getSelectionModel().getSelectedItem();
+            String symmSelection = (String) symmetricEncryptionComboBox.getSelectionModel().getSelectedItem();
+            JSONObject encryptionParameters = JSONUtil.getEncryptionOptions(asymmSelection, symmSelection, resolveSymmetricEncryptionParameters(symmSelection));
+            ClientData.getInstance().setEncryptionData(encryptionParameters);
+            centerNode.getScene().getWindow().hide();
         });
 
         //TODO: Wenn der Accept Button geklickt wird, werden die ausgewählten Modi in der ClientData Klasse gespeichert. Dafür Getter und Setter definieren.
         //TODO: Außerdem eine Klasse schreiben, die, wenn man absenden klickt, den eingegeben Text auf einem Verschlüsselungsobjekt (zB Vigenere) verschlüsselt und das JSON Objekt erstellt.
 
-
-
     }
 
     private JSONObject resolveSymmetricEncryptionParameters(String symmEncryptionMode) {
+        JSONObject symmEncryptionParameters = new JSONObject();
         switch (symmEncryptionMode) {
             case (AFFINE_CHIFFRE): {
                 affinTField = (TextField) this.getPane().lookup("#affinTField");
@@ -147,19 +146,6 @@ public class EncryptionOptionsController implements IController, Initializable {
                 break;
             }
         }
-
         return symmEncryptionParameters;
     }
-
-    /*private void buildJSONAndSendToEncryptionInterface(){
-        Button acceptButton = (Button) this.getPane().lookup("#acceptButton");
-        Button abortButton = (Button) this.getPane().lookup("#abortButton");
-
-        abortButton.setOnAction((event -> {
-            JSONObject startChatWithSelectedEncryptionOptions = new JSONObject();
-            startChatWithSelectedEncryptionOptions.put("asymEncrypt", asymmetricEncryption.getValue());
-            startChatWithSelectedEncryptionOptions.put("symEncrypt", symmetricEncryption.getValue());
-
-        }));
-    }*/
 }

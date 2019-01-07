@@ -18,6 +18,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.json.simple.JSONObject;
 import util.ChatViewUtil;
+import util.ModalUtil;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -73,6 +74,8 @@ public HBox mainPane;
 
     private void initChat(HBox box)
     {
+        ModalUtil.showEncryptionOptions(this.getClass());
+
         String requestedID = box.getId();
 
         String otherClientsName = ClientData.getInstance().getAvailableChatById(requestedID).getName();
