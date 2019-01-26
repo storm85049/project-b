@@ -17,10 +17,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.json.simple.JSONObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.SQLOutput;
+import java.util.*;
 
 public class ChatViewUtil {
 
@@ -38,13 +38,43 @@ public class ChatViewUtil {
 
 
 
+    private static void setPublicKeysOfRemoteClient(String id,Map<String,String> publicRSAKeyMap,Map<String,String> publicElGamalKeyMap){
+
+        ClientData.getInstance().getAvailableChatById(id).setPublicElGamalKeyMap(publicElGamalKeyMap);
+        ClientData.getInstance().getAvailableChatById(id).setPublicRSAKeyMap(publicRSAKeyMap);
 
 
-    public static VBox updateChatView(HashMap<String,String> users, VBox list, IController controller) {
+    }
+
+
+    public static VBox updateChatView(JSONObject users, VBox list, IController controller) {
         VBox tmp = list;
         tmp.getChildren().clear();
 
-        for (Map.Entry<String, String> entry : users.entrySet()) {
+        HashMap<String,String> dataSet = new HashMap<>();
+
+        Iterator<String> temp = users.keySet().iterator();
+        while (temp.hasNext()) {
+            String id = temp.next();
+
+            if(  users.get(id) instanceof JSONObject ){
+                JSONObject json = (JSONObject) users.get(id);
+
+                if(ClientData.getInstance().getId().equalsIgnoreCase(id)) continue;
+
+                String name = (String) json.get("name");
+                dataSet.put(name,id);
+                HashMap<String, String> publicRSAKeyMap = (HashMap<String, String>) json.get("publicRSAKeyMap");
+                HashMap<String, String> publicElGamalKeyMap = (HashMap<String, String>) json.get("publicElGamalKeyMap");
+                RemoteClient remoteClient = new RemoteClient(id,name);
+                ClientData.getInstance().addToAvailableChats(remoteClient);
+                setPublicKeysOfRemoteClient(id,publicRSAKeyMap,publicElGamalKeyMap);
+
+            }
+
+        }
+
+        for (Map.Entry<String, String> entry : dataSet.entrySet()) {
 
             String name = entry.getKey();
             String id = entry.getValue();
@@ -65,8 +95,6 @@ public class ChatViewUtil {
             }
             tmp.getChildren().add(buttonBox);
 
-            RemoteClient remoteClient = new RemoteClient(id,name);
-            ClientData.getInstance().addToAvailableChats(remoteClient);
 
         }
         if(tmp.getChildren().size() <= 0){

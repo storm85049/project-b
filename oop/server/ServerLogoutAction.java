@@ -23,8 +23,7 @@ public class ServerLogoutAction implements ServerActionResolver {
 
 
     private static void notifyChatStatus(ServerMain serverMain){
-        HashMap<String,String> updatedUsers = JSONUtil.getConnectedClientsHashMap(serverMain.getConnectedClients());
-        JSONObject jsonObject = JSONUtil.getUpdatedChatViewJSON(updatedUsers);
-        serverMain.sendToClients(jsonObject,serverMain.getConnectedClients());
+        JSONObject updatedUsers = JSONUtil.getConnectedClientsJSON(serverMain.getConnectedClients());
+        serverMain.sendToClients(updatedUsers,serverMain.getConnectedClients());
     }
 }

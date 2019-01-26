@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class RemoteClient {
 
@@ -17,7 +18,24 @@ public class RemoteClient {
     private String ip  ;
     private InetAddress serverAdress ;
     private int unreadMessages = 0;
+    private Map<String,String> publicRSAKeyMap;
+    private Map<String,String> publicElGamalKeyMap;
 
+    public void setPublicElGamalKeyMap(Map<String, String> publicElGamalKeyMap) {
+        this.publicElGamalKeyMap = publicElGamalKeyMap;
+    }
+
+    public void setPublicRSAKeyMap(Map<String, String> publicRSAKeyMap) {
+        this.publicRSAKeyMap = publicRSAKeyMap;
+    }
+
+    public Map<String, String> getPublicRSAKeyMap() {
+        return publicRSAKeyMap;
+    }
+
+    public Map<String, String> getPublicElGamalKeyMap() {
+        return publicElGamalKeyMap;
+    }
 
     public int getUnreadMessages() {
         return unreadMessages;

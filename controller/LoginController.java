@@ -1,5 +1,8 @@
 package controller;
 
+import Krypto.ElGamal;
+import Krypto.RSA;
+import client.ClientData;
 import client.ObjectIOSingleton;
 import com.sun.deploy.util.StringUtils;
 import javafx.application.Platform;
@@ -30,17 +33,22 @@ public class LoginController  implements Initializable, Observer, IController {
     private TextField inputField;
     @FXML
     private ImageView spinnerImage;
-
     @FXML
     private VBox mainPane;
 
-    ActionManager actionManager = new ActionManager();
+    private ActionManager actionManager = new ActionManager();
 
     public void sendLoginRequest(){
 
         spinnerImage.setVisible(true);
         String name = StringUtils.trimWhitespace(inputField.getText());
-        JSONObject json = JSONUtil.getLoginRequestJSON(name);
+
+        RSA rsa = new RSA();
+        ClientData.getInstance().setRsa(rsa);
+        ElGamal elGamal = new ElGamal();
+        ClientData.getInstance().setElGamal(elGamal);
+
+        JSONObject json = JSONUtil.getLoginRequestJSON(name, rsa.getPublicKeyMap(), elGamal.getPublicKeyMap());
         ObjectIOSingleton io = ObjectIOSingleton.getInstance();
         io.init();
         io.sendToServer(json);
@@ -52,7 +60,6 @@ public class LoginController  implements Initializable, Observer, IController {
     public void initialize(URL location, ResourceBundle resources) {
 
         ObjectIOSingleton.getInstance().addObserver(this);
-
         inputField.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent event) {
