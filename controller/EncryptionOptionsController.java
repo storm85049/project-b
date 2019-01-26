@@ -1,7 +1,7 @@
 package controller;
 
+import Krypto.RSA;
 import client.ClientData;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,7 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -35,6 +34,7 @@ public class EncryptionOptionsController implements IController, Initializable {
     private static final String ELGAMAL = "ElGamal";
 
     private Map <String, String> encryptionMap = new HashMap<>();
+    private JSONObject symmetricEncryptionParameters = new JSONObject();
 
     public static ObservableList<String> asymmetricEncryptionOptions =
             FXCollections.observableArrayList(
@@ -115,7 +115,7 @@ public class EncryptionOptionsController implements IController, Initializable {
         abortButton.setOnAction(event -> {
             String asymmSelection = (String) asymmetricEncryptionComboBox.getSelectionModel().getSelectedItem();
             String symmSelection = (String) symmetricEncryptionComboBox.getSelectionModel().getSelectedItem();
-            JSONObject encryptionParameters = JSONUtil.getEncryptionOptions(asymmSelection, symmSelection, resolveSymmetricEncryptionParameters(symmSelection));
+            JSONObject encryptionParameters = JSONUtil.getEncryptionOptions(asymmSelection, symmSelection, putSymmetricEncryptionParametersIntoJSONObject(symmSelection));
             ClientData.getInstance().setEncryptionData(encryptionParameters);
             centerNode.getScene().getWindow().hide();
         });
@@ -125,27 +125,91 @@ public class EncryptionOptionsController implements IController, Initializable {
 
     }
 
-    private JSONObject resolveSymmetricEncryptionParameters(String symmEncryptionMode) {
-        JSONObject symmEncryptionParameters = new JSONObject();
-        switch (symmEncryptionMode) {
+    private JSONObject putSymmetricEncryptionParametersIntoJSONObject(String symmetricEncryption) {
+        switch (symmetricEncryption) {
             case (AFFINE_CHIFFRE): {
                 affinTField = (TextField) this.getPane().lookup("#affinTField");
                 affinKField = (TextField) this.getPane().lookup("#affinKField");
 
                 String T = affinTField.getText();
                 String K = affinKField.getText();
-                symmEncryptionParameters.put("T", T);
-                symmEncryptionParameters.put("K", K);
+                symmetricEncryptionParameters.put("T", T);
+                symmetricEncryptionParameters.put("K", K);
                 break;
             }
             case (VIGENERE_CHIFFRE): {
                 vigenereKeyField = (TextField) this.getPane().lookup("#vigenereKeyField");
 
                 String vigenereKey = vigenereKeyField.getText();
-                symmEncryptionParameters.put("vigenereKey", vigenereKey);
+                symmetricEncryptionParameters.put("vigenereKey", vigenereKey);
                 break;
             }
         }
-        return symmEncryptionParameters;
+        return symmetricEncryptionParameters;
+    }
+
+
+    //wird bald entfernt...
+
+    /*public ArrayList<String> getAllEncryptionParametersFromJSONObject(JSONObject encryptionData){
+        ArrayList<String> allEncryptionData = new ArrayList<>();
+
+        allEncryptionData.add((String)encryptionData.get("asymmEncryption"));
+
+        String symmetricEncryption = (String)encryptionData.get("symmEncryption");
+        allEncryptionData.add(symmetricEncryption);
+
+
+        //Parameter ermitteln, die von der symmetrischen Verschlüsselung abhängig sind
+        switch(symmetricEncryption){
+            case (AFFINE_CHIFFRE):
+                String t = (String)symmetricEncryptionParameters.get("T");
+                String k = (String)symmetricEncryptionParameters.get("k");
+                allEncryptionData.add(t);
+                allEncryptionData.add(k);
+            case (VIGENERE_CHIFFRE):
+                String key = (String)encryptionData.get("symmMode");
+                allEncryptionData.add(key);
+                break;
+        }
+
+        return allEncryptionData;
+    }*/
+
+    public void encryptKeys(JSONObject encryptionData){
+        String asymmetricEncryption = (String)encryptionData.get(("asymmetricEncryptionMode"));
+        String symmetricEncryption = (String)encryptionData.get(("symmetricEncryptionMode"));
+
+        //Parameter ermitteln, die von der symmetrischen Verschlüsselung abhängig sind
+        switch(symmetricEncryption){
+            case (AFFINE_CHIFFRE):
+                String t = (String)symmetricEncryptionParameters.get("T");
+                String k = (String)symmetricEncryptionParameters.get("k");
+                encryptAffineKey(asymmetricEncryption);
+                break;
+            case (VIGENERE_CHIFFRE):
+                String key = (String)encryptionData.get("symmMode");
+                encryptVigenereKey(asymmetricEncryption, key);
+                break;
+        }
+
+    }
+
+    private void encryptVigenereKey(String asymmetricEncryption, String key) {
+
+        if(asymmetricEncryption.equals("RSA")){
+            Krypto.RSA RSA = new RSA();
+            //RSA.encrypt(key,)
+        }
+
+    }
+
+    private void encryptAffineKey(String asymmetricEncryption) {
+
+        if (asymmetricEncryption.equals("RSA")){
+            Krypto.RSA rsa = new RSA();
+       //     rsa.
+        }
+
     }
 }

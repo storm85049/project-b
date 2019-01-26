@@ -61,9 +61,4 @@ public class ModalUtil{
             e.printStackTrace();
         }
     }
-
-    private static void startEncryption(String asymMode, String symMode, String symKey, String opMode){
-
-    }
-
 }

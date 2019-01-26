@@ -41,12 +41,15 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ChatController implements Initializable, Observer, IController {
+
+    private EncryptionOptionsController encryptionOptionsController = new EncryptionOptionsController();
 
     @FXML
     BorderPane mainPane;
@@ -130,6 +133,7 @@ public class ChatController implements Initializable, Observer, IController {
 
 
         //encrypt message here
+        encryptionOptionsController.encryptKeys(ClientData.getInstance().getEncryptionData());
         JSONObject json = JSONUtil.getMessageSendingJSON(message, from, to);
         ObjectIOSingleton.getInstance().sendToServer(json);
         ClientData.getInstance().getAvailableChatById(to).addMessageToChatHistory(json);
@@ -242,10 +246,4 @@ public class ChatController implements Initializable, Observer, IController {
 
 
     }
-
-
-
-
-
-
 }

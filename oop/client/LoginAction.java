@@ -1,5 +1,7 @@
 package oop.client;
 
+import Krypto.ElGamal;
+import Krypto.RSA;
 import client.ClientData;
 import client.ObjectIOSingleton;
 import controller.IController;
@@ -8,8 +10,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import org.json.simple.JSONObject;
 import util.Actions;
-import util.ModalUtil;
-import java.util.HashMap;
 
 public class LoginAction implements ActionResolver {
     @Override
@@ -22,12 +22,10 @@ public class LoginAction implements ActionResolver {
                 initSuccesfullUserLogin(jsonObject);
                 break;
             case Actions.ACTION_LOGIN_FAILED:
-
                 ImageView spinner = (ImageView) controller.getPane().lookup("#spinnerImage");
                 TextField textField = (TextField) controller.getPane().lookup("#inputField");
                 spinner.setVisible(false);
                 textField.setText("");
-
                 break;
         }
 
@@ -42,6 +40,8 @@ public class LoginAction implements ActionResolver {
 
         MainViewController.getInstance().loadUI(MainViewController.CHAT_VIEW);
 
+       ClientData.getInstance().setRSA(new RSA());
+       ClientData.getInstance().setElGamal(new ElGamal());
     }
 
 }

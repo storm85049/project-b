@@ -121,12 +121,12 @@ public class JSONUtil {
         return jsonObject;
     }
 
-    public static JSONObject getEncryptionOptions(String asymmEncryption, String symmEncryption, JSONObject symmMode) {
+    public static JSONObject getEncryptionOptions(String asymmetricEncryptionMode, String symmetricEncryptionMode, JSONObject symmetricEncryptionParameters /*, String OperationMode */) {
         JSONObject encryptionObject = new JSONObject();
-        encryptionObject.put("asymmEncryption", asymmEncryption);
-        encryptionObject.put("symmEncryption", symmEncryption);
-        encryptionObject.put("symmMode", symmMode);
-        System.out.println(asymmEncryption + ", " + symmEncryption + ", " + symmMode);
+        encryptionObject.put("asymmetricEncryptionMode", asymmetricEncryptionMode);
+        encryptionObject.put("symmetricEncryptionMode", symmetricEncryptionMode);
+        encryptionObject.put("symmetricEncryptionParameters", symmetricEncryptionParameters);
+        System.out.println(asymmetricEncryptionMode + ", " + symmetricEncryptionMode + ", " + symmetricEncryptionParameters);
         return encryptionObject;
     }
 

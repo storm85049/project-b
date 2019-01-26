@@ -1,5 +1,7 @@
 package client;
 
+import Krypto.ElGamal;
+import Krypto.RSA;
 import org.json.simple.JSONObject;
 
 import java.net.InetAddress;
@@ -13,6 +15,8 @@ public class ClientData{
     private InetAddress serverAdress = null;
     private String idFromOpenChat = null;
     private JSONObject encryptionData = null;
+    private RSA RSA = null;
+    private ElGamal elGamal = null;
 
     /**
      * first String represents id of remoteclient -> makes it easy to query for remoteclient
@@ -91,5 +95,21 @@ public class ClientData{
 
     public void setEncryptionData(JSONObject encryptionData) {
         this.encryptionData = encryptionData;
+    }
+
+    public RSA getRSA(){
+        return RSA;
+    }
+
+    public void setRSA(RSA RSA){
+        this.RSA = RSA;
+    }
+    
+    public ElGamal getElGamal(){
+        return elGamal;
+    }
+
+    public void setElGamal(ElGamal elGamal){
+        this.elGamal = elGamal;
     }
 }
