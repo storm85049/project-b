@@ -7,11 +7,9 @@ import util.Actions;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Array;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ServerMain{
 
@@ -57,7 +55,7 @@ public class ServerMain{
             case (Actions.ACTION_CLOSE_APPLICATION):
                 serverActionManager.setServerActionResolver(new ServerLogoutAction());break;
             case(Actions.ACTION_REQUEST_CHAT_STATUS):
-                serverActionManager.setServerActionResolver(new ServerSendOpenChats());break;
+                serverActionManager.setServerActionResolver(new ServerSendOpenChatsAction());break;
             case(Actions.ACTION_SEND_MESSAGE):
                 serverActionManager.setServerActionResolver(new SendMessageAction());break;
 

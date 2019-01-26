@@ -1,44 +1,56 @@
 package util;
 
-import com.sun.deploy.util.StringUtils;
 import org.json.simple.JSONObject;
 import server.ConnectedClient;
 
-import java.awt.event.ActionEvent;
-import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Array;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
+import java.util.Map;
 
 
 public class JSONUtil {
 
     public static JSONObject getLoginResponseJSON(String name, String id,
-                                                  String publicRSAKey, String publicELGamalKey,
                                                   String status, ArrayList<ConnectedClient>connectedClients){
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("action",Actions.ACTION_LOGIN_RESPONSE);
         jsonObject.put("status",status);
         jsonObject.put("name",name);
         jsonObject.put("id",id);
-        jsonObject.put("publicRSAKey",publicRSAKey);
-        jsonObject.put("publicELGamalKey",publicELGamalKey);
 
+        /*
         if(!connectedClients.isEmpty()){
-            HashMap<String,String> activeUsers = JSONUtil.getConnectedClientsHashMap(connectedClients);
+            HashMap<String,String> activeUsers = JSONUtil.getConnectedClientsJSON(connectedClients);
             jsonObject.put("activeUsers",activeUsers);
-        }
+        }*/
         return jsonObject;
+    }
+
+
+    /**
+     *
+     * @param id
+     * @param rsaKeyMap
+     * @param elGamalKeyMap
+     * @return
+     */
+    public static JSONObject getPublicKeyBroadcastJSON(String id,
+                                                       Map<String, String> rsaKeyMap,
+                                                       Map<String,String> elGamalKeyMap){
+        JSONObject json = new JSONObject();
+        json.put("action", Actions.ACTION_SEND_ASYMMETRIC_KEYS);
+        json.put("id", id);
+        json.put("rsa_keymap", rsaKeyMap);
+        json.put("elgamal_keymap", elGamalKeyMap);
+
+        return json;
+
     }
 
 
@@ -58,25 +70,28 @@ public class JSONUtil {
         String formattedDate= dateFormat.format(date);
         json.put("timestamp", formattedDate);
 
-
         return json;
 
     }
 
-    public static JSONObject getUpdatedChatViewJSON(HashMap<String,String> activeUsers){
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("activeUsers",activeUsers);
-        jsonObject.put("action",Actions.ACTION_UPDATE_CHAT_VIEW);
 
-        return jsonObject;
-    }
+    public static JSONObject getConnectedClientsJSON(ArrayList<ConnectedClient> connectedClients){
 
-    public static HashMap<String,String> getConnectedClientsHashMap(ArrayList<ConnectedClient> connectedClients){
-        HashMap<String,String> activeUsers = new HashMap<>();
+
+        JSONObject mainJSON = new JSONObject();
+        mainJSON.put("action",Actions.ACTION_UPDATE_CHAT_VIEW);
+
+
         for(ConnectedClient c : connectedClients) {
-            activeUsers.put(c.getName(), c.getId());
+            JSONObject jsonConnectedClient = new JSONObject();
+            jsonConnectedClient.put("name", c.getName());
+            jsonConnectedClient.put("publicRSAKeyMap", c.getPublicRSAKeyMap());
+            jsonConnectedClient.put("publicElGamalKeyMap", c.getPublicElGamalKeyMap());
+
+            mainJSON.put(c.getId(), jsonConnectedClient);
+
         }
-        return activeUsers;
+        return mainJSON;
     }
 
 
@@ -84,7 +99,7 @@ public class JSONUtil {
 
 
 
-    public static JSONObject getLoginRequestJSON(String name){
+    public static JSONObject getLoginRequestJSON(String name, Map<String,String> rsaPublicKeyMap, Map<String,String> elGamalPublicKeyMap ){
         InetAddress ip = ConnectionUtil.getIP();
         MessageDigest instance = null;
         try {
@@ -102,13 +117,13 @@ public class JSONUtil {
             hexString.append(hex);
         }
 
-
-
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("action",Actions.ACTION_LOGIN_REQUEST);
         jsonObject.put("name",name);
         jsonObject.put("id",hexString.toString());
         jsonObject.put("ip",ip);
+        jsonObject.put("publicRSAKeyMap", rsaPublicKeyMap);
+        jsonObject.put("publicElGamalKeyMap", elGamalPublicKeyMap);
         return jsonObject;
     }
 

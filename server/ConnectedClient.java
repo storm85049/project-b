@@ -2,43 +2,50 @@ package server;
 
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
+import java.util.Map;
 
 public class ConnectedClient {
     private String name;
     private String id;
     private InetAddress ip;
-    private String publicRSAKey;
-    private String publicElGamalKey;
+    private Map<String,String> rsaPublicKeyMap;
+    private Map<String,String> elGamalPublicKeyMap;
     private ObjectOutputStream objectOutputStream;
 
     /**
      *
      * @String name
      * @String id
-     * @String publicRSAKey
-     * @String publicElGamalKey
+     * @String rsaPublicKeyMap
+     * @String elGamalPublicKeyMap
      */
-    public ConnectedClient(String name, String id, InetAddress ip, String publicRSAKey, String publicElGamalKey,ObjectOutputStream o){
+    public ConnectedClient(String name, String id, InetAddress ip, Map<String,String> rsaPublicKeyMap, Map<String,String> elGamalPublicKeyMap,ObjectOutputStream o){
         this.name = name;
         this.id = id;
         this.ip = ip;
-        this.publicRSAKey = publicRSAKey;
-        this.publicElGamalKey = publicElGamalKey;
+        this.rsaPublicKeyMap = rsaPublicKeyMap;
+        this.elGamalPublicKeyMap = elGamalPublicKeyMap;
         this.objectOutputStream = o;
     }
 
+    public Map<String, String> getPublicElGamalKeyMap() {
+        return elGamalPublicKeyMap;
+    }
 
+    public Map<String, String> getPublicRSAKeyMap() {
+        return rsaPublicKeyMap;
+    }
 
     public InetAddress getIp() {
         return ip;
     }
 
-    public void setPublicElGamalKey(String publicElGamalKey) {
-        this.publicElGamalKey = publicElGamalKey;
+    public void setElGamalPublicKeyMap(Map<String,String> elGamalPublicKeyMap) {
+        this.elGamalPublicKeyMap = elGamalPublicKeyMap;
     }
 
-    public void setPublicRSAKey(String publicRSAKey) {
-        this.publicRSAKey = publicRSAKey;
+    public void setRsaPublicKeyMap(Map<String,String> rsaPublicKeyMap) {
+        this.rsaPublicKeyMap = rsaPublicKeyMap;
     }
 
     public String getId(){

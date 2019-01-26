@@ -14,5 +14,7 @@ public class Actions {
     public static final String ACTION_SEND_MESSAGE= "action_send_message";
     public static final String ACTION_RECEIVING= "action_receiving";
     public static final String ACTION_SENDING= "action_sending";
+    public static final String ACTION_SEND_ASYMMETRIC_KEYS= "action_send_asymmetric_keys";
+
 
 }

@@ -35,7 +35,7 @@ public class ModalUtil{
     }
 
 
-    public static void showLoginError(JSONObject json){
+    public static void showLoginError(){
 
         //nur ein beispiel
 
