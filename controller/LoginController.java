@@ -44,7 +44,7 @@ public class LoginController  implements Initializable, Observer, IController {
         String name = StringUtils.trimWhitespace(inputField.getText());
 
         RSA rsa = new RSA();
-        ClientData.getInstance().setRsa(rsa);
+        ClientData.getInstance().setRSA(rsa);
         ElGamal elGamal = new ElGamal();
         ClientData.getInstance().setElGamal(elGamal);
 
