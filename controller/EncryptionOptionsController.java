@@ -101,9 +101,6 @@ public class EncryptionOptionsController implements IController, Initializable {
         asymmetricEncryptionComboBox.setItems(asymmetricEncryptionOptions);
         symmetricEncryptionComboBox.setOnAction(event -> {
             String symmSelection = (String) symmetricEncryptionComboBox.getSelectionModel().getSelectedItem();
-            System.out.println(event);
-            System.out.println(symmSelection);
-            System.out.println(encryptionMap.get(symmSelection));
             try{
                 centerNode = FXMLLoader.load(getClass().getClassLoader().getResource(encryptionMap.get(symmSelection)));
                 mainPane.setCenter(centerNode);
@@ -148,34 +145,6 @@ public class EncryptionOptionsController implements IController, Initializable {
         return symmetricEncryptionParameters;
     }
 
-
-    //wird bald entfernt...
-
-    /*public ArrayList<String> getAllEncryptionParametersFromJSONObject(JSONObject encryptionData){
-        ArrayList<String> allEncryptionData = new ArrayList<>();
-
-        allEncryptionData.add((String)encryptionData.get("asymmEncryption"));
-
-        String symmetricEncryption = (String)encryptionData.get("symmEncryption");
-        allEncryptionData.add(symmetricEncryption);
-
-
-        //Parameter ermitteln, die von der symmetrischen Verschlüsselung abhängig sind
-        switch(symmetricEncryption){
-            case (AFFINE_CHIFFRE):
-                String t = (String)symmetricEncryptionParameters.get("T");
-                String k = (String)symmetricEncryptionParameters.get("k");
-                allEncryptionData.add(t);
-                allEncryptionData.add(k);
-            case (VIGENERE_CHIFFRE):
-                String key = (String)encryptionData.get("symmMode");
-                allEncryptionData.add(key);
-                break;
-        }
-
-        return allEncryptionData;
-    }*/
-
     public void encryptKeys(JSONObject encryptionData){
         String asymmetricEncryption = (String)encryptionData.get(("asymmetricEncryptionMode"));
         String symmetricEncryption = (String)encryptionData.get(("symmetricEncryptionMode"));
@@ -188,7 +157,8 @@ public class EncryptionOptionsController implements IController, Initializable {
                 encryptAffineKey(asymmetricEncryption);
                 break;
             case (VIGENERE_CHIFFRE):
-                String key = (String)encryptionData.get("symmMode");
+                JSONObject json = (JSONObject)encryptionData.get("symmetricEncryptionParameters");
+                String key = (String)json.get("vigenereKey");
                 encryptVigenereKey(asymmetricEncryption, key);
                 break;
         }
@@ -196,10 +166,10 @@ public class EncryptionOptionsController implements IController, Initializable {
     }
 
     private void encryptVigenereKey(String asymmetricEncryption, String key) {
-
         if(asymmetricEncryption.equals("RSA")){
             Krypto.RSA RSA = new RSA();
-            //RSA.encrypt(key,)
+            RSA.encrypt(key, ClientData.getInstance().getAvailableChatById(ClientData.getInstance().getIdFromOpenChat()).getPublicRSAKeyMap());
+            System.out.println(RSA.encrypt(key, ClientData.getInstance().getAvailableChatById(ClientData.getInstance().getIdFromOpenChat()).getPublicRSAKeyMap()));
         }
 
     }

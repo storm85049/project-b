@@ -14,6 +14,9 @@ public class ClientData{
     private String ip = null;
     private InetAddress serverAdress = null;
     private String idFromOpenChat = null;
+    private String asymmetricEncryptionFromOpenChat = null;
+    private String symmetricEncryptionFromOpenChat = null;
+    private JSONObject symmetricEncryptionParameters = null;
     private JSONObject encryptionData = null;
     private RSA RSA = null;
     private ElGamal elGamal = null;
@@ -111,5 +114,29 @@ public class ClientData{
 
     public void setElGamal(ElGamal elGamal){
         this.elGamal = elGamal;
+    }
+
+    public String getSymmetricEncryptionFromOpenChat() {
+        return symmetricEncryptionFromOpenChat;
+    }
+
+    public void setSymmetricEncryptionFromOpenChat(String symmetricEncryptionFromOpenChat) {
+        this.symmetricEncryptionFromOpenChat = symmetricEncryptionFromOpenChat;
+    }
+
+    public String getAsymmetricEncryptionFromOpenChat() {
+        return asymmetricEncryptionFromOpenChat;
+    }
+
+    public void setAsymmetricEncryptionFromOpenChat(String asymmetricEncryptionFromOpenChat) {
+        this.asymmetricEncryptionFromOpenChat = asymmetricEncryptionFromOpenChat;
+    }
+
+    public JSONObject getSymmetricEncryptionParameters() {
+        return symmetricEncryptionParameters;
+    }
+
+    public void setSymmetricEncryptionParameters(JSONObject symmetricEncryptionParameters) {
+        this.symmetricEncryptionParameters = symmetricEncryptionParameters;
     }
 }
