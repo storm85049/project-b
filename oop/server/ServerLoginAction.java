@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ServerLoginAction implements ServerActionResolver {
 
@@ -27,18 +28,19 @@ public class ServerLoginAction implements ServerActionResolver {
         String name = (String)jsonIN.get("name");
         String id = (String)jsonIN.get("id");
         InetAddress ip = (InetAddress)jsonIN.get("ip");
+        Map<String,String> rsaPublicKeyMap = (Map<String,String>) jsonIN.get("publicRSAKeyMap");
+        Map<String,String> elGamalPublicKeyMap = (Map<String,String>) jsonIN.get("publicElGamalKeyMap");
 
         if(isNameAvailable(name,serverMain)){
-            String rsa = null;
-            String elgamal = null;
-            ConnectedClient client = new ConnectedClient(name,id,ip,rsa,elgamal,out);
-            jsonOut= JSONUtil.getLoginResponseJSON(name,id,rsa,elgamal, Actions.ACTION_LOGIN_GRANTED,serverMain.getConnectedClients());
+            ConnectedClient client = new ConnectedClient(name,id,ip,rsaPublicKeyMap,elGamalPublicKeyMap,out);
+            jsonOut = JSONUtil.getLoginResponseJSON(name,id, Actions.ACTION_LOGIN_GRANTED,serverMain.getConnectedClients());
             serverMain.addClient(client);
             ArrayList<ConnectedClient> receiver = new ArrayList<>();
             receiver.add(client);
             serverMain.sendToClients(jsonOut,receiver);
+
         }else{
-            jsonOut= JSONUtil.getLoginResponseJSON(name,id,null,null,Actions.ACTION_LOGIN_FAILED,serverMain.getConnectedClients());
+            jsonOut= JSONUtil.getLoginResponseJSON(name,id,Actions.ACTION_LOGIN_FAILED,serverMain.getConnectedClients());
             serverMain.sendToClients(jsonOut,out);
         }
     }

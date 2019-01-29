@@ -1,5 +1,8 @@
 package client;
 
+import Krypto.ElGamal;
+import Krypto.RSA;
+
 import java.net.InetAddress;
 import java.util.*;
 
@@ -10,6 +13,25 @@ public class ClientData{
     private String ip = null;
     private InetAddress serverAdress = null;
     private String idFromOpenChat = null;
+
+    private RSA rsa = null;
+    private ElGamal elGamal = null;
+
+    public void setRsa(RSA rsa){
+        this.rsa = rsa;
+    }
+    public void setElGamal(ElGamal elGamal){
+        this.elGamal = elGamal;
+    }
+
+    public ElGamal getElGamal() {
+        return elGamal;
+    }
+
+    public RSA getRsa() {
+        return rsa;
+    }
+
 
     /**
      * first String represents id of remoteclient -> makes it easy to query for remoteclient
