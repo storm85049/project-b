@@ -65,7 +65,7 @@ public class LoginController  implements Initializable, Observer, IController {
                 updateMessage("Generating RSA Key");
                 updateTitle("");
                 RSA rsa = new RSA();
-                ClientData.getInstance().setRsa(rsa);
+                ClientData.getInstance().setRSA(rsa);
                 String publicrsa = rsa.getPublicKey().substring(0,maxVisibleLengthOfKeys) + "...";
                 String privatersa = rsa.getPrivateKey().substring(0,maxVisibleLengthOfKeys) + "...";
 
