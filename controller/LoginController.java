@@ -6,9 +6,11 @@ import client.ClientData;
 import client.ObjectIOSingleton;
 import com.sun.deploy.util.StringUtils;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -35,7 +37,12 @@ public class LoginController  implements Initializable, Observer, IController {
     private ImageView spinnerImage;
     @FXML
     private VBox mainPane;
+    @FXML
+    private Label keyStatus;
+    @FXML
+    private Label privateKey;
 
+    private int maxVisibleLengthOfKeys = 25;
     private ActionManager actionManager = new ActionManager();
 
     public void sendLoginRequest(){
@@ -43,15 +50,45 @@ public class LoginController  implements Initializable, Observer, IController {
         spinnerImage.setVisible(true);
         String name = StringUtils.trimWhitespace(inputField.getText());
 
-        RSA rsa = new RSA();
-        ClientData.getInstance().setRsa(rsa);
-        ElGamal elGamal = new ElGamal();
-        ClientData.getInstance().setElGamal(elGamal);
+        Task<Void> initAsymm = new Task<Void>(){
+            @Override
+            protected Void call() throws Exception {
 
-        JSONObject json = JSONUtil.getLoginRequestJSON(name, rsa.getPublicKeyMap(), elGamal.getPublicKeyMap());
-        ObjectIOSingleton io = ObjectIOSingleton.getInstance();
-        io.init();
-        io.sendToServer(json);
+                updateMessage("Generating EL Gamal Key");
+                ElGamal elGamal = new ElGamal();
+                ClientData.getInstance().setElGamal(elGamal);
+                String privateEG = elGamal.getPrivateKey().substring(0,maxVisibleLengthOfKeys) + "...";
+                String publicEG = elGamal.getPublicKey().substring(0,maxVisibleLengthOfKeys) + "...";
+                updateMessage("EL Gamal Private Key: " + privateEG);
+                updateTitle("EL Gamal Public Key: " + publicEG);
+                Thread.sleep(1000);
+                updateMessage("Generating RSA Key");
+                updateTitle("");
+                RSA rsa = new RSA();
+                ClientData.getInstance().setRsa(rsa);
+                String publicrsa = rsa.getPublicKey().substring(0,maxVisibleLengthOfKeys) + "...";
+                String privatersa = rsa.getPrivateKey().substring(0,maxVisibleLengthOfKeys) + "...";
+
+                updateMessage("RSA Private Key: " + privatersa);
+                updateTitle("RSA Public Key: " + publicrsa);
+                Thread.sleep(1000);
+                updateMessage("Launching App...");
+                updateTitle("");
+
+                JSONObject json = JSONUtil.getLoginRequestJSON(name, rsa.getPublicKeyMap(), elGamal.getPublicKeyMap());
+                ObjectIOSingleton io = ObjectIOSingleton.getInstance();
+                io.init();
+                io.sendToServer(json);
+
+                return null;
+            }
+
+        };
+        keyStatus.textProperty().bind(initAsymm.messageProperty());
+        privateKey.textProperty().bind(initAsymm.titleProperty());
+
+        new Thread(initAsymm).start();
+
     }
 
 

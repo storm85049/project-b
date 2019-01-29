@@ -29,10 +29,13 @@ public class ClientMain extends Application{
 
         double inititalWidth = 1460;
         double inititalHeight = 720;
-        Scene scene = new Scene(root, inititalWidth, inititalHeight);
+        Scene scene = new Scene(root/*,inititalWidth,inititalHeight*/);
         primaryStage.setScene(scene);
 
         primaryStage.setTitle("Welcome to secure ChatClient");
+
+        /*kann aus, falls nervig*/
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 
