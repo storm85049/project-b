@@ -74,7 +74,6 @@ public HBox mainPane;
 
     private void initChat(HBox box)
     {
-        ModalUtil.showEncryptionOptions(this.getClass());
 
         String requestedID = box.getId();
 
@@ -85,6 +84,9 @@ public HBox mainPane;
         messageCount.setManaged(false);
         ClientData.getInstance().setIdFromOpenChat(requestedID);
 
+        if (ClientData.getInstance().getAvailableChatById(ClientData.getInstance().getIdFromOpenChat()).getChatHistory() == null) {
+            ModalUtil.showEncryptionOptions(this.getClass());
+        }
 
         //clear whole view
 
@@ -121,10 +123,10 @@ public HBox mainPane;
     {
 
         for(JSONObject json : chatHistory){
-
-            String message = (String)json.get("message");
-            String fromID  = (String)json.get("fromID");
-            String toID = (String)json.get("toID");
+            JSONObject jsonObject = (JSONObject)json.get("message");
+            String message = (String)jsonObject.get("kryptoMessage");
+            String fromID  = (String)jsonObject.get("fromID");
+            String toID = (String)jsonObject.get("toID");
 
             Text text=new Text(message);
             text.getStyleClass().add("message");

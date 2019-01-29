@@ -3,6 +3,7 @@ package controller;
 import Krypto.AffineCipher;
 import Krypto.RSA;
 import client.ClientData;
+import com.sun.security.ntlm.Client;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -100,7 +101,6 @@ public class EncryptionController implements IController, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         encryptionMap.put(AFFINE_CHIFFRE, MainViewController.ENCRYPTION_DIALOG_AFFIN);
         encryptionMap.put(VIGENERE_CHIFFRE, MainViewController.ENCRYPTION_DIALOG_VIGENERE);
         //encryptionMap.put(HILL_CHIFFRE, MainViewController.ENCRYPTION_DIALOG_HILL);   ---> fxml fehlt noch
@@ -124,10 +124,6 @@ public class EncryptionController implements IController, Initializable {
             ClientData.getInstance().setEncryptionData(encryptionParameters);
             centerNode.getScene().getWindow().hide();
         });
-
-        //TODO: Wenn der Accept Button geklickt wird, werden die ausgewählten Modi in der ClientData Klasse gespeichert. Dafür Getter und Setter definieren.
-        //TODO: Außerdem eine Klasse schreiben, die, wenn man absenden klickt, den eingegeben Text auf einem Verschlüsselungsobjekt (zB Vigenere) verschlüsselt und das JSON Objekt erstellt.
-
     }
 
     private JSONObject putSymmetricEncryptionParametersIntoJSONObject(String symmetricEncryption) {
@@ -153,54 +149,6 @@ public class EncryptionController implements IController, Initializable {
         return symmetricEncryptionParameters;
     }
 
-    private JSONObject encryptSymmetricKeys(JSONObject encryptionData){
-        String asymmetricEncryption = (String)encryptionData.get(("asymmetricEncryptionMode"));
-        String symmetricEncryption = (String)encryptionData.get(("symmetricEncryptionMode"));
-
-        //Parameter ermitteln, die von der symmetrischen Verschlüsselung abhängig sind
-        switch(symmetricEncryption){
-            case (AFFINE_CHIFFRE):
-                String t = (String)symmetricEncryptionParameters.get("T");
-                String k = (String)symmetricEncryptionParameters.get("K");
-                encryptedMessage.put("K",k);
-                encryptedMessage.put("T",t);
-                break;
-            case (VIGENERE_CHIFFRE):
-                JSONObject json = (JSONObject)encryptionData.get("symmetricEncryptionParameters");
-                String key = (String)json.get("vigenereKey");
-                encryptedMessage.put("encryptedVigenereKey", encryptVigenereKey(asymmetricEncryption, key));
-                break;
-        }
-        return null;
-    }
-
-    private String encryptVigenereKey(String asymmetricEncryption, String key) {
-        if(asymmetricEncryption.equals("RSA")){
-            RSA RSA = ClientData.getInstance().getRSA();
-            String encryptedVigenereKey = RSA.encrypt(key, ClientData.getInstance().getAvailableChatById(ClientData.getInstance().getIdFromOpenChat()).getPublicRSAKeyMap());
-            System.out.println(RSA.encrypt(key, ClientData.getInstance().getAvailableChatById(ClientData.getInstance().getIdFromOpenChat()).getPublicRSAKeyMap()));
-            return encryptedVigenereKey;
-        }
-        return null;
-    }
-
-    private void encryptAffineKey(String asymmetricEncryption) {
-
-        if (asymmetricEncryption.equals("RSA")){
-            Krypto.RSA rsa = new RSA();
-       //     rsa.
-        }
-
-    }
-
-    private String encryptMessageWithSymmetricEncryption(String symmetricEncryption, String message){
-        if (symmetricEncryption.equals(AFFINE_CHIFFRE)){
-            AffineCipher affine = new AffineCipher((String)symmetricEncryptionParameters.get("K"), (String)symmetricEncryptionParameters.get("T"),"ABC");
-            return affine.encrypt(message);
-        }
-        return null;
-    }
-
     public JSONObject encryptMessage(String message){
 
         encryptedMessage.put("asymmetricEncryption", asymmetricSelection);
@@ -212,14 +160,86 @@ public class EncryptionController implements IController, Initializable {
                 AffineCipher affineCipher = new AffineCipher((String)symmetricEncryptionParameters.get("K"),(String)symmetricEncryptionParameters.get("T"),"ABC");
                 String encrypt = affineCipher.encrypt(message);
                 System.out.println(encrypt);
-                encryptedMessage.put("enryptedMessage",affineCipher.encrypt(message));
+                encryptedMessage.put("kryptoMessage",affineCipher.encrypt(message));
                 break;
             case(VIGENERE_CHIFFRE):
                 break;
         }
-
-
         return encryptedMessage;
     }
 
-}
+    private JSONObject encryptSymmetricKeys(JSONObject encryptionData){
+        String asymmetricEncryption = (String)encryptionData.get(("asymmetricEncryptionMode"));
+        String symmetricEncryption = (String)encryptionData.get(("symmetricEncryptionMode"));
+
+        //Parameter ermitteln, die von der symmetrischen Verschlüsselung abhängig sind
+        switch(symmetricEncryption){
+            case (AFFINE_CHIFFRE):
+                String k = (String)symmetricEncryptionParameters.get("K");
+                String t = (String)symmetricEncryptionParameters.get("T");
+                encryptedMessage.put("K", encryptAffineKey(asymmetricEncryption, k));
+                encryptedMessage.put("T", encryptAffineKey(asymmetricEncryption, t));
+                break;
+            case (VIGENERE_CHIFFRE):
+                JSONObject json = (JSONObject)encryptionData.get("symmetricEncryptionParameters");
+                String key = (String)json.get("vigenereKey");
+                encryptedMessage.put("encryptedVigenereKey", encryptVigenereKey(asymmetricEncryption, key));
+                break;
+        }
+        return null;
+    }
+
+    private String encryptVigenereKey(String asymmetricEncryption, String key) {
+        if(asymmetricEncryption.equals(RSA)){
+            RSA RSA = ClientData.getInstance().getRSA();
+            String encryptedVigenereKey = RSA.encrypt(key, ClientData.getInstance().getAvailableChatById(ClientData.getInstance().getIdFromOpenChat()).getPublicRSAKeyMap());
+            System.out.println(RSA.encrypt(key, ClientData.getInstance().getAvailableChatById(ClientData.getInstance().getIdFromOpenChat()).getPublicRSAKeyMap()));
+            return encryptedVigenereKey;
+        }
+        return null;
+    }
+
+    private String encryptAffineKey(String asymmetricEncryption, String key) {
+
+        if (asymmetricEncryption.equals(RSA)){
+            RSA RSA = ClientData.getInstance().getRSA();
+            String encryptedAffineKey = RSA.encrypt(key,ClientData.getInstance().getAvailableChatById(ClientData.getInstance().getIdFromOpenChat()).getPublicRSAKeyMap());
+            return  encryptedAffineKey;
+        }
+        return null;
+    }
+
+
+    public JSONObject decryptMessage(JSONObject encryptedMessage){
+        JSONObject json = (JSONObject)encryptedMessage.get("message");
+        String toBeDecryptedMessage = (String)json.get("kryptoMessage");
+        String asymmetricEncryption = (String)json.get("asymmetricEncryption");
+        String symmetricEncryption = (String)json.get("symmetricEncryption");
+
+        switch(symmetricEncryption){
+            case(AFFINE_CHIFFRE):
+                String k = (String)json.get("K");
+                String t = (String)json.get("T");
+
+                k = decryptAffineKey(asymmetricEncryption, k);
+                t = decryptAffineKey(asymmetricEncryption, t);
+                AffineCipher affineCipher = new AffineCipher(k, t,"ABC");
+                String decryptedMessage = affineCipher.decrypt(toBeDecryptedMessage);
+                json.put("kryptoMessage", decryptedMessage);
+                encryptedMessage.put("message", json);
+                return encryptedMessage;
+            }
+        return null;
+        }
+
+
+        private String decryptAffineKey(String asymmetricSelection, String key){
+            switch (asymmetricSelection){
+                case(RSA):
+                    RSA RSA = ClientData.getInstance().getRSA();
+                    return RSA.decrypt(key);
+            }
+            return null;
+        }
+    }
+

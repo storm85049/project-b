@@ -163,6 +163,7 @@ public class ChatController implements Initializable, Observer, IController {
 
     private void handleIncomingMessage(JSONObject json)
     {
+        json = encryptionController.decryptMessage(json);
         String openChatID = ClientData.getInstance().getIdFromOpenChat();
         String fromID = (String)json.get("fromID");
 
@@ -192,8 +193,8 @@ public class ChatController implements Initializable, Observer, IController {
 
     private void addMessageToCheckBox(JSONObject json, String sendingOrReceiving)
     {
-
-        String message = (String) json.get("message");
+            JSONObject jsonObject = (JSONObject)json.get("message");
+        String message = (String) jsonObject.get("kryptoMessage");
 
         Text t = (Text)(ChatViewUtil.find("welcomeText"));
         if(t!= null){
