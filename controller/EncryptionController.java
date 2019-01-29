@@ -1,5 +1,6 @@
 package controller;
 
+import Krypto.AffineCipher;
 import Krypto.RSA;
 import client.ClientData;
 import javafx.collections.FXCollections;
@@ -21,32 +22,23 @@ import util.JSONUtil;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLOutput;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class EncryptionOptionsController implements IController, Initializable {
+public class EncryptionController implements IController, Initializable {
 
     private static final String AFFINE_CHIFFRE = "Affine Chiffre";
     private static final String VIGENERE_CHIFFRE = "Vigenere Chiffre";
     private static final String HILL_CHIFFRE = "Hill Chiffre";
     private static final String RSA = "RSA";
     private static final String ELGAMAL = "ElGamal";
-
-    private Map <String, String> encryptionMap = new HashMap<>();
-    private JSONObject symmetricEncryptionParameters = new JSONObject();
-
-    public static ObservableList<String> asymmetricEncryptionOptions =
-            FXCollections.observableArrayList(
-                    RSA,
-                    ELGAMAL
-            );
-    public static ObservableList<String> symmetricEncryptionOptions =
-            FXCollections.observableArrayList(
-                    AFFINE_CHIFFRE,
-                    VIGENERE_CHIFFRE,
-                    HILL_CHIFFRE
-            );
+    private static Map <String, String> encryptionMap = new HashMap<>();
+    private static JSONObject symmetricEncryptionParameters = new JSONObject();
+    private static JSONObject encryptedMessage = new JSONObject();
+    private static String asymmetricSelection;
+    private static String symmetricSelection;
 
     @FXML
     private Text test;
@@ -85,10 +77,26 @@ public class EncryptionOptionsController implements IController, Initializable {
 
     private HBox centerNode;
 
+    public static ObservableList<String> asymmetricEncryptionOptions =
+            FXCollections.observableArrayList(
+                    RSA,
+                    ELGAMAL
+            );
+    public static ObservableList<String> symmetricEncryptionOptions =
+            FXCollections.observableArrayList(
+                    AFFINE_CHIFFRE,
+                    VIGENERE_CHIFFRE,
+                    HILL_CHIFFRE
+            );
+
+
     @Override
     public Pane getPane() {
         return mainPane;
     }
+
+
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -110,9 +118,9 @@ public class EncryptionOptionsController implements IController, Initializable {
         });
 
         abortButton.setOnAction(event -> {
-            String asymmSelection = (String) asymmetricEncryptionComboBox.getSelectionModel().getSelectedItem();
-            String symmSelection = (String) symmetricEncryptionComboBox.getSelectionModel().getSelectedItem();
-            JSONObject encryptionParameters = JSONUtil.getEncryptionOptions(asymmSelection, symmSelection, putSymmetricEncryptionParametersIntoJSONObject(symmSelection));
+            asymmetricSelection = (String) asymmetricEncryptionComboBox.getSelectionModel().getSelectedItem();
+            symmetricSelection = (String) symmetricEncryptionComboBox.getSelectionModel().getSelectedItem();
+            JSONObject encryptionParameters = JSONUtil.getEncryptionOptions(asymmetricSelection, symmetricSelection, putSymmetricEncryptionParametersIntoJSONObject(symmetricSelection));
             ClientData.getInstance().setEncryptionData(encryptionParameters);
             centerNode.getScene().getWindow().hide();
         });
@@ -130,8 +138,8 @@ public class EncryptionOptionsController implements IController, Initializable {
 
                 String T = affinTField.getText();
                 String K = affinKField.getText();
-                symmetricEncryptionParameters.put("T", T);
                 symmetricEncryptionParameters.put("K", K);
+                symmetricEncryptionParameters.put("T", T);
                 break;
             }
             case (VIGENERE_CHIFFRE): {
@@ -145,7 +153,7 @@ public class EncryptionOptionsController implements IController, Initializable {
         return symmetricEncryptionParameters;
     }
 
-    public void encryptKeys(JSONObject encryptionData){
+    private JSONObject encryptSymmetricKeys(JSONObject encryptionData){
         String asymmetricEncryption = (String)encryptionData.get(("asymmetricEncryptionMode"));
         String symmetricEncryption = (String)encryptionData.get(("symmetricEncryptionMode"));
 
@@ -153,25 +161,27 @@ public class EncryptionOptionsController implements IController, Initializable {
         switch(symmetricEncryption){
             case (AFFINE_CHIFFRE):
                 String t = (String)symmetricEncryptionParameters.get("T");
-                String k = (String)symmetricEncryptionParameters.get("k");
-                encryptAffineKey(asymmetricEncryption);
+                String k = (String)symmetricEncryptionParameters.get("K");
+                encryptedMessage.put("K",k);
+                encryptedMessage.put("T",t);
                 break;
             case (VIGENERE_CHIFFRE):
                 JSONObject json = (JSONObject)encryptionData.get("symmetricEncryptionParameters");
                 String key = (String)json.get("vigenereKey");
-                encryptVigenereKey(asymmetricEncryption, key);
+                encryptedMessage.put("encryptedVigenereKey", encryptVigenereKey(asymmetricEncryption, key));
                 break;
         }
-
+        return null;
     }
 
-    private void encryptVigenereKey(String asymmetricEncryption, String key) {
+    private String encryptVigenereKey(String asymmetricEncryption, String key) {
         if(asymmetricEncryption.equals("RSA")){
-            Krypto.RSA RSA = new RSA();
-            RSA.encrypt(key, ClientData.getInstance().getAvailableChatById(ClientData.getInstance().getIdFromOpenChat()).getPublicRSAKeyMap());
+            RSA RSA = ClientData.getInstance().getRSA();
+            String encryptedVigenereKey = RSA.encrypt(key, ClientData.getInstance().getAvailableChatById(ClientData.getInstance().getIdFromOpenChat()).getPublicRSAKeyMap());
             System.out.println(RSA.encrypt(key, ClientData.getInstance().getAvailableChatById(ClientData.getInstance().getIdFromOpenChat()).getPublicRSAKeyMap()));
+            return encryptedVigenereKey;
         }
-
+        return null;
     }
 
     private void encryptAffineKey(String asymmetricEncryption) {
@@ -182,4 +192,34 @@ public class EncryptionOptionsController implements IController, Initializable {
         }
 
     }
+
+    private String encryptMessageWithSymmetricEncryption(String symmetricEncryption, String message){
+        if (symmetricEncryption.equals(AFFINE_CHIFFRE)){
+            AffineCipher affine = new AffineCipher((String)symmetricEncryptionParameters.get("K"), (String)symmetricEncryptionParameters.get("T"),"ABC");
+            return affine.encrypt(message);
+        }
+        return null;
+    }
+
+    public JSONObject encryptMessage(String message){
+
+        encryptedMessage.put("asymmetricEncryption", asymmetricSelection);
+        encryptedMessage.put("symmetricEncryption", symmetricSelection);
+        encryptSymmetricKeys(ClientData.getInstance().getEncryptionData());
+
+        switch(symmetricSelection){
+            case (AFFINE_CHIFFRE):
+                AffineCipher affineCipher = new AffineCipher((String)symmetricEncryptionParameters.get("K"),(String)symmetricEncryptionParameters.get("T"),"ABC");
+                String encrypt = affineCipher.encrypt(message);
+                System.out.println(encrypt);
+                encryptedMessage.put("enryptedMessage",affineCipher.encrypt(message));
+                break;
+            case(VIGENERE_CHIFFRE):
+                break;
+        }
+
+
+        return encryptedMessage;
+    }
+
 }

@@ -1,19 +1,14 @@
 package controller;
 
 import animatefx.animation.Flash;
-import animatefx.animation.SlideInLeft;
 import client.ClientData;
-import client.ClientMain;
 import client.ObjectIOSingleton;
 import com.sun.deploy.util.StringUtils;
 import javafx.application.Platform;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
@@ -25,23 +20,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import oop.client.ActionManager;
 import oop.client.ChatViewAction;
-import oop.client.LoginAction;
 import org.json.simple.JSONObject;
-import sun.misc.IOUtils;
 import util.Actions;
 import util.ChatViewUtil;
 import util.JSONUtil;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
-import java.security.Key;
-import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
@@ -49,7 +38,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ChatController implements Initializable, Observer, IController {
 
-    private EncryptionOptionsController encryptionOptionsController = new EncryptionOptionsController();
+    private EncryptionController encryptionController = new EncryptionController();
 
     @FXML
     BorderPane mainPane;
@@ -133,8 +122,7 @@ public class ChatController implements Initializable, Observer, IController {
 
 
         //encrypt message here
-        encryptionOptionsController.encryptKeys(ClientData.getInstance().getEncryptionData());
-        JSONObject json = JSONUtil.getMessageSendingJSON(message, from, to);
+        JSONObject json = JSONUtil.getMessageSendingJSON(encryptionController.encryptMessage(message), from, to);
         ObjectIOSingleton.getInstance().sendToServer(json);
         ClientData.getInstance().getAvailableChatById(to).addMessageToChatHistory(json);
         this.addMessageToCheckBox(json,Actions.ACTION_SENDING);

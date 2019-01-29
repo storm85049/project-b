@@ -86,6 +86,10 @@ public class RemoteClient {
         return currentAsymEncryption;
     }
 
+    public void setCurrentAsymEncryption(IAsymmetricEncryption currentAsymEncryption) {
+        this.currentAsymEncryption = currentAsymEncryption;
+    }
+
     public ISymmetricEncryption getCurrentSymEncryption() {
         return currentSymEncryption;
     }
@@ -123,9 +127,6 @@ public class RemoteClient {
         this.serverAdress = serverAdress;
     }
 
-    public void setCurrentAsymEncryption(IAsymmetricEncryption currentAsymEncryption) {
-        this.currentAsymEncryption = currentAsymEncryption;
-    }
 
 
 }

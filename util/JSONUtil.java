@@ -56,7 +56,7 @@ public class JSONUtil {
 
 
 
-    public static JSONObject getMessageSendingJSON(String message,String fromID, String toID)
+    public static JSONObject getMessageSendingJSON(JSONObject message, String fromID, String toID)
     {
         JSONObject json = new JSONObject();
         json.put("action", Actions.ACTION_SEND_MESSAGE);
