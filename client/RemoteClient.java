@@ -1,8 +1,9 @@
 package client;
 
-import Krypto.IAsymmetricEncryption;
-import Krypto.ISymmetricEncryption;
+import Krypto.*;
+import controller.EncryptionController;
 import org.json.simple.JSONObject;
+import util.Actions;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -11,8 +12,14 @@ import java.util.Map;
 public class RemoteClient {
 
 
-    private IAsymmetricEncryption currentAsymEncryption;
-    private ISymmetricEncryption currentSymEncryption;
+    private String asymEncryptionString = null;
+    private String symEncryptionString = null;
+    private ISymmetricEncryption symEncryption = null;
+
+    private JSONObject requestedEncryptionData = null;
+    private String encryptionStatus;
+
+
     private String id;
     private String name ;
     private String ip  ;
@@ -23,6 +30,11 @@ public class RemoteClient {
 
     public void setPublicElGamalKeyMap(Map<String, String> publicElGamalKeyMap) {
         this.publicElGamalKeyMap = publicElGamalKeyMap;
+    }
+
+    public boolean isEncryptionSet()
+    {
+        return this.getRequestedEncryptionData() != null;
     }
 
     public void setPublicRSAKeyMap(Map<String, String> publicRSAKeyMap) {
@@ -80,22 +92,99 @@ public class RemoteClient {
         this.chatHistory.add(messageData);
     }
 
-
-
-    public IAsymmetricEncryption getCurrentAsymEncryption() {
-        return currentAsymEncryption;
+    public JSONObject getRequestedEncryptionData() {
+        return requestedEncryptionData;
     }
 
-    public void setCurrentAsymEncryption(IAsymmetricEncryption currentAsymEncryption) {
-        this.currentAsymEncryption = currentAsymEncryption;
+    public void setRequestedEncryptionData(JSONObject requestedEncryptionData) {
+
+        String asymMode = (String) requestedEncryptionData.get("asymMode");
+        String symMode = (String) requestedEncryptionData.get("symMode");
+        JSONObject keys =  (JSONObject) requestedEncryptionData.get("encryptionParams");
+
+        this.setAsymEncryptionString(asymMode);
+        this.setSymEncryptionString(symMode);
+
+        if(symMode.equals(Actions.MODE_VIGENERE)){
+            //todo:das geht aber nicht auf der empängerseite !!!!!
+            String key = (String) keys.get("key");
+            this.setSymEncryption(new VigenereCipher(key, EncryptionController.DEFAULT_ALPHABET_MODE));
+        }else if (symMode.equals(Actions.MODE_AFFINE)){
+            String t = (String) keys.get("t");
+            String k = (String) keys.get("k");
+            this.setSymEncryption(new AffineCipher(k,t,EncryptionController.DEFAULT_ALPHABET_MODE));
+        }
+
+        this.requestedEncryptionData = requestedEncryptionData;
+
     }
 
-    public ISymmetricEncryption getCurrentSymEncryption() {
-        return currentSymEncryption;
+
+    public JSONObject getEncryptedEncryptionData()
+    {
+
+
+        JSONObject requestedEncryptionData = (JSONObject) this.getRequestedEncryptionData().clone();
+        JSONObject keys = (JSONObject) requestedEncryptionData.get("encryptionParams");
+        String symMode = this.getSymEncryptionString();
+        String asymMode = this.getAsymEncryptionString();
+
+        if(symMode.equals(Actions.MODE_VIGENERE)){
+            String key = (String) keys.get("key");
+            keys.remove("key");
+            keys.put("encryptedKey", this.getEncryptedStringForCurrentAsymMode(asymMode, key));
+            requestedEncryptionData.put("encryptionParams", keys);
+            return requestedEncryptionData;
+        }else if (symMode.equals(Actions.MODE_AFFINE)){
+            JSONObject jsonNew = new JSONObject();
+            jsonNew.put("t",keys.get("t"));
+            jsonNew.put("k",keys.get("k")) ;
+            keys.remove("t");
+            keys.remove("k");
+            keys.put("encryptedKey", this.getEncryptedStringForCurrentAsymMode(asymMode,jsonNew.toString()));
+            requestedEncryptionData.put("encryptionParams",keys);
+            return requestedEncryptionData;
+        }
+
+        return requestedEncryptionData;
     }
 
-    public void setCurrentSymEncryption(ISymmetricEncryption currentSymEncryption) {
-        this.currentSymEncryption = currentSymEncryption;
+
+
+    private String getEncryptedStringForCurrentAsymMode(String mode, String s)
+    {
+        if(mode.equals(Actions.MODE_RSA)){
+            return ClientData.getInstance().getRSA().encrypt(s,this.getPublicRSAKeyMap());
+        }else if(mode.equals(Actions.MODE_ELGAMAL)){
+            return ClientData.getInstance().getElGamal().encrypt(s,this.getPublicElGamalKeyMap());
+        }
+        return null;
+
+    }
+
+
+    public ISymmetricEncryption getSymEncryption() {
+        return symEncryption;
+    }
+
+    public void setSymEncryption(ISymmetricEncryption symEncryption) {
+        this.symEncryption = symEncryption;
+    }
+
+    public String getAsymEncryptionString() {
+        return asymEncryptionString;
+    }
+
+    public void setAsymEncryptionString(String asymEncryptionString) {
+        this.asymEncryptionString = asymEncryptionString;
+    }
+
+    public String getSymEncryptionString() {
+        return symEncryptionString;
+    }
+
+    public void setSymEncryptionString(String symEncryptionString) {
+        this.symEncryptionString = symEncryptionString;
     }
 
     public String getId() {
@@ -118,7 +207,6 @@ public class RemoteClient {
         return ip;
     }
 
-
     public InetAddress getServerAdress() {
         return serverAdress;
     }
@@ -126,7 +214,5 @@ public class RemoteClient {
     public void setServerAdress(InetAddress serverAdress) {
         this.serverAdress = serverAdress;
     }
-
-
 
 }

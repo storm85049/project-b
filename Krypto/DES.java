@@ -172,6 +172,12 @@ public class DES implements ISymmetricEncryption{
         keyMap.put("key", tempKeyWithZeroes);
       //  System.out.println(Long.toBinaryString(key));
     }
+
+    @Override
+    public String getModeSpecificKey() {
+        return this.key.toString();
+    }
+
     // Calculates the 16 Subkeys for DES
     private List<String> calculateSubKeys(){
         String permutatedKey = "";

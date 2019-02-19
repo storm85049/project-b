@@ -3,8 +3,6 @@ package client;
 import Krypto.ElGamal;
 import Krypto.RSA;
 
-import Krypto.ElGamal;
-import Krypto.RSA;
 import org.json.simple.JSONObject;
 
 import java.net.InetAddress;
@@ -17,6 +15,8 @@ public class ClientData{
     private String ip = null;
     private InetAddress serverAdress = null;
     private String idFromOpenChat = null;
+    private String idFromLastRequest = null;
+
     private String asymmetricEncryptionFromOpenChat = null;
     private String symmetricEncryptionFromOpenChat = null;
     private JSONObject symmetricEncryptionParameters = null;
@@ -48,7 +48,7 @@ public class ClientData{
 
 
 
-    public RemoteClient getAvailableChatById(String id)
+    public RemoteClient getRemoteClientById(String id)
     {
         if(this.availableChats.containsKey(id)){
             return this.availableChats.get(id);
@@ -60,6 +60,24 @@ public class ClientData{
     {
         if(!this.availableChats.containsKey(remoteClient.getId()))
             this.availableChats.put(remoteClient.getId(), remoteClient);
+
+    }
+
+
+    public String getIdFromLastRequest() {
+        return idFromLastRequest;
+    }
+
+    public void setIdFromLastRequest(String idFromLastRequest) {
+        this.idFromLastRequest = idFromLastRequest;
+    }
+
+    public RemoteClient getRemoteClientFromOpenChat()
+    {
+        String id = this.getIdFromOpenChat();
+        if(id.isEmpty())
+            return null;
+        return this.getRemoteClientById(id);
 
     }
 

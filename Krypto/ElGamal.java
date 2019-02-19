@@ -1,5 +1,7 @@
 package Krypto;
 
+import util.Actions;
+
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,6 +67,7 @@ public class ElGamal implements IAsymmetricEncryption {
         BigInteger j = gInt.modPow(y, moduloInt);
         publicKeyMap.put("public_key_j",j.toString());
 
+        //hier muss das der chatpartner mitbekommen
         return StringAndIntTransformation.intToAscii(mTextInt.multiply(iInt.modPow(y,
                 moduloInt)).toString());
     }
@@ -153,5 +156,10 @@ public class ElGamal implements IAsymmetricEncryption {
     @Override
     public void addExternalKeys(String keyJ) {
         externalPublicKeyJ = keyJ;
+    }
+
+    @Override
+    public String toString() {
+        return Actions.MODE_ELGAMAL;
     }
 }

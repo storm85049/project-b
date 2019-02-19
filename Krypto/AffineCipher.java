@@ -1,4 +1,6 @@
 package Krypto;
+import util.Actions;
+
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +37,13 @@ public class AffineCipher implements ISymmetricEncryption {
     private String mode;
     private Map<String, String> keyMap = new HashMap<>();
 
+
+    /**
+     *
+     * @param k
+     * @param t
+     * @param mode
+     */
     public AffineCipher(String k, String t, String mode){ // Mode should be: ASCII or ABC
         setAlphabetMode(mode);
         this.k = new BigInteger(k);
@@ -47,6 +56,7 @@ public class AffineCipher implements ISymmetricEncryption {
         keyMap.put("key_t", t);
         this.mode = mode;
     }
+
     public AffineCipher(){} // Constructor for Empty Initialization
 
     public AffineCipher(String mode){ // Constructor for generation of a Random key
@@ -159,5 +169,15 @@ public class AffineCipher implements ISymmetricEncryption {
         this.t = t;
         keyMap.put("key_k", k.toString());
         keyMap.put("key_t", t.toString());
+    }
+
+    @Override
+    public String getModeSpecificKey() {
+        return "t: " + t +  ", k: " + k + ", p: " + p;
+    }
+
+    @Override
+    public String toString() {
+        return Actions.MODE_AFFINE;
     }
 }

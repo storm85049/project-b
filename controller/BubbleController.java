@@ -3,15 +3,11 @@ package controller;
 import client.ClientData;
 import client.RemoteClient;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -38,12 +34,7 @@ public HBox mainPane;
     public void initialize(URL location, ResourceBundle resources) {
 
 
-        mainPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                handleButtonPress(mainPane);
-            }
-        });
+        mainPane.setOnMouseClicked(event -> handleButtonPress(mainPane));
     }
 
 
@@ -76,15 +67,16 @@ public HBox mainPane;
     {
 
         String requestedID = box.getId();
+        RemoteClient remoteClient = ClientData.getInstance().getRemoteClientById(requestedID);
 
-        String otherClientsName = ClientData.getInstance().getAvailableChatById(requestedID).getName();
-        ClientData.getInstance().getAvailableChatById(requestedID).setUnreadMessages(0);
+        String otherClientsName = remoteClient.getName();
+        remoteClient.setUnreadMessages(0);
         Text messageCount = (Text) box.getChildren().get(COUNT_INDEX);
         messageCount.setVisible(false);
         messageCount.setManaged(false);
         ClientData.getInstance().setIdFromOpenChat(requestedID);
 
-        if (ClientData.getInstance().getAvailableChatById(ClientData.getInstance().getIdFromOpenChat()).getChatHistory() == null) {
+        if (!remoteClient.isEncryptionSet()) {
             ModalUtil.showEncryptionOptions(this.getClass());
         }
 
@@ -92,7 +84,6 @@ public HBox mainPane;
 
         //no chat available yet todo: set and send public/private key
 
-        RemoteClient remoteClient = ClientData.getInstance().getAvailableChatById(requestedID);
         Text topName = (Text) ChatViewUtil.find("topName");
         topName.setText(otherClientsName);
 
@@ -106,8 +97,6 @@ public HBox mainPane;
 
             chatBox.setAlignment(Pos.CENTER);
             chatBox.getChildren().addAll(welcomeText);
-
-
         }
         else{
             //load chat into view
@@ -123,17 +112,18 @@ public HBox mainPane;
     {
 
         for(JSONObject json : chatHistory){
-            JSONObject jsonObject = (JSONObject)json.get("message");
-            String message = (String)jsonObject.get("kryptoMessage");
-            String fromID  = (String)jsonObject.get("fromID");
-            String toID = (String)jsonObject.get("toID");
+            String encrypted= (String)json.get("message");
+            String decrypted = (String)json.get("decryptedMessage");
+            String fromID  = (String)json.get("fromID");
+            String toID = (String)json.get("toID");
 
-            Text text=new Text(message);
+            Text text=new Text(decrypted);
             text.getStyleClass().add("message");
             TextFlow tempFlow=new TextFlow();
             tempFlow.getChildren().add(text);
             TextFlow flow=new TextFlow(tempFlow);
             HBox hbox=new HBox(12);
+            Tooltip tooltip = new Tooltip("encrypted -> " + encrypted);
 
             VBox chatBox = (VBox)ChatViewUtil.find("chatBox");
             ScrollPane scrollPane = (ScrollPane)ChatViewUtil.find("scrollPane");
@@ -154,6 +144,7 @@ public HBox mainPane;
             tempFlow.maxWidthProperty().bind(scrollPane.widthProperty().divide(2));
             flow.maxWidthProperty().bind(scrollPane.widthProperty().divide(2));
             hbox.getStyleClass().add("hbox");
+            Tooltip.install(hbox,tooltip);
             Platform.runLater(() -> chatBox.getChildren().addAll(hbox));
         }
     }

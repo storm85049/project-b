@@ -1,0 +1,15 @@
+
+
+
+beim klicken auf einen anderen chat 
+	. prüfe, ob im remoteclient verschlüsselung ausgewählt ist -> asymm, symm, symmData (Klartext Key/Klartext t & k, usw.) 
+		wenn ja, nehme genau die daten - also verschlüssel mit dem symmetrischen schlüssel des anderen die nachricht
+		wenn nein, encryptionoptions öffnen.//checks durchführen ob alle gestzt ist. Dann bei absenden dem anderen einen request schicken, den dieser bestätigt und sieht, was für schlüssel wie ausgetauscht werden. 
+
+
+
+		from 
+		to 
+		asymModus 
+		symModus 
+		encryptedKey

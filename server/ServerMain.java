@@ -50,7 +50,7 @@ public class ServerMain{
         JSONObject json = (JSONObject)o;
         String action = (String)json.get("action");
         switch (action){
-            case (Actions.ACTION_LOGIN_REQUEST):
+            case (Actions.ACTION_INIT_LOGIN):
                 serverActionManager.setServerActionResolver(new ServerLoginAction(out));break;
             case (Actions.ACTION_CLOSE_APPLICATION):
                 serverActionManager.setServerActionResolver(new ServerLogoutAction());break;
@@ -58,6 +58,10 @@ public class ServerMain{
                 serverActionManager.setServerActionResolver(new ServerSendOpenChatsAction());break;
             case(Actions.ACTION_SEND_MESSAGE):
                 serverActionManager.setServerActionResolver(new SendMessageAction());break;
+            case(Actions.ACTION_SEND_LOGIN_REQUEST_NAME):
+                serverActionManager.setServerActionResolver(new ServerLoginNameAction(out));break;
+            case(Actions.ACTION_INIT_ENCRYPTED_CHAT_REQUEST):
+                serverActionManager.setServerActionResolver(new ServerForwardChatRequest());break;
 
         }
         serverActionManager.resolve(json,this);
@@ -87,6 +91,20 @@ public class ServerMain{
         return connectedClients;
     }
 
+
+
+    public ConnectedClient getConnectedClientById(String id)
+    {
+        for (ConnectedClient connectedClient : this.connectedClients) {
+            String possibleID = connectedClient.getId();
+            if(id.equals(possibleID)){
+                return connectedClient;
+            }
+        }return  null;
+    }
+
+
+
     public synchronized ArrayList<ConnectedClient> getConnectedClientsByID(ArrayList<String> ids)
     {
         ArrayList<ConnectedClient> tmpList = new ArrayList<>();
@@ -105,6 +123,7 @@ public class ServerMain{
     {
         connectedClients.add(c);
     }
+
     public synchronized boolean hasClientById(String id )
     {
         for (ConnectedClient connectedClient : this.connectedClients) {

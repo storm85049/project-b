@@ -10,6 +10,7 @@ import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -22,6 +23,7 @@ import oop.client.LoginAction;
 import org.json.simple.JSONObject;
 import util.Actions;
 import util.JSONUtil;
+import util.ModalUtil;
 
 import java.net.URL;
 import java.util.Observable;
@@ -41,19 +43,27 @@ public class LoginController  implements Initializable, Observer, IController {
     private Label keyStatus;
     @FXML
     private Label privateKey;
+    @FXML
+    private Button loginBtn;
+
+
+
 
     private int maxVisibleLengthOfKeys = 25;
     private ActionManager actionManager = new ActionManager();
 
-    public void sendLoginRequest(){
+    public void initLogin(){
 
         spinnerImage.setVisible(true);
+        loginBtn.setDisable(true);
+        inputField.setDisable(true);
+
         String name = StringUtils.trimWhitespace(inputField.getText());
 
         Task<Void> initAsymm = new Task<Void>(){
             @Override
             protected Void call() throws Exception {
-
+                //todo:disable buttons when keys are generating
                 updateMessage("Generating EL Gamal Key");
                 ElGamal elGamal = new ElGamal();
                 ClientData.getInstance().setElGamal(elGamal);
@@ -61,7 +71,7 @@ public class LoginController  implements Initializable, Observer, IController {
                 String publicEG = elGamal.getPublicKey().substring(0,maxVisibleLengthOfKeys) + "...";
                 updateMessage("EL Gamal Private Key: " + privateEG);
                 updateTitle("EL Gamal Public Key: " + publicEG);
-                Thread.sleep(1000);
+                //Thread.sleep(1000);
                 updateMessage("Generating RSA Key");
                 updateTitle("");
                 RSA rsa = new RSA();
@@ -71,7 +81,7 @@ public class LoginController  implements Initializable, Observer, IController {
 
                 updateMessage("RSA Private Key: " + privatersa);
                 updateTitle("RSA Public Key: " + publicrsa);
-                Thread.sleep(1000);
+                //Thread.sleep(1000);
                 updateMessage("Launching App...");
                 updateTitle("");
 
@@ -100,12 +110,27 @@ public class LoginController  implements Initializable, Observer, IController {
         inputField.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent event) {
-                    if(event.getCode() == KeyCode.ENTER){
-                        sendLoginRequest();
+                    if(event.getCode() == KeyCode.ENTER && !inputField.getText().isEmpty()){
+                        sendLoginRequestName();
                     }
                 }
         });
     }
+
+
+    public void sendLoginRequestName()
+    {
+
+        spinnerImage.setVisible(true);
+        String name = StringUtils.trimWhitespace(inputField.getText());
+        JSONObject json = JSONUtil.getLoginRequestNameJSON(name);
+        ObjectIOSingleton.getInstance().init();
+        ObjectIOSingleton.getInstance().sendToServer(json);
+    }
+
+
+
+
 
     @Override
     public void update(Observable o, Object arg) {
@@ -114,7 +139,11 @@ public class LoginController  implements Initializable, Observer, IController {
         AtomicBoolean execute = new AtomicBoolean(false);
             Platform.runLater(()->{
                 switch (action){
-                    case (Actions.ACTION_LOGIN_RESPONSE):
+                    case (Actions.ACTION_LOGIN_FAILED):
+                        this.showLoginFailed();break;
+                    case(Actions.ACTION_LOGIN_GRANTED):
+                        initLogin();break;
+                    case (Actions.ACTION_INIT_LOGIN_RESPONSE):
                         actionManager.setActionResolver(new LoginAction());
                         execute.set(true);
                         break;
@@ -126,6 +155,17 @@ public class LoginController  implements Initializable, Observer, IController {
             });
 
     }
+
+
+    private void showLoginFailed()
+    {
+        ModalUtil.showLoginError();
+        spinnerImage.setVisible(false);
+        inputField.setText("");
+        loginBtn.setDisable(false);
+        inputField.setDisable(false);
+    }
+
 
     @Override
     public Pane getPane()

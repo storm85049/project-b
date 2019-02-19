@@ -19,20 +19,10 @@ import javafx.stage.Stage;
 import org.json.simple.JSONObject;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class ModalUtil{
 
-    private static ModalUtil instance;
-
-    public ModalUtil() {
-    }
-
-    public static ModalUtil getInstance() {
-        if(ModalUtil.instance == null){
-            ModalUtil.instance = new ModalUtil();
-        }
-        return ModalUtil.instance;
-    }
 
 
     public static void showLoginError(){
@@ -48,13 +38,35 @@ public class ModalUtil{
 
     }
 
-    public static void showEncryptionOptions(Class callingClass) {
+
+
+    public static void showEncryptionOptions(Class callingClass)
+    {
         try {
-            Parent root = FXMLLoader.load(callingClass.getClassLoader().getResource(MainViewController.ENCRYPTION_DIALOG_MAIN));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(callingClass.getClassLoader().getResource(MainViewController.ENCRYPTION_DIALOG_MAIN)));
             Stage secondStage = new Stage();
             Scene scene = new Scene(root);
             secondStage.setScene(scene);
-            secondStage.setTitle("Test");
+            secondStage.setTitle("Please choose your encryption mode");
+            secondStage.setAlwaysOnTop(true);
+            secondStage.show();
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+    public static void showInitChatRequest(Class callingClass) {
+        try {
+            Parent root = FXMLLoader.load(Objects.requireNonNull(callingClass.getClassLoader().getResource(MainViewController.ENCRYPTION_DIALOG_INFO_REQUEST)));
+            Stage secondStage = new Stage();
+            Scene scene = new Scene(root);
+            secondStage.setScene(scene);
+            secondStage.setTitle("New chat request");
+            secondStage.setAlwaysOnTop(true);
             secondStage.show();
 
         } catch (IOException e){

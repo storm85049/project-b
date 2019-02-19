@@ -31,27 +31,12 @@ public class ServerLoginAction implements ServerActionResolver {
         Map<String,String> rsaPublicKeyMap = (Map<String,String>) jsonIN.get("publicRSAKeyMap");
         Map<String,String> elGamalPublicKeyMap = (Map<String,String>) jsonIN.get("publicElGamalKeyMap");
 
-        if(isNameAvailable(name,serverMain)){
-            ConnectedClient client = new ConnectedClient(name,id,ip,rsaPublicKeyMap,elGamalPublicKeyMap,out);
-            jsonOut = JSONUtil.getLoginResponseJSON(name,id, Actions.ACTION_LOGIN_GRANTED,serverMain.getConnectedClients());
-            serverMain.addClient(client);
-            ArrayList<ConnectedClient> receiver = new ArrayList<>();
-            receiver.add(client);
-            serverMain.sendToClients(jsonOut,receiver);
-
-        }else{
-            jsonOut= JSONUtil.getLoginResponseJSON(name,id,Actions.ACTION_LOGIN_FAILED,serverMain.getConnectedClients());
-            serverMain.sendToClients(jsonOut,out);
-        }
-    }
-
-
-    private synchronized boolean isNameAvailable(String name,ServerMain serverMain) {
-        for(ConnectedClient c : serverMain.getConnectedClients()){
-            if(c.getName().equalsIgnoreCase(name)){
-                return false;
-            }
-        }return true;
+       ConnectedClient client = new ConnectedClient(name,id,ip,rsaPublicKeyMap,elGamalPublicKeyMap,out);
+       jsonOut = JSONUtil.getLoginResponseJSON(name,id,serverMain.getConnectedClients());
+       serverMain.addClient(client);
+       ArrayList<ConnectedClient> receiver = new ArrayList<>();
+       receiver.add(client);
+       serverMain.sendToClients(jsonOut,receiver);
     }
 
 

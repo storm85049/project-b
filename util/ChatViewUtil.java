@@ -3,23 +3,17 @@ package util;
 import client.ClientData;
 import client.RemoteClient;
 import controller.BubbleController;
-import controller.ChatController;
 import controller.IController;
 import controller.MainViewController;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.json.simple.JSONObject;
 
-import java.sql.SQLOutput;
 import java.util.*;
 
 public class ChatViewUtil {
@@ -40,8 +34,8 @@ public class ChatViewUtil {
 
     private static void setPublicKeysOfRemoteClient(String id,Map<String,String> publicRSAKeyMap,Map<String,String> publicElGamalKeyMap){
 
-        ClientData.getInstance().getAvailableChatById(id).setPublicElGamalKeyMap(publicElGamalKeyMap);
-        ClientData.getInstance().getAvailableChatById(id).setPublicRSAKeyMap(publicRSAKeyMap);
+        ClientData.getInstance().getRemoteClientById(id).setPublicElGamalKeyMap(publicElGamalKeyMap);
+        ClientData.getInstance().getRemoteClientById(id).setPublicRSAKeyMap(publicRSAKeyMap);
 
 
     }

@@ -13,7 +13,6 @@ public class ServerSendOpenChatsAction implements ServerActionResolver {
         JSONObject json  = JSONUtil.getConnectedClientsJSON(serverMain.getConnectedClients());
         serverMain.sendToClients(json,serverMain.getConnectedClients());
 
-
     }
 
 

@@ -4,6 +4,10 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.util.Map;
 
+/**
+ * This class represents a client and all the important information that belongs to it.
+ * It only contains information that are relevant to the server and therefore held as objects on he server
+ */
 public class ConnectedClient {
     private String name;
     private String id;
