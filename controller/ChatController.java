@@ -189,9 +189,9 @@ public class ChatController implements Initializable, Observer, IController {
                 decryptedKey = ClientData.getInstance().getRSA().decrypt(encryptedKey);
                 break;
             case(Actions.MODE_ELGAMAL):
-                //todo:die crashen noch weil es den key nicht gibt.
-                //ClientData.getInstance().getElGamal().addExternalKeys(remoteClient.getPublicElGamalKeyMap().get("public_key_j"));
-                //decryptedKey = ClientData.getInstance().getElGamal().decrypt(encryptedKey);
+                String publicKeyJ = (String) encryptionParams.get("public_key_j");
+                ClientData.getInstance().getElGamal().addExternalKeys(publicKeyJ);
+                decryptedKey = ClientData.getInstance().getElGamal().decrypt(encryptedKey);
 
                 break;
         }

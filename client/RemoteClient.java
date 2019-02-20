@@ -134,7 +134,6 @@ public class RemoteClient {
             keys.remove("key");
             keys.put("encryptedKey", this.getEncryptedStringForCurrentAsymMode(asymMode, key));
             requestedEncryptionData.put("encryptionParams", keys);
-            return requestedEncryptionData;
         }else if (symMode.equals(Actions.MODE_AFFINE)){
             JSONObject jsonNew = new JSONObject();
             jsonNew.put("t",keys.get("t"));
@@ -143,9 +142,12 @@ public class RemoteClient {
             keys.remove("k");
             keys.put("encryptedKey", this.getEncryptedStringForCurrentAsymMode(asymMode,jsonNew.toString()));
             requestedEncryptionData.put("encryptionParams",keys);
-            return requestedEncryptionData;
         }
 
+        if(asymMode.equals(Actions.MODE_ELGAMAL)){
+            String keyJ = ClientData.getInstance().getElGamal().getPublicKeyMap().get("public_key_j");
+            requestedEncryptionData.put("public_key_j",keyJ );
+        }
         return requestedEncryptionData;
     }
 
