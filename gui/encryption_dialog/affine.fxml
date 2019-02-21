@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../css/style.css">
          <children>
@@ -20,7 +20,7 @@
              <TextField fx:id="affinTField">
                <styleClass>
                   <String fx:value="edgy" />
-                  <String fx:value="mediumBlue" />
+                  <String fx:value="lightgrey" />
                </styleClass>
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -34,7 +34,7 @@
              <TextField fx:id="affinKField">
                <styleClass>
                   <String fx:value="edgy" />
-                  <String fx:value="mediumBlue" />
+                  <String fx:value="lightgrey" />
                </styleClass>
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

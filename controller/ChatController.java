@@ -73,6 +73,10 @@ public class ChatController implements Initializable, Observer, IController {
     @FXML
     Button sendButton;
 
+
+    @FXML
+    private Button encryptionOptionsOpen;
+
     public ChatController(){
 
         ObjectIOSingleton.getInstance().addObserver(this);
@@ -103,11 +107,11 @@ public class ChatController implements Initializable, Observer, IController {
                 }
             });
 
-        sendButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                sendMessage(textInput.getText());
-            }
+        sendButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> sendMessage(textInput.getText()));
+
+
+        encryptionOptionsOpen.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            ModalUtil.showEncryptionOptions(this.getClass());
         });
     }
 

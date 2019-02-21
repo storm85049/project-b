@@ -28,8 +28,10 @@ public class DESFactory implements Initializable {
 
     public void generateDes()
     {
-        DES des = new DES();
+
+        DES des = ClientData.getInstance().getInternalDES();
+        des.generateNew();
         desKey.setText("DES Key : " + des.getKey().toString());
-        ClientData.getInstance().setInternalDES(des);
+
     }
 }

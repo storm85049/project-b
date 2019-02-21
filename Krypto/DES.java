@@ -35,6 +35,14 @@ public class DES implements ISymmetricEncryption{
         invertedSubKeys = invertSubKeys();
     }
 
+    public void generateNew()
+    {
+        generateRandomKey();
+        subKeys = calculateSubKeys();
+        invertedSubKeys = invertSubKeys();
+    }
+
+
     public DES(Map<String, String> keyMap){
         setSelectedKeys(keyMap);
     }

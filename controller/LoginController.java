@@ -1,10 +1,12 @@
 package controller;
 
+import Krypto.DES;
 import Krypto.ElGamal;
 import Krypto.RSA;
 import client.ClientData;
 import client.ObjectIOSingleton;
 import com.sun.deploy.util.StringUtils;
+import com.sun.security.ntlm.Client;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
@@ -63,7 +65,9 @@ public class LoginController  implements Initializable, Observer, IController {
         Task<Void> initAsymm = new Task<Void>(){
             @Override
             protected Void call() throws Exception {
-                //todo:disable buttons when keys are generating
+
+                ClientData.getInstance().setInternalDES(new DES());
+
                 updateMessage("Generating EL Gamal Key");
                 ElGamal elGamal = new ElGamal();
                 ClientData.getInstance().setElGamal(elGamal);
