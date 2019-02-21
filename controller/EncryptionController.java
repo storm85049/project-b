@@ -1,6 +1,7 @@
 package controller;
 
 import Krypto.AffineCipher;
+import Krypto.DES;
 import Krypto.IAsymmetricEncryption;
 import Krypto.RSA;
 import animatefx.animation.Flash;
@@ -35,6 +36,9 @@ public class EncryptionController implements IController, Initializable {
     public static final String AFFINE_CHIFFRE = "Affine Chiffre";
     public static final String VIGENERE_CHIFFRE = "Vigenere Chiffre";
     public static final String HILL_CHIFFRE = "Hill Chiffre";
+    public static final String RC4_CHIFFRE = "RC4 Chiffre";
+    public static final String DES_CHIFFRE = "DES";
+
     public static final String RSA = "RSA";
     public static final String ELGAMAL = "ElGamal";
 
@@ -81,7 +85,9 @@ public class EncryptionController implements IController, Initializable {
             FXCollections.observableArrayList(
                     AFFINE_CHIFFRE,
                     VIGENERE_CHIFFRE,
-                    HILL_CHIFFRE
+                    HILL_CHIFFRE,
+                    RC4_CHIFFRE,
+                    DES_CHIFFRE
             );
 
     private Node find(String selector)
@@ -121,6 +127,8 @@ public class EncryptionController implements IController, Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         encryptionMap.put(AFFINE_CHIFFRE, MainViewController.ENCRYPTION_DIALOG_AFFIN);
         encryptionMap.put(VIGENERE_CHIFFRE, MainViewController.ENCRYPTION_DIALOG_VIGENERE);
+        encryptionMap.put(RC4_CHIFFRE, MainViewController.ENCRYPTION_DIALOG_RC4);
+        encryptionMap.put(DES_CHIFFRE, MainViewController.ENCRYPTION_DIALOG_DES);
         //encryptionMap.put(HILL_CHIFFRE, MainViewController.ENCRYPTION_DIALOG_HILL);   ---> fxml fehlt noch
         symmetricEncryptionComboBox.setItems(symmetricEncryptionOptions);
         asymmetricEncryptionComboBox.setItems(asymmetricEncryptionOptions);
@@ -157,6 +165,8 @@ public class EncryptionController implements IController, Initializable {
          if(s.equals(RSA)) return Actions.MODE_RSA;
          if(s.equals(ELGAMAL)) return Actions.MODE_ELGAMAL;
          if(s.equals(AFFINE_CHIFFRE)) return Actions.MODE_AFFINE;
+         if(s.equals(RC4_CHIFFRE)) return Actions.MODE_RC4;
+         if(s.equals(DES_CHIFFRE)) return Actions.MODE_DES;
          if(s.equals(HILL_CHIFFRE)) return Actions.MODE_HILL;
          if(s.equals(VIGENERE_CHIFFRE)) return Actions.MODE_VIGENERE;
          return "";
@@ -202,6 +212,22 @@ public class EncryptionController implements IController, Initializable {
                     flashInvalid((Label) this.find("vigenereWarning"));
                 }
                 break;
+            case(RC4_CHIFFRE):
+                String rc4Field = ((TextField)this.find("rc4Field")).getText();
+                //if its not 1s and 0s
+                if(!rc4Field.isEmpty()){
+                    return JSONUtil.rc4KeyJson(mode,rc4Field);
+                }else{
+                    flashInvalid((Label)this.find("rc4Warning"));
+                }break;
+            case(DES_CHIFFRE):
+                DES des = ClientData.getInstance().getInternalDES();
+                if(des == null){
+                    flashInvalid((Label) this.find("desWarning"));
+                }else{
+                    Map<String,String> keyMap = des.getKeyMap();
+                    return JSONUtil.desKEYJson(mode,keyMap);
+                }break;
         }
         return null;
     }

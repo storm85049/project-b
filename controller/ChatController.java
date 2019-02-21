@@ -196,22 +196,32 @@ public class ChatController implements Initializable, Observer, IController {
                 break;
         }
 
-        switch (symMode)
-        {
-            case(Actions.MODE_AFFINE):
-                try{
+        switch (symMode) {
+            case (Actions.MODE_AFFINE):
+                try {
                     JSONParser parser = new JSONParser();
                     JSONObject tAndKJson = (JSONObject) parser.parse(decryptedKey);
-                    actualEncryptedKeys.put("t",tAndKJson.get("t"));
-                    actualEncryptedKeys.put("k",tAndKJson.get("k"));
+                    actualEncryptedKeys.put("t", tAndKJson.get("t"));
+                    actualEncryptedKeys.put("k", tAndKJson.get("k"));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
                 break;
-            case(Actions.MODE_VIGENERE):
+            case (Actions.MODE_VIGENERE):
                 actualEncryptedKeys.put("key", decryptedKey);
                 break;
-
+            case (Actions.MODE_RC4):
+                actualEncryptedKeys.put("key", decryptedKey);
+                break;
+            case (Actions.MODE_DES):
+                try {
+                    JSONParser parser = new JSONParser();
+                    JSONObject tAndKJson = (JSONObject) parser.parse(decryptedKey);
+                    actualEncryptedKeys.put("keymap", tAndKJson.get("keymap"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
 
         remoteClient.setRequestedEncryptionData(encryptionParams);

@@ -24,10 +24,10 @@
                         <Insets right="10.0" />
                      </HBox.margin>
                   </Label>
-                  <ComboBox fx:id="asymmetricEncryptionComboBox" prefWidth="150.0" promptText="- Select Item amk - ">
+                  <ComboBox fx:id="asymmetricEncryptionComboBox" nodeOrientation="LEFT_TO_RIGHT" prefWidth="150.0" promptText="select">
                      <styleClass>
                         <String fx:value="edgy" />
-                        <String fx:value="mediumBlue" />
+                        <String fx:value="lightgrey" />
                      </styleClass>
                      <HBox.margin>
                         <Insets right="10.0" />
@@ -41,10 +41,10 @@
                         <Insets right="10.0" />
                      </HBox.margin>
                   </Label>
-                  <ComboBox fx:id="symmetricEncryptionComboBox" prefWidth="150.0" promptText="- Select Item amk - ">
+                  <ComboBox fx:id="symmetricEncryptionComboBox" prefWidth="150.0" promptText="select">
                      <styleClass>
                         <String fx:value="edgy" />
-                        <String fx:value="mediumBlue" />
+                        <String fx:value="lightgrey" />
                      </styleClass>
                   </ComboBox>
                </children>

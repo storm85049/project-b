@@ -87,6 +87,31 @@ public class JSONUtil {
     }
 
 
+    public static JSONObject rc4KeyJson(String asymMode, String key)
+    {
+        JSONObject json = new JSONObject();
+        JSONObject data = new JSONObject();
+        json.put("asymMode",asymMode);
+        json.put("symMode",Actions.MODE_RC4);
+        data.put("key",key);
+        json.put("encryptionParams", data);
+        return  json;
+    }
+
+
+    public static JSONObject desKEYJson(String asymMode, Map<String,String> key)
+    {
+        JSONObject json = new JSONObject();
+        JSONObject data = new JSONObject();
+        json.put("asymMode",asymMode);
+        json.put("symMode",Actions.MODE_DES);
+        data.put("keymap",key);
+        json.put("encryptionParams", data);
+        return  json;
+    }
+
+
+
 
 
     public static JSONObject getMessageSendingJSON(String message, String fromID, String toID)

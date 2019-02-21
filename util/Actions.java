@@ -21,6 +21,9 @@ public class Actions {
 
     public static final String MODE_AFFINE = "mode_affine";
     public static final String MODE_VIGENERE = "mode_vigenere";
+    public static final String MODE_RC4 = "mode_rc4";
+    public static final String MODE_DES = "mode_des";
+
     public static final String MODE_HILL = "mode_hill";
     public static final String MODE_RSA = "rsa";
     public static final String MODE_ELGAMAL = "elgamal";

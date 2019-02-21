@@ -1,5 +1,6 @@
 package client;
 
+import Krypto.DES;
 import Krypto.ElGamal;
 import Krypto.RSA;
 
@@ -17,6 +18,8 @@ public class ClientData{
     private String idFromOpenChat = null;
     private String idFromLastRequest = null;
 
+
+
     private String asymmetricEncryptionFromOpenChat = null;
     private String symmetricEncryptionFromOpenChat = null;
     private JSONObject symmetricEncryptionParameters = null;
@@ -24,6 +27,7 @@ public class ClientData{
     private RSA RSA = null;
     private ElGamal elGamal = null;
 
+    private DES internalDES = null;
 
     /**
      * first String represents id of remoteclient -> makes it easy to query for remoteclient
@@ -47,6 +51,13 @@ public class ClientData{
     }
 
 
+    public DES getInternalDES() {
+        return internalDES;
+    }
+
+    public void setInternalDES(DES internalDES) {
+        this.internalDES = internalDES;
+    }
 
     public RemoteClient getRemoteClientById(String id)
     {

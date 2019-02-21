@@ -22,6 +22,8 @@ public class MainViewController  implements Initializable, IController{
     public static  String ENCRYPTION_DIALOG_INFO_REQUEST = ENCRYPTION_DIALOG + "init_chat_request_popup.fxml";
     public static  String ENCRYPTION_DIALOG_AFFIN = ENCRYPTION_DIALOG + "affine.fxml";
     public static  String ENCRYPTION_DIALOG_VIGENERE = ENCRYPTION_DIALOG + "vigenere.fxml";
+    public static  String ENCRYPTION_DIALOG_RC4 = ENCRYPTION_DIALOG + "rc4.fxml";
+    public static  String ENCRYPTION_DIALOG_DES = ENCRYPTION_DIALOG + "des.fxml";
     public static  String ENCRYPTION_DIALOG_HILL = ENCRYPTION_DIALOG + "hill.fxml";
 
     @FXML

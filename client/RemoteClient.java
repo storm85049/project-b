@@ -106,13 +106,18 @@ public class RemoteClient {
         this.setSymEncryptionString(symMode);
 
         if(symMode.equals(Actions.MODE_VIGENERE)){
-            //todo:das geht aber nicht auf der empängerseite !!!!!
             String key = (String) keys.get("key");
             this.setSymEncryption(new VigenereCipher(key, EncryptionController.DEFAULT_ALPHABET_MODE));
         }else if (symMode.equals(Actions.MODE_AFFINE)){
             String t = (String) keys.get("t");
             String k = (String) keys.get("k");
             this.setSymEncryption(new AffineCipher(k,t,EncryptionController.DEFAULT_ALPHABET_MODE));
+        }else if(symMode.equals(Actions.MODE_RC4)){
+            String key = (String) keys.get("key");
+            this.setSymEncryption(new RC4(key));
+        }else if(symMode.equals(Actions.MODE_DES)){
+            Map<String,String> keyMap =(Map<String,String>)keys.get("keymap");
+            this.setSymEncryption(new DES(keyMap));
         }
 
         this.requestedEncryptionData = requestedEncryptionData;
@@ -142,7 +147,23 @@ public class RemoteClient {
             keys.remove("k");
             keys.put("encryptedKey", this.getEncryptedStringForCurrentAsymMode(asymMode,jsonNew.toString()));
             requestedEncryptionData.put("encryptionParams",keys);
+        }else if(symMode.equals(Actions.MODE_RC4)){
+            String key = (String) keys.get("key");
+            keys.remove("key");
+            keys.put("encryptedKey", this.getEncryptedStringForCurrentAsymMode(asymMode, key));
+            requestedEncryptionData.put("encryptionParams", keys);
+        }else if(symMode.equals(Actions.MODE_DES)) {
+            Map<String, String> keymap = (Map<String, String>) keys.get("key");
+            keys.remove("key");
+            JSONObject json = new JSONObject();
+            json.put("keyMap",keymap);
+            keys.put("encryptedKey", this.getEncryptedStringForCurrentAsymMode(asymMode, json.toString()));
+            requestedEncryptionData.put("encryptionParams", keys);
+
         }
+
+
+
 
         if(asymMode.equals(Actions.MODE_ELGAMAL)){
             String keyJ = ClientData.getInstance().getElGamal().getPublicKeyMap().get("public_key_j");

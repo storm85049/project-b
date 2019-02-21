@@ -104,7 +104,7 @@ public class RC4 implements ISymmetricEncryption{
 
     @Override
     public String getModeSpecificKey() {
-        return "???not implemented yet???";
+        return this.keyMap.get("key");
     }
 
     private short[] calculateKArray(String key){
