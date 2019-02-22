@@ -114,13 +114,14 @@ public class JSONUtil {
 
 
 
-    public static JSONObject getMessageSendingJSON(String message, String fromID, String toID)
+    public static JSONObject getMessageSendingJSON(String message, String fromID, String toID, String symmode)
     {
         JSONObject json = new JSONObject();
         json.put("action", Actions.ACTION_SEND_MESSAGE);
         json.put("message" , message);
         json.put("fromID" , fromID);
         json.put("toID" , toID);
+        json.put("symMode" ,symmode);
 
         Date date = new Date();
         String strDateFormat = "hh:mm:ss a";

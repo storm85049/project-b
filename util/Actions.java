@@ -28,6 +28,8 @@ public class Actions {
     public static final String MODE_RSA = "rsa";
     public static final String MODE_ELGAMAL = "elgamal";
 
+    public static final String REFERRER_CREATE = "create";
+    public static final String REFERRER_UPDATE = "update";
 
 
 

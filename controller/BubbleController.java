@@ -13,6 +13,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.json.simple.JSONObject;
+import util.Actions;
 import util.ChatViewUtil;
 import util.ModalUtil;
 
@@ -52,11 +53,9 @@ public HBox mainPane;
             ChatViewUtil.find(activeID).getStyleClass().remove("active");
         }
         box.getStyleClass().add("active");
-        //check if a mode is selected ... wait for max implementation
-
 
         this.initChat(box);
-        //change out keys and shit
+
 
 
 
@@ -92,7 +91,7 @@ public HBox mainPane;
 
         if(remoteClient.getChatHistory() == null){
             Text welcomeText = new Text("Type to start chatting with " + otherClientsName);
-            welcomeText.setId("welcomeText");
+             welcomeText.setId("welcomeText");
             welcomeText.setFont(Font.font("Agency FB",20));
 
             chatBox.setAlignment(Pos.CENTER);

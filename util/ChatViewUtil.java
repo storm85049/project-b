@@ -6,6 +6,7 @@ import controller.BubbleController;
 import controller.IController;
 import controller.MainViewController;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -54,6 +55,8 @@ public class ChatViewUtil {
             if(  users.get(id) instanceof JSONObject ){
                 JSONObject json = (JSONObject) users.get(id);
 
+                //todo:.eigentlich nur den einen neuen hinzufügen, nicht die ganze liste  neu bzw wenn, dann nicht die publickeys neu setten
+
                 if(ClientData.getInstance().getId().equalsIgnoreCase(id)) continue;
 
                 String name = (String) json.get("name");
@@ -67,6 +70,8 @@ public class ChatViewUtil {
             }
 
         }
+
+        boolean lastOneStillOnline = false;
 
         for (Map.Entry<String, String> entry : dataSet.entrySet()) {
 
@@ -86,11 +91,46 @@ public class ChatViewUtil {
             String possibleOpenChat = ClientData.getInstance().getIdFromOpenChat();
             if(possibleOpenChat != null && possibleOpenChat.equals(id)){
                 buttonBox.getStyleClass().addAll("active");
+                lastOneStillOnline = true;
             }
             tmp.getChildren().add(buttonBox);
+        }
+        if(!lastOneStillOnline && ClientData.getInstance().getIdFromOpenChat() != null ){
+            HashMap<String, RemoteClient> falseList = ClientData.getInstance().getAvailableChats();
 
+            for (String id: falseList.keySet()) {
+
+                if(!dataSet.containsValue(id)){
+
+                    //the active chat went offline
+                    String idFromOpenChat = ClientData.getInstance().getIdFromOpenChat();
+
+                    String name = ClientData.getInstance().getRemoteClientById(idFromOpenChat).getName();
+                    ClientData.getInstance().setIdFromOpenChat(null);
+                    ClientData.getInstance().removeRemoteClientById(id);
+
+                    Text topName = (Text) ChatViewUtil.find("topName");
+                    topName.setText("active Chat");
+                    VBox chatBox = (VBox)ChatViewUtil.find("chatBox");
+                    chatBox.getChildren().clear();
+
+                    Text welcomeText = new Text(name + " is offline... chat with someone else!");
+
+                    welcomeText.setId("welcomeText");
+                    welcomeText.setFont(Font.font("Agency FB",20));
+
+                    chatBox.setAlignment(Pos.CENTER);
+                    chatBox.getChildren().addAll(welcomeText);
+
+
+
+                    break;
+                }
+            }
 
         }
+
+
         if(tmp.getChildren().size() <= 0){
             Text t = new Text("no one is online");
             t.setManaged(true);

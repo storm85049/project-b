@@ -43,6 +43,9 @@ public class EncryptionController implements IController, Initializable {
     public static final String ELGAMAL = "ElGamal";
 
 
+
+
+
     public static final String DEFAULT_ALPHABET_MODE = "ABC";
     private static Map <String, String> encryptionMap = new HashMap<>();
     private static JSONObject encryptedMessage = new JSONObject();
@@ -222,7 +225,7 @@ public class EncryptionController implements IController, Initializable {
                 }break;
             case(DES_CHIFFRE):
                 DES des = ClientData.getInstance().getInternalDES();
-                if(des == null){
+                if(des == null){ // if generate wasnt clicked
                     flashInvalid((Label) this.find("desWarning"));
                 }else{
                     Map<String,String> keyMap = des.getKeyMap();
@@ -239,6 +242,12 @@ public class EncryptionController implements IController, Initializable {
         which.setVisible(true);
         new Flash(which).play();
     }
+
+
+
+
+
+
 
 }
 

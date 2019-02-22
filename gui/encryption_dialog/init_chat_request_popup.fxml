@@ -35,7 +35,7 @@
    <top>
       <VBox alignment="CENTER">
          <children>
-            <Label text="New Chat Request !" textFill="WHITE">
+            <Label fx:id="header" text="New Chat Request !" textFill="WHITE">
                <font>
                   <Font name="Agency FB" size="32.0" />
                </font>

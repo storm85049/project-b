@@ -3,6 +3,8 @@ package util;
 import Krypto.ElGamal;
 import Krypto.IAsymmetricEncryption;
 import Krypto.RSA;
+import controller.ChatInfoController;
+import controller.EncryptionController;
 import controller.MainViewController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -59,9 +61,16 @@ public class ModalUtil{
 
 
 
-    public static void showInitChatRequest(Class callingClass) {
+    public static void showInitChatRequest(Class callingClass, String referrer) {
         try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(callingClass.getClassLoader().getResource(MainViewController.ENCRYPTION_DIALOG_INFO_REQUEST)));
+
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(callingClass.getClassLoader().getResource(MainViewController.ENCRYPTION_DIALOG_INFO_REQUEST)));
+            Parent root = loader.load();
+
+            ChatInfoController ctrl = loader.getController();
+            ctrl.setReferer(referrer);
+
+
             Stage secondStage = new Stage();
             Scene scene = new Scene(root);
             secondStage.setScene(scene);

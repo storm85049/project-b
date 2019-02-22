@@ -15,7 +15,7 @@ public class RemoteClient {
     private String asymEncryptionString = null;
     private String symEncryptionString = null;
     private ISymmetricEncryption symEncryption = null;
-
+    private Map<String,String> desKeyMap = null;
     private JSONObject requestedEncryptionData = null;
     private String encryptionStatus;
 
@@ -78,7 +78,13 @@ public class RemoteClient {
     }
 
 
+    public Map<String, String> getDesKeyMap() {
+        return desKeyMap;
+    }
 
+    public void setDesKeyMap(Map<String, String> desKeyMap) {
+        this.desKeyMap = desKeyMap;
+    }
 
     public ArrayList<JSONObject> getChatHistory()
     {
@@ -108,16 +114,21 @@ public class RemoteClient {
         if(symMode.equals(Actions.MODE_VIGENERE)){
             String key = (String) keys.get("key");
             this.setSymEncryption(new VigenereCipher(key, EncryptionController.DEFAULT_ALPHABET_MODE));
+            this.setSymEncryptionString(Actions.MODE_VIGENERE);
         }else if (symMode.equals(Actions.MODE_AFFINE)){
             String t = (String) keys.get("t");
             String k = (String) keys.get("k");
             this.setSymEncryption(new AffineCipher(k,t,EncryptionController.DEFAULT_ALPHABET_MODE));
+            this.setSymEncryptionString(Actions.MODE_AFFINE);
         }else if(symMode.equals(Actions.MODE_RC4)){
             String key = (String) keys.get("key");
             this.setSymEncryption(new RC4(key));
+            this.setSymEncryptionString(Actions.MODE_RC4);
         }else if(symMode.equals(Actions.MODE_DES)){
             Map<String,String> keyMap =(Map<String,String>)keys.get("keymap");
-            this.setSymEncryption(new DES(keyMap));
+            ClientData.getInstance().getInternalDES().setSelectedKeys(keyMap);
+            this.setDesKeyMap(keyMap);
+            this.setSymEncryptionString(Actions.MODE_DES);
         }
 
         this.requestedEncryptionData = requestedEncryptionData;
@@ -153,10 +164,10 @@ public class RemoteClient {
             keys.put("encryptedKey", this.getEncryptedStringForCurrentAsymMode(asymMode, key));
             requestedEncryptionData.put("encryptionParams", keys);
         }else if(symMode.equals(Actions.MODE_DES)) {
-            Map<String, String> keymap = (Map<String, String>) keys.get("key");
+            Map<String, String> keymap = (Map<String, String>) keys.get("keymap");
             keys.remove("key");
             JSONObject json = new JSONObject();
-            json.put("keyMap",keymap);
+            json.put("keymap",keymap);
             keys.put("encryptedKey", this.getEncryptedStringForCurrentAsymMode(asymMode, json.toString()));
             requestedEncryptionData.put("encryptionParams", keys);
 

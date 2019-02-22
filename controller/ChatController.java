@@ -6,15 +6,18 @@ import client.ObjectIOSingleton;
 import client.RemoteClient;
 import com.sun.deploy.util.StringUtils;
 import com.sun.org.apache.bcel.internal.generic.InstructionConstants;
+import com.sun.org.apache.xml.internal.utils.StringBufferPool;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -73,6 +76,10 @@ public class ChatController implements Initializable, Observer, IController {
     @FXML
     Button sendButton;
 
+    @FXML
+    private Text welcomeText;
+
+
 
     @FXML
     private Button encryptionOptionsOpen;
@@ -113,6 +120,12 @@ public class ChatController implements Initializable, Observer, IController {
         encryptionOptionsOpen.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             ModalUtil.showEncryptionOptions(this.getClass());
         });
+
+
+
+
+
+
     }
 
 
@@ -132,9 +145,17 @@ public class ChatController implements Initializable, Observer, IController {
         //encrypt message here
 
         RemoteClient remoteClient = ClientData.getInstance().getRemoteClientById(to);
-        String encrypted = remoteClient.getSymEncryption().encrypt(message);
 
-        JSONObject json = JSONUtil.getMessageSendingJSON(encrypted, from, to);
+        String encrypted;
+        if(remoteClient.getSymEncryptionString().equals(Actions.MODE_DES)){
+            ClientData.getInstance().getInternalDES().setSelectedKeys(remoteClient.getDesKeyMap());
+            encrypted = ClientData.getInstance().getInternalDES().encrypt(message);
+        }else{
+            encrypted  = remoteClient.getSymEncryption().encrypt(message);
+        }
+        String symMode = remoteClient.getSymEncryptionString();
+
+        JSONObject json = JSONUtil.getMessageSendingJSON(encrypted, from, to, symMode);
         ObjectIOSingleton.getInstance().sendToServer(json);
 
         json.put("decryptedMessage", message);
@@ -196,7 +217,6 @@ public class ChatController implements Initializable, Observer, IController {
                 String publicKeyJ = (String) encryptionParams.get("public_key_j");
                 ClientData.getInstance().getElGamal().addExternalKeys(publicKeyJ);
                 decryptedKey = ClientData.getInstance().getElGamal().decrypt(encryptedKey);
-
                 break;
         }
 
@@ -228,12 +248,12 @@ public class ChatController implements Initializable, Observer, IController {
                 break;
         }
 
+        String referrer =  (remoteClient.getRequestedEncryptionData() == null) ?  Actions.REFERRER_CREATE : Actions.REFERRER_UPDATE;
+
         remoteClient.setRequestedEncryptionData(encryptionParams);
         ClientData.getInstance().setIdFromLastRequest(from);
 
-
-
-        ModalUtil.showInitChatRequest(this.getClass());
+        ModalUtil.showInitChatRequest(this.getClass(),referrer);
 
 
     }
@@ -257,7 +277,12 @@ public class ChatController implements Initializable, Observer, IController {
         //json = encryptionController.decryptMessage(json);
         String openChatID = ClientData.getInstance().getIdFromOpenChat();
         String fromID = (String)json.get("fromID");
-        String decrypted = ClientData.getInstance().getRemoteClientById(fromID).getSymEncryption().decrypt((String) json.get("message"));
+        String decrypted;
+        if(json.get("symMode").equals(Actions.MODE_DES)){
+            decrypted = ClientData.getInstance().getInternalDES().decrypt((String) json.get("message"));
+        }else{
+            decrypted = ClientData.getInstance().getRemoteClientById(fromID).getSymEncryption().decrypt((String) json.get("message"));
+        }
         json.put("decryptedMessage", decrypted);
 
         ClientData.getInstance().getRemoteClientById(fromID).addMessageToChatHistory(json);
@@ -291,7 +316,11 @@ public class ChatController implements Initializable, Observer, IController {
 
         String decrypted = "";
         if(sendingOrReceiving.equals(Actions.ACTION_RECEIVING)){
-            decrypted = ClientData.getInstance().getRemoteClientById(from).getSymEncryption().decrypt(message);
+            if(json.get("symMode").equals(Actions.MODE_DES)){
+                decrypted = ClientData.getInstance().getInternalDES().decrypt((String) json.get("message"));
+            }else{
+                decrypted = ClientData.getInstance().getRemoteClientById(from).getSymEncryption().decrypt(message);
+            }
         }
         else{
             decrypted = (String) json.get("decryptedMessage");
@@ -301,6 +330,7 @@ public class ChatController implements Initializable, Observer, IController {
 
 
         Text t = (Text)(ChatViewUtil.find("welcomeText"));
+
         if(t!= null){
             t.setManaged(false);
             t.setVisible(false);

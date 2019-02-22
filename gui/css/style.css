@@ -28,10 +28,6 @@
 	-fx-background-color: #375c82 !important;
 }
 
-.lightBlue:hover{
-	-fx-background-color: #4f6b82 !important;
-}
-
 .bubbleBackground.active,
 .bubbleBackground:hover,
 .open .dropdown-toggle.chatbubble { 

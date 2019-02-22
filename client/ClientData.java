@@ -4,6 +4,7 @@ import Krypto.DES;
 import Krypto.ElGamal;
 import Krypto.RSA;
 
+import javafx.beans.property.SimpleStringProperty;
 import org.json.simple.JSONObject;
 
 import java.net.InetAddress;
@@ -17,6 +18,7 @@ public class ClientData{
     private InetAddress serverAdress = null;
     private String idFromOpenChat = null;
     private String idFromLastRequest = null;
+
 
 
 
@@ -40,6 +42,22 @@ public class ClientData{
             ClientData.instance = new ClientData();
         }
         return ClientData.instance;
+    }
+
+
+
+    public void removeRemoteClientById(String id){
+        if(availableChats.containsKey(id)){
+            availableChats.remove(id);
+        }
+    }
+
+    public HashMap<String, RemoteClient> getAvailableChats() {
+        return availableChats;
+    }
+
+    public void setAvailableChats(HashMap<String, RemoteClient> availableChats) {
+        this.availableChats = availableChats;
     }
 
     public InetAddress getServerAdress() {
