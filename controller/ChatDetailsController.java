@@ -3,6 +3,7 @@ package controller;
 import client.ClientData;
 import client.ObjectIOSingleton;
 import client.RemoteClient;
+import controller.logger.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -67,7 +68,6 @@ public class ChatDetailsController implements Initializable, IController {
     public Pane getPane() {
         return this.mainPane;
     }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 

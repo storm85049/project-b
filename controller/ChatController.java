@@ -7,6 +7,7 @@ import client.RemoteClient;
 import com.sun.deploy.util.StringUtils;
 import com.sun.org.apache.bcel.internal.generic.InstructionConstants;
 import com.sun.org.apache.xml.internal.utils.StringBufferPool;
+import controller.logger.Logger;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
@@ -29,6 +30,7 @@ import oop.client.ChatViewAction;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import sun.rmi.runtime.Log;
 import util.Actions;
 import util.ChatViewUtil;
 import util.JSONUtil;
@@ -44,7 +46,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ChatController implements Initializable, Observer, IController {
 
-    private EncryptionController encryptionController = new EncryptionController();
 
     @FXML
     BorderPane mainPane;
@@ -84,15 +85,12 @@ public class ChatController implements Initializable, Observer, IController {
 
     @FXML
     private HBox chatInputs;
-
-
-
-
     @FXML
     private Button infoBtn;
 
     @FXML
     private Button encryptionOptionsOpen;
+
 
     public ChatController(){
 
@@ -123,6 +121,7 @@ public class ChatController implements Initializable, Observer, IController {
                     }
                 }
             });
+        textInput.setPromptText("type your message");
 
 
         chatInputs.visibleProperty().bind(Bindings.isNotNull(ClientData.getInstance().getIdFromOpenChatProperty()));
@@ -132,27 +131,13 @@ public class ChatController implements Initializable, Observer, IController {
         });
 
         sendButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> sendMessage(textInput.getText()));
-
-    /*    sendButton.disableProperty().bind(Bindings.isNull(ClientData.getInstance().getIdFromOpenChatProperty()));
-        textInput.editableProperty().bind(Bindings.isNotNull(ClientData.getInstance().getIdFromOpenChatProperty()));*/
-
         encryptionOptionsOpen.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             ModalUtil.showEncryptionOptions(this.getClass());
         });
 
-
         infoBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             ModalUtil.showChatInfo(this.getClass());
         });
-
-        SimpleStringProperty simpleStringProperty = ClientData.getInstance().getIdFromOpenChatProperty();
-       /* encryptionOptionsOpen.visibleProperty().bind(Bindings.isNotNull(simpleStringProperty));
-        infoBtn.visibleProperty().bind(Bindings.isNotNull(simpleStringProperty));*/
-
-
-
-
-
 
 
     }
@@ -173,8 +158,6 @@ public class ChatController implements Initializable, Observer, IController {
         //encrypt message here
 
         RemoteClient remoteClient = ClientData.getInstance().getRemoteClientById(to);
-
-
 
 
         String encrypted;
@@ -227,6 +210,7 @@ public class ChatController implements Initializable, Observer, IController {
     public Pane getPane() {
         return this.mainPane;
     }
+
 
 
     private void decrypt(JSONObject json)
@@ -286,27 +270,18 @@ public class ChatController implements Initializable, Observer, IController {
         ClientData.getInstance().setIdFromLastRequest(from);
 
         ModalUtil.showInitChatRequest(this.getClass(),referrer);
+        Platform.runLater(()->{
+            Logger.getInstance().setReferrer(referrer);
+            Logger.getInstance().log(Actions.LOG_INIT_CHAT, from);
+        });
 
 
     }
 
 
-  /*  public String decryptAccordingToMode(String s, String asymMode)
-    {
-        switch (asymMode){
-            case(RSA.class.getName()):
-                return ClientData.getInstance().getRSA().decrypt(s);
-            case (ElGamal.class.getName()):
-
-        }
-
-
-
-    }*/
-
     private void handleIncomingMessage(JSONObject json)
     {
-        //json = encryptionController.decryptMessage(json);
+
         String openChatID = ClientData.getInstance().getIdFromOpenChat();
         String fromID = (String)json.get("fromID");
         String decrypted;
@@ -316,6 +291,7 @@ public class ChatController implements Initializable, Observer, IController {
             decrypted = ClientData.getInstance().getRemoteClientById(fromID).getSymEncryption().decrypt((String) json.get("message"));
         }
         json.put("decryptedMessage", decrypted);
+
 
         ClientData.getInstance().getRemoteClientById(fromID).addMessageToChatHistory(json);
 
@@ -347,15 +323,26 @@ public class ChatController implements Initializable, Observer, IController {
         String from = (String) json.get("fromID");
 
         String decrypted = "";
+        String key = "";
         if(sendingOrReceiving.equals(Actions.ACTION_RECEIVING)){
             if(json.get("symMode").equals(Actions.MODE_DES)){
                 decrypted = ClientData.getInstance().getInternalDES().decrypt((String) json.get("message"));
+                key = ClientData.getInstance().getInternalDES().getModeSpecificKey();
             }else{
                 decrypted = ClientData.getInstance().getRemoteClientById(from).getSymEncryption().decrypt(message);
+                key = ClientData.getInstance().getRemoteClientById(from).getSymEncryption().getModeSpecificKey();
             }
         }
         else{
             decrypted = (String) json.get("decryptedMessage");
+        }
+        Logger.getInstance().setLastDecryptedMessage(decrypted);
+        Logger.getInstance().setLastEncryptedMessage(message);
+        Logger.getInstance().setLastSymMode((String) json.get("symMode"));
+        Logger.getInstance().setLastKey(key);
+        if(sendingOrReceiving.equals(Actions.ACTION_RECEIVING)){
+            String name = ClientData.getInstance().getRemoteClientById(from).getName();
+            Logger.getInstance().log(Actions.LOG_REMOTE_MESSAGE, name);
         }
 
 
@@ -404,7 +391,11 @@ public class ChatController implements Initializable, Observer, IController {
 
         Tooltip.install(tempFlow,tooltip);
 
-        Platform.runLater(() -> chatBox.getChildren().addAll(hbox));
+
+        Platform.runLater(()->{
+            chatBox.getChildren().addAll(hbox);
+
+        });
 
 
     }

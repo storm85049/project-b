@@ -42,6 +42,7 @@
 }
 .textfield{
 	-fx-background-insets:0px;
+	-fx-background-color: #dadada;
 }
 .lightgrey{
 	-fx-background-color: #999;

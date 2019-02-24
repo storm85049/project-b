@@ -5,6 +5,7 @@ import client.RemoteClient;
 import controller.BubbleController;
 import controller.IController;
 import controller.MainViewController;
+import controller.logger.Logger;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -95,6 +96,20 @@ public class ChatViewUtil {
             }
             tmp.getChildren().add(buttonBox);
         }
+
+        HashMap<String, RemoteClient> list2 = ClientData.getInstance().getAvailableChats();
+        for(String ident : list2.keySet()){
+            if(!dataSet.containsKey(ident) && !ClientData.getInstance().getId().equals(ident)){
+                if(list2.size() < dataSet.size()){
+
+                    Logger.getInstance().log(Actions.LOG_OFFLINE,ClientData.getInstance().getRemoteClientById(ident).getName());
+                }else{
+                    Logger.getInstance().log(Actions.LOG_ONLINE,ClientData.getInstance().getRemoteClientById(ident).getName());
+
+                }
+            }
+        }
+
         if(!lastOneStillOnline && ClientData.getInstance().getIdFromOpenChat() != null ){
             HashMap<String, RemoteClient> falseList = ClientData.getInstance().getAvailableChats();
 
@@ -108,6 +123,9 @@ public class ChatViewUtil {
                     String name = ClientData.getInstance().getRemoteClientById(idFromOpenChat).getName();
                     ClientData.getInstance().setIdFromOpenChat(null);
                     ClientData.getInstance().removeRemoteClientById(id);
+
+                    //controller.getLogger().log(Actions.LOG_OFFLINE, name);
+
 
                     Text topName = (Text) ChatViewUtil.find("topName");
                     topName.setText("active Chat");

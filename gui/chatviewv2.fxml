@@ -73,7 +73,7 @@
          </children></HBox>
    </bottom>
    <center>
-      <SplitPane dividerPositions="0.6658291457286433" nodeOrientation="LEFT_TO_RIGHT" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <SplitPane dividerPositions="0.7767695099818511" nodeOrientation="LEFT_TO_RIGHT" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="500.0">
                <children>
@@ -125,6 +125,9 @@
                                              <HBox.margin>
                                                 <Insets bottom="5.0" left="5.0" />
                                              </HBox.margin>
+                                             <font>
+                                                <Font name="Agency FB" size="15.0" />
+                                             </font>
                                           </Button>
                                           <Button fx:id="infoBtn" mnemonicParsing="false" prefWidth="80.0" stylesheets="@css/style.css" text="information">
                                              <styleClass>
@@ -134,23 +137,20 @@
                                              <HBox.margin>
                                                 <Insets left="5.0" />
                                              </HBox.margin>
+                                             <font>
+                                                <Font name="Agency FB" size="15.0" />
+                                             </font>
                                           </Button>
                                        </children>
                                     </HBox>
-                                    <TextField fx:id="textInput" layoutY="1.0" prefHeight="25.0" stylesheets="@css/style.css" AnchorPane.leftAnchor="175.0" AnchorPane.rightAnchor="10.0">
+                                    <TextField fx:id="textInput" layoutY="1.0" prefHeight="25.0" styleClass="textfield" stylesheets="@css/style.css" AnchorPane.leftAnchor="175.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="2.0" />
+                                    <Button fx:id="sendButton" layoutX="149.0" minWidth="60.0" mnemonicParsing="false" stylesheets="@css/style.css" text="send" AnchorPane.rightAnchor="10.0">
                                        <styleClass>
-                                          <String fx:value="edgy" />
-                                          <String fx:value="textfield" />
-                                       </styleClass>
-                                    </TextField>
-                                    <Button fx:id="sendButton" layoutX="149.0" minWidth="60.0" mnemonicParsing="false" stylesheets="@css/style.css" text="Senden" AnchorPane.rightAnchor="10.0">
-                                       <styleClass>
-                                          <String fx:value="lightgrey" />
+                                          <String fx:value="lightBlue" />
                                           <String fx:value="btn" />
-                                          <String fx:value="edgy" />
                                        </styleClass>
                                        <font>
-                                          <Font name="Agency FB" size="13.0" />
+                                          <Font name="Agency FB" size="15.0" />
                                        </font>
                                     </Button>
                                  </children>

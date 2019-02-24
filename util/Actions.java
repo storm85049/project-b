@@ -33,4 +33,11 @@ public class Actions {
 
 
 
+    public static final String LOG_INIT_CHAT = "log_init_chat";
+    public static final String LOG_OFFLINE  = "log_offline";
+    public static final String LOG_ONLINE  = "log_online";
+    public static final String LOG_REMOTE_MESSAGE  = "log_remote_message";
+
+
+
 }

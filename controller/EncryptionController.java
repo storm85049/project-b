@@ -9,6 +9,7 @@ import client.ClientData;
 import client.ObjectIOSingleton;
 import client.RemoteClient;
 import com.sun.security.ntlm.Client;
+import controller.logger.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -69,8 +70,6 @@ public class EncryptionController implements IController, Initializable {
     @FXML
     private ChoiceBox operationsMode;
 
-    @FXML
-    private Button abortButton;
 
     //todo:was passiert wenn der geklickt wird ? modus muss ja zwangsweise ausgewählt werden.
     @FXML
@@ -154,12 +153,22 @@ public class EncryptionController implements IController, Initializable {
             if (this.getValidSelection() == null) return;
 
             RemoteClient remoteClient = ClientData.getInstance().getRemoteClientFromOpenChat();
+            String referrer = remoteClient.isEncryptionSet() ? Actions.REFERRER_CREATE : Actions.REFERRER_UPDATE;
             remoteClient.setRequestedEncryptionData(this.getValidSelection());
 
             String from = ClientData.getInstance().getId();
             String to = remoteClient.getId();
             JSONObject jsonToSend = JSONUtil.initEncryptedChatRequest(from, to, remoteClient.getEncryptedEncryptionData());
             ObjectIOSingleton.getInstance().sendToServer(jsonToSend);
+
+
+            Platform.runLater(()->{
+                Logger.getInstance().setReferrer(referrer);
+                Logger.getInstance().log(Actions.LOG_INIT_CHAT, to);
+            });
+
+
+
             this.getPane().getScene().getWindow().hide();
         });
 

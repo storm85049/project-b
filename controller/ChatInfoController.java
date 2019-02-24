@@ -3,6 +3,7 @@ package controller;
 
 import client.ClientData;
 import client.RemoteClient;
+import controller.logger.Logger;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -130,4 +131,6 @@ public class ChatInfoController implements Initializable, IController {
     public Pane getPane() {
         return this.mainPane;
     }
+
+
 }

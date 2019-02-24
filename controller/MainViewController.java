@@ -1,5 +1,6 @@
 package controller;
 
+import controller.logger.Logger;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

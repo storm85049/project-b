@@ -97,19 +97,6 @@
                   <Font name="Agency FB" size="18.0" />
                </font>
             </Button>
-            <Button fx:id="abortButton" mnemonicParsing="false" text="Abort" textFill="WHITE">
-               <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </HBox.margin>
-               <styleClass>
-                  <String fx:value="btn" />
-                  <String fx:value="edgy" />
-                  <String fx:value="mediumBlue" />
-               </styleClass>
-               <font>
-                  <Font name="Agency FB" size="18.0" />
-               </font>
-            </Button>
          </children>
       </HBox>
    </bottom>

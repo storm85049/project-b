@@ -1,6 +1,7 @@
 package controller;
 
 import controller.helper.ToggleSwitch;
+import controller.logger.Logger;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -45,54 +46,11 @@ public class CryptoChatInfoController implements Initializable, IController {
     public void initialize(URL location, ResourceBundle resources) {
 
 
-
-       /* ToggleSwitch toggle = new ToggleSwitch();
-
-
-
-        logInfo.textProperty().bind(Bindings.when(toggle.switchedOnProperty()).then("Log vertically").otherwise("Log horizontally"));
-
-        Platform.runLater(()->{
-
-            hboxDown.getChildren().add(1,toggle);
-            hboxDown.getChildren().get(1).setStyle();
-        });
-*/
-
-
         try{
             uri = new URI(url);
         }catch (URISyntaxException e){
             System.out.println("false uri");
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         hyperlink.addEventHandler(MouseEvent.MOUSE_CLICKED, evt ->{
             try {
@@ -112,4 +70,6 @@ public class CryptoChatInfoController implements Initializable, IController {
     public Pane getPane() {
         return mainPane;
     }
+
+
 }
