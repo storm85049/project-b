@@ -81,7 +81,7 @@ public HBox mainPane;
 
         //clear whole view
 
-        //no chat available yet todo: set and send public/private key
+
 
         Text topName = (Text) ChatViewUtil.find("topName");
         topName.setText(otherClientsName);

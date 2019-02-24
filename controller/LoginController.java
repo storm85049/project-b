@@ -28,9 +28,7 @@ import util.JSONUtil;
 import util.ModalUtil;
 
 import java.net.URL;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LoginController  implements Initializable, Observer, IController {
@@ -68,28 +66,42 @@ public class LoginController  implements Initializable, Observer, IController {
 
                 ClientData.getInstance().setInternalDES(new DES());
 
+                boolean testUmgebung = false;
+
+                JSONObject json = new JSONObject();
                 updateMessage("Generating EL Gamal Key");
-                ElGamal elGamal = new ElGamal();
-                ClientData.getInstance().setElGamal(elGamal);
-                String privateEG = elGamal.getPrivateKey().substring(0,maxVisibleLengthOfKeys) + "...";
-                String publicEG = elGamal.getPublicKey().substring(0,maxVisibleLengthOfKeys) + "...";
-                updateMessage("EL Gamal Private Key: " + privateEG);
-                updateTitle("EL Gamal Public Key: " + publicEG);
-                //Thread.sleep(1000);
-                updateMessage("Generating RSA Key");
-                updateTitle("");
-                RSA rsa = new RSA();
-                ClientData.getInstance().setRSA(rsa);
-                String publicrsa = rsa.getPublicKey().substring(0,maxVisibleLengthOfKeys) + "...";
-                String privatersa = rsa.getPrivateKey().substring(0,maxVisibleLengthOfKeys) + "...";
+                if(!testUmgebung){
+                    ElGamal elGamal = new ElGamal();
+                    ClientData.getInstance().setElGamal(elGamal);
+                    String privateEG = elGamal.getPrivateKey().substring(0,maxVisibleLengthOfKeys) + "...";
+                    String publicEG = elGamal.getPublicKey().substring(0,maxVisibleLengthOfKeys) + "...";
+                    updateMessage("EL Gamal Private Key: " + privateEG);
+                    updateTitle("EL Gamal Public Key: " + publicEG);
+                    updateMessage("Generating RSA Key");
+                    updateTitle("");
+                    RSA rsa = new RSA();
+                    ClientData.getInstance().setRSA(rsa);
+                    String publicrsa = rsa.getPublicKey().substring(0,maxVisibleLengthOfKeys) + "...";
+                    String privatersa = rsa.getPrivateKey().substring(0,maxVisibleLengthOfKeys) + "...";
 
-                updateMessage("RSA Private Key: " + privatersa);
-                updateTitle("RSA Public Key: " + publicrsa);
-                //Thread.sleep(1000);
-                updateMessage("Launching App...");
-                updateTitle("");
+                    updateMessage("RSA Private Key: " + privatersa);
+                    updateTitle("RSA Public Key: " + publicrsa);
+                    //Thread.sleep(1000);
+                    updateMessage("Launching App...");
+                    updateTitle("");
+                    json = JSONUtil.getLoginRequestJSON(name, rsa.getPublicKeyMap(), elGamal.getPublicKeyMap());
 
-                JSONObject json = JSONUtil.getLoginRequestJSON(name, rsa.getPublicKeyMap(), elGamal.getPublicKeyMap());
+                }
+                //Thread.sleep(1000);
+
+
+
+                if(testUmgebung){
+                    Map<String,String> m1 = new HashMap<>();
+                    Map<String,String> m2 = new HashMap<>();
+                    json = JSONUtil.getLoginRequestJSON(name, m1, m2);
+                }
+
                 ObjectIOSingleton io = ObjectIOSingleton.getInstance();
                 io.init();
                 io.sendToServer(json);

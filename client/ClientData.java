@@ -16,7 +16,7 @@ public class ClientData{
     private String id = null;
     private String ip = null;
     private InetAddress serverAdress = null;
-    private String idFromOpenChat = null;
+    private SimpleStringProperty  idFromOpenChat = new SimpleStringProperty();
     private String idFromLastRequest = null;
 
 
@@ -63,10 +63,10 @@ public class ClientData{
     public InetAddress getServerAdress() {
         return serverAdress;
     }
-
+/*
     public String getIdFromOpenChat() {
         return idFromOpenChat;
-    }
+    }*/
 
 
     public DES getInternalDES() {
@@ -88,6 +88,7 @@ public class ClientData{
     public void addToAvailableChats(RemoteClient remoteClient)
     {
         if(!this.availableChats.containsKey(remoteClient.getId()))
+            remoteClient.setOnlineSince(new Date());
             this.availableChats.put(remoteClient.getId(), remoteClient);
 
     }
@@ -110,10 +111,22 @@ public class ClientData{
 
     }
 
+    public String getIdFromOpenChat() {
+        return idFromOpenChat.get();
+    }
+
+    public SimpleStringProperty getIdFromOpenChatProperty() {
+        return idFromOpenChat;
+    }
 
     public void setIdFromOpenChat(String idFromOpenChat) {
-        this.idFromOpenChat = idFromOpenChat;
+        this.idFromOpenChat.set(idFromOpenChat);
     }
+
+
+    /*public void setIdFromOpenChat(String idFromOpenChat) {
+        this.idFromOpenChat = idFromOpenChat;
+    }*/
 
     public void setServerAdress(InetAddress serverAdress) {
         this.serverAdress = serverAdress;

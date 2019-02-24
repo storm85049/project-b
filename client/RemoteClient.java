@@ -6,7 +6,10 @@ import org.json.simple.JSONObject;
 import util.Actions;
 
 import java.net.InetAddress;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 public class RemoteClient {
@@ -17,7 +20,9 @@ public class RemoteClient {
     private ISymmetricEncryption symEncryption = null;
     private Map<String,String> desKeyMap = null;
     private JSONObject requestedEncryptionData = null;
-    private String encryptionStatus;
+    private Date onlineSince = null;
+    private String asymKeyReadable = null;
+
 
 
     private String id;
@@ -58,6 +63,14 @@ public class RemoteClient {
     }
 
 
+    public String getAsymKeyReadable() {
+        return asymKeyReadable;
+    }
+
+    public void setAsymKeyReadable(String asymKeyReadable) {
+        this.asymKeyReadable = asymKeyReadable;
+    }
+
     /**
      * in dieser ArrayList werden die Nachrichten mit allen zugehörigen Infos als JsonObjekte gespeichert.
      * Drin stehen kann (für den LOG )zb. ->timestamp ->enc.message ->dec.message und was sonst noch so dazugehört
@@ -75,8 +88,20 @@ public class RemoteClient {
     {
         this.id = id;
         this.name = name;
+
     }
 
+
+   public String getOnlineSince() {
+
+       String strDateFormat = "hh:mm:ss a";
+       DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+       return  dateFormat.format(this.onlineSince);
+    }
+
+    public void setOnlineSince(Date onlineSince) {
+        this.onlineSince = onlineSince;
+    }
 
     public Map<String, String> getDesKeyMap() {
         return desKeyMap;
@@ -115,6 +140,7 @@ public class RemoteClient {
             String key = (String) keys.get("key");
             this.setSymEncryption(new VigenereCipher(key, EncryptionController.DEFAULT_ALPHABET_MODE));
             this.setSymEncryptionString(Actions.MODE_VIGENERE);
+
         }else if (symMode.equals(Actions.MODE_AFFINE)){
             String t = (String) keys.get("t");
             String k = (String) keys.get("k");
@@ -188,9 +214,13 @@ public class RemoteClient {
     private String getEncryptedStringForCurrentAsymMode(String mode, String s)
     {
         if(mode.equals(Actions.MODE_RSA)){
-            return ClientData.getInstance().getRSA().encrypt(s,this.getPublicRSAKeyMap());
+            String encrypted = ClientData.getInstance().getRSA().encrypt(s,this.getPublicRSAKeyMap());
+            this.setAsymKeyReadable(encrypted);
+            return encrypted;
         }else if(mode.equals(Actions.MODE_ELGAMAL)){
-            return ClientData.getInstance().getElGamal().encrypt(s,this.getPublicElGamalKeyMap());
+            String encrypted = ClientData.getInstance().getElGamal().encrypt(s,this.getPublicElGamalKeyMap());
+            this.setAsymKeyReadable(encrypted);
+            return encrypted;
         }
         return null;
 

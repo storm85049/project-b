@@ -3,6 +3,7 @@ package util;
 import Krypto.ElGamal;
 import Krypto.IAsymmetricEncryption;
 import Krypto.RSA;
+import client.ClientData;
 import controller.ChatInfoController;
 import controller.EncryptionController;
 import controller.MainViewController;
@@ -15,8 +16,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import javafx.scene.transform.MatrixType;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.json.simple.JSONObject;
 
@@ -50,8 +53,9 @@ public class ModalUtil{
             Scene scene = new Scene(root);
             secondStage.setScene(scene);
             secondStage.setTitle("Please choose your encryption mode");
-            secondStage.setAlwaysOnTop(true);
-            secondStage.show();
+
+            secondStage.initModality(Modality.APPLICATION_MODAL);
+            secondStage.showAndWait();
 
         } catch (IOException e){
             e.printStackTrace();
@@ -75,11 +79,64 @@ public class ModalUtil{
             Scene scene = new Scene(root);
             secondStage.setScene(scene);
             secondStage.setTitle("New chat request");
-            secondStage.setAlwaysOnTop(true);
-            secondStage.show();
+
+
+            secondStage.initModality(Modality.APPLICATION_MODAL);
+            secondStage.showAndWait();
+
 
         } catch (IOException e){
             e.printStackTrace();
         }
     }
+
+    public static void showCryptoChatInfo(Class callingClass)
+    {
+        try {
+            Parent root = FXMLLoader.load(Objects.requireNonNull(callingClass.getClassLoader().getResource(MainViewController.CRYPTO_CHAT_INFO)));
+            Stage secondStage = new Stage();
+            Scene scene = new Scene(root);
+            secondStage.setScene(scene);
+            secondStage.setTitle("Crypto Chat");
+
+
+            secondStage.initModality(Modality.APPLICATION_MODAL);
+            secondStage.showAndWait();
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+
+
+
+    public static void showChatInfo(Class callingClass)
+    {
+        try {
+            Parent root = FXMLLoader.load(Objects.requireNonNull(callingClass.getClassLoader().getResource(MainViewController.CHAT_INFO)));
+            Stage secondStage = new Stage();
+            Scene scene = new Scene(root);
+            secondStage.setScene(scene);
+            secondStage.setTitle("Chatdetails with " + ClientData.getInstance().getRemoteClientFromOpenChat().getName());
+
+
+
+
+            secondStage.initModality(Modality.APPLICATION_MODAL);
+            secondStage.showAndWait();
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
+
 }
+
+
+

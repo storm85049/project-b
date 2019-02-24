@@ -27,7 +27,7 @@
             <Insets top="10.0" />
          </padding>
       </Label>
-      <Label fx:id="desWarning" text="please generate a des" textFill="#a10000" visible="false">
+      <Label fx:id="desWarning" text="please generate a key" textFill="#a10000" visible="false">
          <font>
             <Font name="Agency FB" size="16.0" />
          </font>

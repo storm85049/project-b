@@ -21,10 +21,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import oop.client.ActionManager;
@@ -69,6 +66,12 @@ public class ChatController implements Initializable, Observer, IController {
     ScrollPane scrollPane;
 
     @FXML
+    ScrollPane log;
+
+    @FXML
+    VBox logPane;
+
+    @FXML
     VBox chatBox;
 
     private ActionManager actionManager;
@@ -79,7 +82,14 @@ public class ChatController implements Initializable, Observer, IController {
     @FXML
     private Text welcomeText;
 
+    @FXML
+    private HBox chatInputs;
 
+
+
+
+    @FXML
+    private Button infoBtn;
 
     @FXML
     private Button encryptionOptionsOpen;
@@ -88,7 +98,6 @@ public class ChatController implements Initializable, Observer, IController {
 
         ObjectIOSingleton.getInstance().addObserver(this);
         actionManager = new ActionManager();
-
         JSONObject json = new JSONObject();
         json.put("action",Actions.ACTION_REQUEST_CHAT_STATUS);
         ObjectIOSingleton.getInstance().sendToServer(json);
@@ -104,6 +113,7 @@ public class ChatController implements Initializable, Observer, IController {
         status.setText(preText + text);
 
         scrollPane.vvalueProperty().bind(chatBox.heightProperty());
+        log.vvalueProperty().bind(logPane.heightProperty());
 
         textInput.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
                 @Override
@@ -114,12 +124,31 @@ public class ChatController implements Initializable, Observer, IController {
                 }
             });
 
+
+        chatInputs.visibleProperty().bind(Bindings.isNotNull(ClientData.getInstance().getIdFromOpenChatProperty()));
+
+        logoHBox.addEventHandler(MouseEvent.MOUSE_CLICKED, event->{
+            ModalUtil.showCryptoChatInfo(this.getClass());
+        });
+
         sendButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> sendMessage(textInput.getText()));
 
+    /*    sendButton.disableProperty().bind(Bindings.isNull(ClientData.getInstance().getIdFromOpenChatProperty()));
+        textInput.editableProperty().bind(Bindings.isNotNull(ClientData.getInstance().getIdFromOpenChatProperty()));*/
 
         encryptionOptionsOpen.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             ModalUtil.showEncryptionOptions(this.getClass());
         });
+
+
+        infoBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            ModalUtil.showChatInfo(this.getClass());
+        });
+
+        SimpleStringProperty simpleStringProperty = ClientData.getInstance().getIdFromOpenChatProperty();
+       /* encryptionOptionsOpen.visibleProperty().bind(Bindings.isNotNull(simpleStringProperty));
+        infoBtn.visibleProperty().bind(Bindings.isNotNull(simpleStringProperty));*/
+
 
 
 
@@ -141,10 +170,12 @@ public class ChatController implements Initializable, Observer, IController {
         String from = ClientData.getInstance().getId();
         String to =  ClientData.getInstance().getIdFromOpenChat();
 
-
         //encrypt message here
 
         RemoteClient remoteClient = ClientData.getInstance().getRemoteClientById(to);
+
+
+
 
         String encrypted;
         if(remoteClient.getSymEncryptionString().equals(Actions.MODE_DES)){
@@ -191,7 +222,6 @@ public class ChatController implements Initializable, Observer, IController {
     }
 
 
-    //todo: ist der chat noch online ? bzw nachricht vom server senden, dass der chat offline gegangen ist und das fenster geschlossen wird, sonst kommt es zu einem bug
 
     @Override
     public Pane getPane() {
@@ -208,6 +238,8 @@ public class ChatController implements Initializable, Observer, IController {
         String symMode = (String) encryptionParams.get("symMode");
         JSONObject actualEncryptedKeys = (JSONObject) encryptionParams.get("encryptionParams");
         String encryptedKey = (String)actualEncryptedKeys.get("encryptedKey");
+        remoteClient.setAsymKeyReadable(encryptedKey);
+
         String decryptedKey = "";
         switch (asymMode){
             case(Actions.MODE_RSA):
@@ -369,7 +401,8 @@ public class ChatController implements Initializable, Observer, IController {
         flow.maxWidthProperty().bind(scrollPane.widthProperty().divide(2));
 
         hbox.getStyleClass().add("hbox");
-        Tooltip.install(hbox,tooltip);
+
+        Tooltip.install(tempFlow,tooltip);
 
         Platform.runLater(() -> chatBox.getChildren().addAll(hbox));
 

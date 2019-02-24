@@ -43,7 +43,6 @@ public class ObjectIOSingleton extends Observable{
             e.printStackTrace();
         }
     }
-
     public void notifyControllerObservers(Object o){
         JSONObject json = (JSONObject)o;
         setChanged();

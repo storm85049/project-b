@@ -49,3 +49,10 @@
 .roundBorder{
 	-fx-background-radius: 20 20 20 0;
 }
+
+.log-background{
+	-fx-background-color: #111;
+}
+.log-text-color{
+	-fx-background-color: #2438bf;
+}

@@ -24,6 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import org.json.simple.JSONObject;
 import util.Actions;
+import util.ChatViewUtil;
 import util.JSONUtil;
 
 import java.net.URL;
@@ -161,6 +162,24 @@ public class EncryptionController implements IController, Initializable {
             ObjectIOSingleton.getInstance().sendToServer(jsonToSend);
             this.getPane().getScene().getWindow().hide();
         });
+
+
+        RemoteClient remoteClient = ClientData.getInstance().getRemoteClientFromOpenChat();
+        if(remoteClient.getSymEncryptionString() != null){
+                String symMode = this.flipModes(remoteClient.getSymEncryptionString());
+                symmetricEncryptionComboBox.getSelectionModel().select(symMode);
+                this.setSymmetricSelection(symMode);
+                String asymMode = this.flipModes(remoteClient.getAsymEncryptionString());
+                asymmetricEncryptionComboBox.getSelectionModel().select(asymMode);
+                this.setAsymmetricSelection(asymMode);
+
+            Node center = MainViewController.loadComponent(getClass(), encryptionMap.get(this.getSymmetricSelection()));
+            mainPane.setCenter(center);
+
+        }
+
+
+
     }
 
     private String convertModes(String s)
@@ -173,6 +192,19 @@ public class EncryptionController implements IController, Initializable {
          if(s.equals(HILL_CHIFFRE)) return Actions.MODE_HILL;
          if(s.equals(VIGENERE_CHIFFRE)) return Actions.MODE_VIGENERE;
          return "";
+    }
+
+
+    private String flipModes(String s)
+    {
+        if(s.equals( Actions.MODE_RSA)) return RSA;
+        if(s.equals( Actions.MODE_ELGAMAL)) return ELGAMAL;
+        if(s.equals( Actions.MODE_AFFINE)) return AFFINE_CHIFFRE;
+        if(s.equals( Actions.MODE_RC4)) return RC4_CHIFFRE;
+        if(s.equals( Actions.MODE_DES)) return DES_CHIFFRE;
+        if(s.equals( Actions.MODE_HILL)) return HILL_CHIFFRE;
+        if(s.equals( Actions.MODE_VIGENERE)) return VIGENERE_CHIFFRE;
+        return "";
     }
 
 
@@ -204,7 +236,7 @@ public class EncryptionController implements IController, Initializable {
                 if(!k.isEmpty() && !t.isEmpty()){
                     return JSONUtil.affineKeyJson(mode,t,k);
                 }else{
-                    flashInvalid((Label)this.find("affinWarning"));
+                    flashInvalid((Label)this.find("affineWarning"));
                 }
                 break;
             case(VIGENERE_CHIFFRE):
@@ -225,7 +257,8 @@ public class EncryptionController implements IController, Initializable {
                 }break;
             case(DES_CHIFFRE):
                 DES des = ClientData.getInstance().getInternalDES();
-                if(des == null){ // if generate wasnt clicked
+                Label possibleDesKey = (Label) this.find("desKey");
+                if(possibleDesKey.getText().isEmpty()){// if generate wasnt clicked
                     flashInvalid((Label) this.find("desWarning"));
                 }else{
                     Map<String,String> keyMap = des.getKeyMap();

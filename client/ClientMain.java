@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import org.json.simple.JSONObject;
 import util.JSONUtil;
@@ -36,12 +37,19 @@ public class ClientMain extends Application{
         primaryStage.setTitle("Welcome to secure ChatClient");
 
         /*kann aus, falls nervig*/
-        primaryStage.setMaximized(true);
+        //primaryStage.setMaximized(true);
         primaryStage.show();
+
+
+
+        primaryStage.setOnCloseRequest( evt -> {
+            evt.consume();
+            closeApp(primaryStage);
+        });
     }
 
-    @Override
-    public void stop(){
+
+    private void closeApp(Stage stage){
         String id = ClientData.getInstance().getId();
         if (id != null){
             JSONObject json = JSONUtil.shutDownConnectionJSON(id);
@@ -56,5 +64,10 @@ public class ClientMain extends Application{
             }
             System.out.println("Connection shut down!");
         }
+        stage.close();
+
     }
+
+
+
 }

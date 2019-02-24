@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" styleClass="lightBlue" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ChatInfoController">
+<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" styleClass="lightBlue" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ChatDetailsController">
    <bottom>
       <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="BOTTOM_RIGHT">
          <children>
@@ -35,7 +35,7 @@
    <top>
       <VBox alignment="CENTER">
          <children>
-            <Label fx:id="header" text="New Chat Request !" textFill="WHITE">
+            <Label fx:id="heading" text="Chat with" textFill="WHITE">
                <font>
                   <Font name="Agency FB" size="32.0" />
                </font>
@@ -43,32 +43,40 @@
                   <Insets top="10.0" />
                </VBox.margin>
             </Label>
-            <Label fx:id="originInfo" text="from " textFill="#b9b9b9">
-               <font>
-                  <Font name="Agency FB" size="21.0" />
-               </font>
-            </Label>
          </children>
       </VBox>
    </top>
    <center>
-      <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="asymInfo" text="max wants to use RSA as asymmetric encryption mode" textFill="#9a9a9a">
+            <Label fx:id="onlineInfo" text="Online since :" textFill="WHITE">
                <font>
                   <Font name="Agency FB" size="21.0" />
                </font>
             </Label>
-            <Label fx:id="symInfo" text="his symetric key is a vigenere key " textFill="#dadada">
+            <Label fx:id="messageCountInfo" text="Messages sent :" textFill="WHITE">
                <font>
-                  <Font name="Agency FB" size="26.0" />
+                  <Font name="Agency FB" size="21.0" />
                </font>
             </Label>
-            <HBox alignment="CENTER">
+            <Label fx:id="asymInfo" text="Initial Asymmetric Encryption :" textFill="WHITE">
+               <font>
+                  <Font name="Agency FB" size="21.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Label>
+            <Label fx:id="symInfo" text="Symmetric Encryption :" textFill="WHITE">
+               <font>
+                  <Font name="Agency FB" size="21.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER_LEFT">
                <children>
-                  <Label fx:id="encryptedKeyInfo" text="encrypted key: " textFill="#ababab">
+                  <Label fx:id="encryptedInfo" text="Symmetric key encrypted with " textFill="WHITE">
                      <font>
-                        <Font name="Agency FB" size="20.0" />
+                        <Font name="Agency FB" size="21.0" />
                      </font>
                      <HBox.margin>
                         <Insets />
@@ -76,7 +84,7 @@
                   </Label>
                   <Label>
                      <graphic>
-                        <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="tooltipImageEncrypted" fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" visible="false">
                            <image>
                               <Image url="@../../img/feddich.png" />
                            </image>
@@ -92,23 +100,23 @@
                   </Label>
                </children>
             </HBox>
-            <HBox alignment="CENTER">
+            <HBox alignment="CENTER_LEFT">
                <children>
-                  <Label fx:id="keyInfo" text="decrypted key: " textFill="#ababab">
+                  <Label fx:id="decryptedInfo" text="Symmetric decrypted key : " textFill="WHITE">
                      <font>
-                        <Font name="Agency FB" size="20.0" />
+                        <Font name="Agency FB" size="21.0" />
                      </font>
                   </Label>
                   <Label>
                      <graphic>
-                        <ImageView fx:id="tooltipImage" fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="tooltipImageDecrypted" fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" visible="false">
                            <image>
                               <Image url="@../../img/feddich.png" />
                            </image>
                         </ImageView>
                      </graphic>
                      <tooltip>
-                        <Tooltip fx:id="tooltip2" prefWidth="250.0" wrapText="true">
+                        <Tooltip fx:id="tooltipDecrypted" prefWidth="250.0" wrapText="true">
                            <font>
                               <Font name="Agency FB" size="24.0" />
                            </font>
@@ -118,6 +126,9 @@
                </children>
             </HBox>
          </children>
+         <padding>
+            <Insets left="50.0" />
+         </padding>
       </VBox>
    </center>
 </BorderPane>
