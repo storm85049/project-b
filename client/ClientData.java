@@ -87,9 +87,10 @@ public class ClientData{
 
     public void addToAvailableChats(RemoteClient remoteClient)
     {
-        if(!this.availableChats.containsKey(remoteClient.getId()))
+        if(!this.availableChats.containsKey(remoteClient.getId())){
             remoteClient.setOnlineSince(new Date());
             this.availableChats.put(remoteClient.getId(), remoteClient);
+        }
 
     }
 
