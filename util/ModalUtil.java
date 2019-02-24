@@ -4,6 +4,7 @@ import Krypto.ElGamal;
 import Krypto.IAsymmetricEncryption;
 import Krypto.RSA;
 import client.ClientData;
+import client.RemoteClient;
 import controller.ChatInfoController;
 import controller.EncryptionController;
 import controller.MainViewController;
@@ -53,6 +54,25 @@ public class ModalUtil{
             Scene scene = new Scene(root);
             secondStage.setScene(scene);
             secondStage.setTitle("Please choose your encryption mode");
+
+
+
+
+            secondStage.setOnCloseRequest( event -> {
+                String requestedChatID = ClientData.getInstance().getIdFromLastRequest();
+                RemoteClient remoteClient = ClientData.getInstance().getRemoteClientById(requestedChatID);
+
+                if(!remoteClient.isEncryptionSet()){
+                    event.consume();
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Stop!");
+                    alert.setContentText("you have to choose a mode before being able to text " + remoteClient.getName());
+                    alert.showAndWait();
+
+                }
+            });
+
 
             secondStage.initModality(Modality.APPLICATION_MODAL);
             secondStage.showAndWait();

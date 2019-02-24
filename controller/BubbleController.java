@@ -74,6 +74,7 @@ public HBox mainPane;
         messageCount.setVisible(false);
         messageCount.setManaged(false);
         ClientData.getInstance().setIdFromOpenChat(requestedID);
+        ClientData.getInstance().setIdFromLastRequest(requestedID);
 
         if (!remoteClient.isEncryptionSet()) {
             ModalUtil.showEncryptionOptions(this.getClass());
