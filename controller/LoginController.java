@@ -64,7 +64,7 @@ public class LoginController  implements Initializable, Observer, IController {
             @Override
             protected Void call() throws Exception {
 
-                ClientData.getInstance().setInternalDES(new DES());
+
 
                 boolean testUmgebung = false;
 

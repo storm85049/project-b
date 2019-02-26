@@ -79,11 +79,7 @@ public class ChatDetailsController implements Initializable, IController {
         String onlineSince = remoteClient.getOnlineSince();
         String encryptedKey = remoteClient.getAsymKeyReadable();
         String decryptedKey;
-        if(remoteClient.getSymEncryptionString().equals(Actions.MODE_DES)){
-            decryptedKey = ClientData.getInstance().getInternalDES().getModeSpecificKey();
-        }else{
-            decryptedKey = remoteClient.getSymEncryption().getModeSpecificKey();
-        }
+        decryptedKey = remoteClient.getSymEncryption().getModeSpecificKey();
 
 
         String messageCount;

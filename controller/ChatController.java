@@ -17,6 +17,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -91,6 +92,11 @@ public class ChatController implements Initializable, Observer, IController {
     @FXML
     private Button encryptionOptionsOpen;
 
+    @FXML
+    private Button clearLogBtn;
+
+    @FXML
+    private SplitPane splitPane;
 
     public ChatController(){
 
@@ -140,6 +146,10 @@ public class ChatController implements Initializable, Observer, IController {
         });
 
 
+        clearLogBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, evt->{
+            Logger.getInstance().clearLog();
+        });
+
         Logger.getInstance().resolveQueue();
 
     }
@@ -160,15 +170,7 @@ public class ChatController implements Initializable, Observer, IController {
         //encrypt message here
 
         RemoteClient remoteClient = ClientData.getInstance().getRemoteClientById(to);
-
-
-        String encrypted;
-        if(remoteClient.getSymEncryptionString().equals(Actions.MODE_DES)){
-            ClientData.getInstance().getInternalDES().setSelectedKeys(remoteClient.getDesKeyMap());
-            encrypted = ClientData.getInstance().getInternalDES().encrypt(message);
-        }else{
-            encrypted  = remoteClient.getSymEncryption().encrypt(message);
-        }
+        String encrypted  = remoteClient.getSymEncryption().encrypt(message);
         String symMode = remoteClient.getSymEncryptionString();
 
         JSONObject json = JSONUtil.getMessageSendingJSON(encrypted, from, to, symMode);
@@ -290,13 +292,9 @@ public class ChatController implements Initializable, Observer, IController {
         String key;
 
         RemoteClient remoteClient = ClientData.getInstance().getRemoteClientById(fromID);
-        if(json.get("symMode").equals(Actions.MODE_DES)){
-            decrypted = ClientData.getInstance().getInternalDES().decrypt((String) json.get("message"));
-            key = ClientData.getInstance().getInternalDES().getModeSpecificKey();
-        }else{
-            decrypted = remoteClient.getSymEncryption().decrypt((String) json.get("message"));
-            key = remoteClient.getSymEncryption().getModeSpecificKey();
-        }
+        decrypted = remoteClient.getSymEncryption().decrypt((String) json.get("message"));
+        key = remoteClient.getSymEncryption().getModeSpecificKey();
+
         json.put("decryptedMessage", decrypted);
 
         remoteClient.addMessageToChatHistory(json);
@@ -341,21 +339,13 @@ public class ChatController implements Initializable, Observer, IController {
         String decrypted = "";
         String key = "";
         if(sendingOrReceiving.equals(Actions.ACTION_RECEIVING)){
-            if(json.get("symMode").equals(Actions.MODE_DES)){
-                decrypted = ClientData.getInstance().getInternalDES().decrypt((String) json.get("message"));
-                key = ClientData.getInstance().getInternalDES().getModeSpecificKey();
-            }else{
-                decrypted = ClientData.getInstance().getRemoteClientById(from).getSymEncryption().decrypt(message);
-                key = ClientData.getInstance().getRemoteClientById(from).getSymEncryption().getModeSpecificKey();
-            }
+            decrypted = ClientData.getInstance().getRemoteClientById(from).getSymEncryption().decrypt(message);
+            key = ClientData.getInstance().getRemoteClientById(from).getSymEncryption().getModeSpecificKey();
         }
         else{
             decrypted = (String) json.get("decryptedMessage");
-            if(json.get("symMode").equals(Actions.MODE_DES)){
-                key = ClientData.getInstance().getInternalDES().getModeSpecificKey();
-            }else{
-                key = ClientData.getInstance().getRemoteClientById(to).getSymEncryption().getModeSpecificKey();
-            }
+            key = ClientData.getInstance().getRemoteClientById(to).getSymEncryption().getModeSpecificKey();
+
         }
 
         Logger.getInstance().setLastDecryptedMessage(decrypted);

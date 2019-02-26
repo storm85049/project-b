@@ -205,11 +205,7 @@ public class Logger {
         String key = (String)encryptionParams.get("key");
 
         if(key == null){
-            if(!remoteClient.getSymEncryptionString().equals(Actions.MODE_DES)){
-                key = remoteClient.getSymEncryption().getModeSpecificKey();
-            }else{
-                key = ClientData.getInstance().getInternalDES().getModeSpecificKey();
-            }
+            key = remoteClient.getSymEncryption().getModeSpecificKey();
         }
 
 
@@ -237,6 +233,7 @@ public class Logger {
         Text text9 =new Text(this.readable(70,enc.getPrivateKey() )+ LB);
 
         Text text6 =new Text(TAB + TAB + "results in decrypted key '" + key +"'" + LB);
+        Text text10 =new Text(TAB  + "both of you can encrypt messages symmetrically now with the key '" + key +"'  " + LB + TAB + "without anyone else possibly knowing this key");
         text2 = setStyle(text2,Color.WHITE);;
         text3 = setStyle(text3,Color.WHITE);
         text4 = setStyle(text4,Color.WHITE);
@@ -245,9 +242,10 @@ public class Logger {
         text7 = setStyle(text7, Color.YELLOW);
         text8 = setStyle(text8, Color.YELLOW);
         text9 = setStyle(text9, Color.YELLOW);
+        text10 = setStyle(text10, Color.GREEN);
 
         TextFlow tempFlow = new TextFlow();
-        tempFlow.getChildren().addAll(text,text2,text3,text7,text4,text8,text5,text9,text6);
+        tempFlow.getChildren().addAll(text,text2,text3,text7,text4,text8,text5,text9,text6, text10);
         TextFlow flow=new TextFlow(tempFlow);
         HBox hbox=new HBox(12);
 
@@ -326,4 +324,15 @@ private String timestamp()
     public void setLastKey(String lastKey) {
         this.lastKey = lastKey;
     }
+
+
+    public void clearLog()
+    {
+        if(this.log != null){
+            VBox logOnGUI = (VBox) ChatViewUtil.find("logPane");
+            logOnGUI.getChildren().clear();
+        }
+    }
+
+
 }

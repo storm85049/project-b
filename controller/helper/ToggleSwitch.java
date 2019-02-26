@@ -27,6 +27,7 @@ public  class ToggleSwitch extends Parent {
 
     public ToggleSwitch() {
         Rectangle background = new Rectangle(50, 25);
+
         background.setArcWidth(25);
         background.setArcHeight(25);
         background.setFill(Color.WHITE);
@@ -37,6 +38,8 @@ public  class ToggleSwitch extends Parent {
         trigger.setCenterY(12.5f);
         trigger.setFill(Color.WHITE);
         trigger.setStroke(Color.LIGHTGRAY);
+
+
 
         DropShadow shadow = new DropShadow();
         shadow.setRadius(1);
@@ -59,5 +62,10 @@ public  class ToggleSwitch extends Parent {
         setOnMouseClicked(event -> {
             switchedOn.set(!switchedOn.get());
         });
+    }
+
+
+    public void setSwitchedOn(boolean state){
+        this.switchedOn.set(state);
     }
 }

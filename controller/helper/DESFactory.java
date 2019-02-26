@@ -18,20 +18,19 @@ public class DESFactory implements Initializable {
     @FXML
     private Label desKey;
 
+    private DES des;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-
-
+        des = new DES();
     }
 
 
     public void generateDes()
     {
-
-        DES des = ClientData.getInstance().getInternalDES();
         des.generateNew();
         desKey.setText("DES Key : " + des.getKey().toString());
-
+        ClientData.getInstance().setInternalChosenDESKeyMap(des.getKeyMap());
     }
 }

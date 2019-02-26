@@ -47,7 +47,7 @@
             </TextField>
          </children>
       </HBox>
-      <Label fx:id="affineWarning" text="Please choose two variables!" textFill="#a10000" visible="false">
+      <Label fx:id="affineWarning" text="Please choose two valid variables!" textFill="#a10000" visible="false">
          <font>
             <Font name="Agency FB" size="16.0" />
          </font>

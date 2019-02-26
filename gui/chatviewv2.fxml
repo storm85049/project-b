@@ -73,7 +73,7 @@
          </children></HBox>
    </bottom>
    <center>
-      <SplitPane dividerPositions="0.7767695099818511" nodeOrientation="LEFT_TO_RIGHT" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <SplitPane fx:id="splitPane" dividerPositions="0.7767695099818511" nodeOrientation="LEFT_TO_RIGHT" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="500.0">
                <children>
@@ -178,7 +178,7 @@
                            <center>
                               <ScrollPane fx:id="log" fitToHeight="true" fitToWidth="true" pannable="true" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #111;" stylesheets="@css/style.css" BorderPane.alignment="CENTER">
                                  <content>
-                                    <VBox fx:id="logPane" alignment="CENTER" prefHeight="0.0" prefWidth="0.0" styleClass="log-background">
+                                    <VBox fx:id="logPane" alignment="CENTER" prefHeight="0.0" prefWidth="0.0" styleClass="background-fit-to-log">
                                        <padding>
                                           <Insets bottom="-1.0" top="-1.0" />
                                        </padding>
@@ -186,6 +186,24 @@
                                  </content>
                               </ScrollPane>
                            </center>
+                           <bottom>
+                              <HBox alignment="CENTER" prefHeight="33.0" styleClass="background-fit-to-log" stylesheets="@css/style.css" BorderPane.alignment="CENTER">
+                                 <children>
+                                    <Button fx:id="clearLogBtn" mnemonicParsing="false" prefHeight="28.0" prefWidth="160.0" stylesheets="@css/style.css" text="clear log" HBox.hgrow="ALWAYS">
+                                       <font>
+                                          <Font name="Agency FB" size="15.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" top="5.0" />
+                                       </HBox.margin>
+                                       <styleClass>
+                                          <String fx:value="lightBlue" />
+                                          <String fx:value="btn" />
+                                       </styleClass>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                           </bottom>
                         </BorderPane>
                      </children>
                   </VBox>

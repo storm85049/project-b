@@ -29,6 +29,7 @@ import util.ChatViewUtil;
 import util.JSONUtil;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -242,7 +243,7 @@ public class EncryptionController implements IController, Initializable {
             case(AFFINE_CHIFFRE):
                 String t= ((TextField) this.find("affinTField")).getText();
                 String k = ((TextField) this.find("affinKField")).getText();
-                if(!k.isEmpty() && !t.isEmpty()){
+                if(!k.isEmpty() && !t.isEmpty() && this.isValidAffineFields(t,k)){
                     return JSONUtil.affineKeyJson(mode,t,k);
                 }else{
                     flashInvalid((Label)this.find("affineWarning"));
@@ -265,19 +266,30 @@ public class EncryptionController implements IController, Initializable {
                     flashInvalid((Label)this.find("rc4Warning"));
                 }break;
             case(DES_CHIFFRE):
-                DES des = ClientData.getInstance().getInternalDES();
                 Label possibleDesKey = (Label) this.find("desKey");
                 if(possibleDesKey.getText().isEmpty()){// if generate wasnt clicked
                     flashInvalid((Label) this.find("desWarning"));
                 }else{
-                    Map<String,String> keyMap = des.getKeyMap();
+                    Map<String,String> keyMap = ClientData.getInstance().getInternalChosenDESKeyMap();
                     return JSONUtil.desKEYJson(mode,keyMap);
                 }break;
         }
         return null;
     }
 
+        private boolean isValidAffineFields(String t, String k)
+        {
 
+            Integer[] validT = {1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23,25};
+
+            if( !(Integer.valueOf(k) >= 0) || !(Integer.valueOf(k) <= 25)){
+                return false;
+            }
+            if (!(Arrays.asList(validT).contains(Integer.valueOf(t)))){
+                return false;
+            };
+            return true;
+        }
 
     private void flashInvalid (Label which)
     {

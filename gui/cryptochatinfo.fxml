@@ -55,6 +55,14 @@
       </VBox>
       <HBox fx:id="hboxDown" alignment="CENTER_RIGHT">
          <children>
+            <Text fx:id="logOrientationInfo" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="log horizontal">
+               <font>
+                  <Font name="Agency FB" size="14.0" />
+               </font>
+               <HBox.margin>
+                  <Insets right="100.0" />
+               </HBox.margin>
+            </Text>
             <Button fx:id="hyperlink" mnemonicParsing="false" prefHeight="19.0" prefWidth="200.0" text="See Source Code" textFill="WHITE">
                <styleClass>
                   <String fx:value="loginButton" />

@@ -6,6 +6,7 @@ import Krypto.RSA;
 
 import controller.logger.Logger;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.geometry.Orientation;
 import org.json.simple.JSONObject;
 import util.Actions;
 
@@ -20,7 +21,7 @@ public class ClientData{
     private InetAddress serverAdress = null;
     private SimpleStringProperty  idFromOpenChat = new SimpleStringProperty();
     private String idFromLastRequest = null;
-
+    private Map<String, String> internalChosenDESKeyMap = new HashMap<>();
 
 
 
@@ -31,7 +32,9 @@ public class ClientData{
     private RSA RSA = null;
     private ElGamal elGamal = null;
 
-    private DES internalDES = null;
+    private Orientation paneOrientation = Orientation.HORIZONTAL;
+
+
 
     /**
      * first String represents id of remoteclient -> makes it easy to query for remoteclient
@@ -72,13 +75,6 @@ public class ClientData{
     }*/
 
 
-    public DES getInternalDES() {
-        return internalDES;
-    }
-
-    public void setInternalDES(DES internalDES) {
-        this.internalDES = internalDES;
-    }
 
     public RemoteClient getRemoteClientById(String id)
     {
@@ -207,5 +203,22 @@ public class ClientData{
 
     public void setSymmetricEncryptionParameters(JSONObject symmetricEncryptionParameters) {
         this.symmetricEncryptionParameters = symmetricEncryptionParameters;
+    }
+
+
+    public Map<String, String> getInternalChosenDESKeyMap() {
+        return internalChosenDESKeyMap;
+    }
+
+    public void setInternalChosenDESKeyMap(Map<String, String> internalChosenDESKeyMap) {
+        this.internalChosenDESKeyMap = internalChosenDESKeyMap;
+    }
+
+    public Orientation getPaneOrientation() {
+        return paneOrientation;
+    }
+
+    public void setPaneOrientation(Orientation paneOrientation) {
+        this.paneOrientation = paneOrientation;
     }
 }

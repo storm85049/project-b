@@ -152,8 +152,7 @@ public class RemoteClient {
             this.setSymEncryptionString(Actions.MODE_RC4);
         }else if(symMode.equals(Actions.MODE_DES)){
             Map<String,String> keyMap =(Map<String,String>)keys.get("keymap");
-            ClientData.getInstance().getInternalDES().setSelectedKeys(keyMap);
-            this.setDesKeyMap(keyMap);
+            this.setSymEncryption(new DES(keyMap));
             this.setSymEncryptionString(Actions.MODE_DES);
         }
 
