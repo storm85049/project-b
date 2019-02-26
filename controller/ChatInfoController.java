@@ -70,7 +70,7 @@ public class ChatInfoController implements Initializable, IController {
         RemoteClient remoteClient = ClientData.getInstance().getRemoteClientById(from);
         String decryptedKey;
         if(remoteClient.getRequestedEncryptionData().get("symMode").equals(Actions.MODE_DES)){
-            decryptedKey = remoteClient.getDesKeyMap().get("key");
+            decryptedKey = ClientData.getInstance().getInternalDES().getModeSpecificKey();
         }else{
             decryptedKey = remoteClient.getSymEncryption().getModeSpecificKey();
         }

@@ -140,6 +140,8 @@ public class ChatController implements Initializable, Observer, IController {
         });
 
 
+        Logger.getInstance().resolveQueue();
+
     }
 
 
@@ -290,7 +292,7 @@ public class ChatController implements Initializable, Observer, IController {
         RemoteClient remoteClient = ClientData.getInstance().getRemoteClientById(fromID);
         if(json.get("symMode").equals(Actions.MODE_DES)){
             decrypted = ClientData.getInstance().getInternalDES().decrypt((String) json.get("message"));
-            key = remoteClient.getDesKeyMap().get("key");
+            key = ClientData.getInstance().getInternalDES().getModeSpecificKey();
         }else{
             decrypted = remoteClient.getSymEncryption().decrypt((String) json.get("message"));
             key = remoteClient.getSymEncryption().getModeSpecificKey();
@@ -349,6 +351,11 @@ public class ChatController implements Initializable, Observer, IController {
         }
         else{
             decrypted = (String) json.get("decryptedMessage");
+            if(json.get("symMode").equals(Actions.MODE_DES)){
+                key = ClientData.getInstance().getInternalDES().getModeSpecificKey();
+            }else{
+                key = ClientData.getInstance().getRemoteClientById(to).getSymEncryption().getModeSpecificKey();
+            }
         }
 
         Logger.getInstance().setLastDecryptedMessage(decrypted);
@@ -356,8 +363,8 @@ public class ChatController implements Initializable, Observer, IController {
         Logger.getInstance().setLastSymMode((String) json.get("symMode"));
         Logger.getInstance().setLastKey(key);
         if(sendingOrReceiving.equals(Actions.ACTION_SENDING)) {
-            String name = ClientData.getInstance().getRemoteClientById(from).getName();
-            Logger.getInstance().log(Actions.LOG_REMOTE_MESSAGE, name);
+            String name = ClientData.getInstance().getRemoteClientById(to).getName();
+            Logger.getInstance().log(Actions.LOG_SELF_MESSAGE, name);
         }
 
 
@@ -388,6 +395,7 @@ public class ChatController implements Initializable, Observer, IController {
             flow.getStyleClass().add("textFlow");
             hbox.setAlignment(Pos.BOTTOM_RIGHT);
             hbox.getChildren().add(flow);
+            chatBox.setAlignment(Pos.TOP_RIGHT);
             textInput.setText("");
             textInput.requestFocus();
         }

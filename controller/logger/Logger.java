@@ -22,8 +22,10 @@ import util.ChatViewUtil;
 import util.ModeMapper;
 
 import javax.jws.WebParam;
+import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Logger {
@@ -36,6 +38,8 @@ public class Logger {
     private TextFlow textFlow;
 
     private static Logger instance;
+
+    private ArrayList<HBox> queue;
 
 
 
@@ -57,8 +61,7 @@ public class Logger {
 
     private Logger()
     {
-
-      this.log =  (VBox) ChatViewUtil.find("logPane");
+        this.queue = new ArrayList<>();
 
     }
 
@@ -73,46 +76,61 @@ public class Logger {
 
     public void log(String type, String message)
     {
-
-        if(this.log == null){
-            this.log = (VBox) ChatViewUtil.find("logPane");
-        }
-        this.log.setAlignment(Pos.TOP_LEFT);
-
-
+        this.log = (VBox) ChatViewUtil.find("logPane");
 
         Platform.runLater(()->{
+
+            HBox box = new HBox();
             switch (type){
                 case(Actions.LOG_INIT_CHAT):
-                    this.logInitChat(message);
+                    box = this.logInitChat(message);
                     break;
                 case(Actions.LOG_OFFLINE):
-                    this.logOffline(true,message);
+                    box = this.logOffline(true,message);
                     break;
                 case(Actions.LOG_ONLINE):
-                    this.logOffline(false,message);
+                    box = this.logOffline(false,message);
                     break;
                 case(Actions.LOG_REMOTE_MESSAGE):
-                    this.logRemoteMessage(true,message);
+                    box = this.logRemoteMessage(true,message);
                     break;
                 case(Actions.LOG_SELF_MESSAGE):
-                    this.logRemoteMessage(false,message);
+                    box = this.logRemoteMessage(false,message);
                     break;
             }
 
+            if(this.log == null){
+                this.queue.add(box);
+            }
+            else{
+                this.log.setAlignment(Pos.TOP_LEFT);
+                for (HBox boxInQueue : this.queue) {
+                    this.log.getChildren().add(boxInQueue);
+                }
+                this.log.getChildren().add(box);
+                this.queue = new ArrayList<>();
+            }
         });
-
-
     }
 
-    private void logRemoteMessage(boolean remote, String name)
+    public void resolveQueue()
+    {
+        if(this.log !=null){
+            this.log.setAlignment(Pos.TOP_LEFT);
+            for (HBox box : this.queue) {
+                this.log.getChildren().add(box);
+            }
+        }
+    }
+
+    private HBox logRemoteMessage(boolean remote, String name)
     {
 
         Text text;
         if(remote){
             text=new Text(timestamp() + name + " sent a message!"+ LB);
         }else{
-            text=new Text(timestamp() + "you sent"+name+" a message!"+ LB);
+            text=new Text(timestamp() + "you sent "+name+" a message!"+ LB);
 
         }
         Text text1 =new Text(TAB + "symetric mode: " + ModeMapper.map(this.getLastSymMode())+LB);
@@ -134,12 +152,11 @@ public class Logger {
         hbox.setAlignment(Pos.CENTER_LEFT);
         hbox.getChildren().add(flow);
         hbox.prefWidthProperty().bind(this.log.widthProperty());
-        this.log.getChildren().add(hbox);
-
+        return hbox;
     }
 
 
-    private void logOffline(boolean offline, String name)
+    private HBox logOffline(boolean offline, String name)
     {
 
         Text text;
@@ -162,12 +179,11 @@ public class Logger {
 
         hbox.setAlignment(Pos.CENTER_LEFT);
         hbox.getChildren().add(flow);
-        hbox.prefWidthProperty().bind(this.log.widthProperty());
-        this.log.getChildren().add(hbox);
+        return hbox;
 
     }
 
-    private  void  logInitChat(String from)
+    private  HBox  logInitChat(String from)
     {
 
         RemoteClient remoteClient = ClientData.getInstance().getRemoteClientById(from);
@@ -192,7 +208,7 @@ public class Logger {
             if(!remoteClient.getSymEncryptionString().equals(Actions.MODE_DES)){
                 key = remoteClient.getSymEncryption().getModeSpecificKey();
             }else{
-                key = remoteClient.getDesKeyMap().get("key");
+                key = ClientData.getInstance().getInternalDES().getModeSpecificKey();
             }
         }
 
@@ -238,7 +254,10 @@ public class Logger {
 
         hbox.setAlignment(Pos.CENTER_LEFT);
         hbox.getChildren().add(flow);
-        this.log.getChildren().add(hbox);
+
+
+        return hbox;
+
 
     }
 

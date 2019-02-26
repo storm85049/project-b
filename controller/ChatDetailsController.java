@@ -80,7 +80,7 @@ public class ChatDetailsController implements Initializable, IController {
         String encryptedKey = remoteClient.getAsymKeyReadable();
         String decryptedKey;
         if(remoteClient.getSymEncryptionString().equals(Actions.MODE_DES)){
-            decryptedKey = remoteClient.getDesKeyMap().get("key");
+            decryptedKey = ClientData.getInstance().getInternalDES().getModeSpecificKey();
         }else{
             decryptedKey = remoteClient.getSymEncryption().getModeSpecificKey();
         }
