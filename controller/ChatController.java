@@ -285,15 +285,28 @@ public class ChatController implements Initializable, Observer, IController {
         String openChatID = ClientData.getInstance().getIdFromOpenChat();
         String fromID = (String)json.get("fromID");
         String decrypted;
+        String key;
+
+        RemoteClient remoteClient = ClientData.getInstance().getRemoteClientById(fromID);
         if(json.get("symMode").equals(Actions.MODE_DES)){
             decrypted = ClientData.getInstance().getInternalDES().decrypt((String) json.get("message"));
+            key = remoteClient.getDesKeyMap().get("key");
         }else{
-            decrypted = ClientData.getInstance().getRemoteClientById(fromID).getSymEncryption().decrypt((String) json.get("message"));
+            decrypted = remoteClient.getSymEncryption().decrypt((String) json.get("message"));
+            key = remoteClient.getSymEncryption().getModeSpecificKey();
         }
         json.put("decryptedMessage", decrypted);
 
+        remoteClient.addMessageToChatHistory(json);
 
-        ClientData.getInstance().getRemoteClientById(fromID).addMessageToChatHistory(json);
+
+
+        Logger.getInstance().setLastDecryptedMessage(decrypted);
+        Logger.getInstance().setLastEncryptedMessage((String) json.get("message"));
+        Logger.getInstance().setLastSymMode((String) json.get("symMode"));
+        Logger.getInstance().setLastKey(key);
+        Logger.getInstance().log(Actions.LOG_REMOTE_MESSAGE, remoteClient.getName());
+
 
         int unreadMessages = ClientData.getInstance().getRemoteClientById(fromID).getUnreadMessages();
         HBox box = (HBox) ChatViewUtil.find(fromID);
@@ -321,6 +334,7 @@ public class ChatController implements Initializable, Observer, IController {
     {
         String message = (String) json.get("message");
         String from = (String) json.get("fromID");
+        String to = (String) json.get("toID");
 
         String decrypted = "";
         String key = "";
@@ -336,11 +350,12 @@ public class ChatController implements Initializable, Observer, IController {
         else{
             decrypted = (String) json.get("decryptedMessage");
         }
+
         Logger.getInstance().setLastDecryptedMessage(decrypted);
         Logger.getInstance().setLastEncryptedMessage(message);
         Logger.getInstance().setLastSymMode((String) json.get("symMode"));
         Logger.getInstance().setLastKey(key);
-        if(sendingOrReceiving.equals(Actions.ACTION_RECEIVING)){
+        if(sendingOrReceiving.equals(Actions.ACTION_SENDING)) {
             String name = ClientData.getInstance().getRemoteClientById(from).getName();
             Logger.getInstance().log(Actions.LOG_REMOTE_MESSAGE, name);
         }

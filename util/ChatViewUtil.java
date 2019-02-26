@@ -2,6 +2,7 @@ package util;
 
 import client.ClientData;
 import client.RemoteClient;
+import com.sun.security.ntlm.Client;
 import controller.BubbleController;
 import controller.IController;
 import controller.MainViewController;
@@ -32,6 +33,9 @@ public class ChatViewUtil {
     }
 
 
+//todo:: set unedingt darauf warten, dass der logger initialisiert wurde... villeicht mit einer queue ? wenn der chatviewutil nichts finden kann,
+    //todo:: das zu loggende in eine arraylist auslagern, wenn der logger dann aktiv wird, alle in der arraylist ausführen. (supergeil)
+
 
 
     private static void setPublicKeysOfRemoteClient(String id,Map<String,String> publicRSAKeyMap,Map<String,String> publicElGamalKeyMap){
@@ -56,8 +60,6 @@ public class ChatViewUtil {
             if(  users.get(id) instanceof JSONObject ){
                 JSONObject json = (JSONObject) users.get(id);
 
-                //todo:.eigentlich nur den einen neuen hinzufügen, nicht die ganze liste  neu bzw wenn, dann nicht die publickeys neu setten
-
                 if(ClientData.getInstance().getId().equalsIgnoreCase(id)) continue;
 
                 String name = (String) json.get("name");
@@ -69,10 +71,30 @@ public class ChatViewUtil {
                 setPublicKeysOfRemoteClient(id,publicRSAKeyMap,publicElGamalKeyMap);
 
             }
-
+        }
+        List<String> idsToRemove = new ArrayList<>();
+        HashMap<String, RemoteClient> lookUpList = ClientData.getInstance().getAvailableChats();
+        if(!lookUpList.isEmpty()){
+            if(dataSet.size() < lookUpList.size()){
+                for(String id : lookUpList.keySet()){
+                    if(!dataSet.containsValue(id)){
+                        idsToRemove.add(id);
+                    }
+                }
+            }
+        }
+        for (String id : idsToRemove) {
+            if(ClientData.getInstance().getIdFromOpenChat() != null && id.equals(ClientData.getInstance().getIdFromOpenChat())){
+                RemoteClient remoteClient = ClientData.getInstance().getRemoteClientById(id);
+                renderChatWentoffline(remoteClient);
+            }
+            ClientData.getInstance().removeRemoteClientById(id);
         }
 
+
+
         boolean lastOneStillOnline = false;
+
 
         for (Map.Entry<String, String> entry : dataSet.entrySet()) {
 
@@ -97,18 +119,6 @@ public class ChatViewUtil {
             tmp.getChildren().add(buttonBox);
         }
 
-        HashMap<String, RemoteClient> list2 = ClientData.getInstance().getAvailableChats();
-        for(String ident : list2.keySet()){
-            if(!dataSet.containsKey(ident) && !ClientData.getInstance().getId().equals(ident)){
-                if(list2.size() < dataSet.size()){
-
-                    Logger.getInstance().log(Actions.LOG_OFFLINE,ClientData.getInstance().getRemoteClientById(ident).getName());
-                }else{
-                    Logger.getInstance().log(Actions.LOG_ONLINE,ClientData.getInstance().getRemoteClientById(ident).getName());
-
-                }
-            }
-        }
 
         if(!lastOneStillOnline && ClientData.getInstance().getIdFromOpenChat() != null ){
             HashMap<String, RemoteClient> falseList = ClientData.getInstance().getAvailableChats();
@@ -160,6 +170,22 @@ public class ChatViewUtil {
         return tmp;
     }
 
+
+
+    public static void renderChatWentoffline(RemoteClient remoteClient){
+        Text topName = (Text) ChatViewUtil.find("topName");
+        topName.setText("active Chat");
+        VBox chatBox = (VBox)ChatViewUtil.find("chatBox");
+        chatBox.getChildren().clear();
+
+        Text welcomeText = new Text(remoteClient.getName() + " is offline... chat with someone else!");
+        welcomeText.setId("welcomeText");
+        welcomeText.setFont(Font.font("Agency FB",20));
+
+        chatBox.setAlignment(Pos.CENTER);
+        chatBox.getChildren().addAll(welcomeText);
+        ClientData.getInstance().setIdFromOpenChat(null);
+    }
 
 
 

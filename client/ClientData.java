@@ -4,8 +4,10 @@ import Krypto.DES;
 import Krypto.ElGamal;
 import Krypto.RSA;
 
+import controller.logger.Logger;
 import javafx.beans.property.SimpleStringProperty;
 import org.json.simple.JSONObject;
+import util.Actions;
 
 import java.net.InetAddress;
 import java.util.*;
@@ -48,6 +50,7 @@ public class ClientData{
 
     public void removeRemoteClientById(String id){
         if(availableChats.containsKey(id)){
+            Logger.getInstance().log(Actions.LOG_OFFLINE, getRemoteClientById(id).getName());
             availableChats.remove(id);
         }
     }
@@ -89,6 +92,7 @@ public class ClientData{
     {
         if(!this.availableChats.containsKey(remoteClient.getId())){
             remoteClient.setOnlineSince(new Date());
+            Logger.getInstance().log(Actions.LOG_ONLINE,remoteClient.getName());
             this.availableChats.put(remoteClient.getId(), remoteClient);
         }
 

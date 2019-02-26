@@ -37,6 +37,7 @@ public class Actions {
     public static final String LOG_OFFLINE  = "log_offline";
     public static final String LOG_ONLINE  = "log_online";
     public static final String LOG_REMOTE_MESSAGE  = "log_remote_message";
+    public static final String LOG_SELF_MESSAGE  = "log_self_message";
 
 
 

@@ -31,7 +31,7 @@ public class Logger {
 
 
 
-    private VBox log;
+    private VBox log = null;
     private Text text;
     private TextFlow textFlow;
 
@@ -74,6 +74,9 @@ public class Logger {
     public void log(String type, String message)
     {
 
+        if(this.log == null){
+            this.log = (VBox) ChatViewUtil.find("logPane");
+        }
         this.log.setAlignment(Pos.TOP_LEFT);
 
 
@@ -90,7 +93,11 @@ public class Logger {
                     this.logOffline(false,message);
                     break;
                 case(Actions.LOG_REMOTE_MESSAGE):
-                    this.logRemoteMessage(message);
+                    this.logRemoteMessage(true,message);
+                    break;
+                case(Actions.LOG_SELF_MESSAGE):
+                    this.logRemoteMessage(false,message);
+                    break;
             }
 
         });
@@ -98,11 +105,16 @@ public class Logger {
 
     }
 
-    private void logRemoteMessage(String name)
+    private void logRemoteMessage(boolean remote, String name)
     {
 
         Text text;
-        text=new Text(timestamp() + name + " sent a message!"+ LB);
+        if(remote){
+            text=new Text(timestamp() + name + " sent a message!"+ LB);
+        }else{
+            text=new Text(timestamp() + "you sent"+name+" a message!"+ LB);
+
+        }
         Text text1 =new Text(TAB + "symetric mode: " + ModeMapper.map(this.getLastSymMode())+LB);
         Text text2 =new Text(TAB + "symetric key: " + this.getLastKey()+LB);
         Text text3 =new Text(TAB + "encrypted: " + this.getLastEncryptedMessage()+LB);
@@ -175,6 +187,14 @@ public class Logger {
         JSONObject encryptionParams = (JSONObject) data.get("encryptionParams");
         String encryptedKey = (String) encryptionParams.get("encryptedKey");
         String key = (String)encryptionParams.get("key");
+
+        if(key == null){
+            if(!remoteClient.getSymEncryptionString().equals(Actions.MODE_DES)){
+                key = remoteClient.getSymEncryption().getModeSpecificKey();
+            }else{
+                key = remoteClient.getDesKeyMap().get("key");
+            }
+        }
 
 
         IAsymmetricEncryption enc = null;
