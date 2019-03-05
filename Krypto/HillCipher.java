@@ -314,4 +314,9 @@ public class HillCipher implements ISymmetricEncryption {
     @Override
     public void generateRandomKey() {
     }
+
+    @Override
+    public String getModeSpecificKey() {
+        return null;
+    }
 }

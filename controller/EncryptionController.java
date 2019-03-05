@@ -36,10 +36,10 @@ import java.util.ResourceBundle;
 
 public class EncryptionController implements IController, Initializable {
 
-    public static final String AFFINE_CHIFFRE = "Affine Chiffre";
-    public static final String VIGENERE_CHIFFRE = "Vigenere Chiffre";
-    public static final String HILL_CHIFFRE = "Hill Chiffre";
-    public static final String RC4_CHIFFRE = "RC4 Chiffre";
+    public static final String AFFINE_CHIFFRE = "Affine Cipher";
+    public static final String VIGENERE_CHIFFRE = "Vigenere Cipher";
+    public static final String HILL_CHIFFRE = "Hill Cipher";
+    public static final String RC4_CHIFFRE = "RC4";
     public static final String DES_CHIFFRE = "DES";
 
     public static final String RSA = "RSA";

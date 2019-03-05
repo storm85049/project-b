@@ -23,12 +23,12 @@
       </Label>
       <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../css/style.css">
          <children>
-            <Label text="Random Seed" textFill="WHITE">
+            <Label text="Binary Key" textFill="WHITE">
                <font>
                   <Font name="Agency FB" size="18.0" />
                </font>
             </Label>
-             <TextField fx:id="rc4Field" prefHeight="37.0" promptText="type in a random seed">
+             <TextField fx:id="rc4Field" prefHeight="37.0" promptText="type in a key">
                <styleClass>
                   <String fx:value="edgy" />
                   <String fx:value="lightgrey" />
@@ -42,7 +42,7 @@
             </TextField>
          </children>
       </HBox>
-      <Label fx:id="rc4Warning" text="Please type in a random seed" textFill="#a10000" visible="false">
+      <Label fx:id="rc4Warning" text="Please type in the seed's generation key" textFill="#a10000" visible="false">
          <font>
             <Font name="Agency FB" size="16.0" />
          </font>
