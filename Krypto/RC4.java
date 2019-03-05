@@ -66,7 +66,7 @@ public class RC4 implements ISymmetricEncryption{
 
     @Override
     public void setSelectedKeys(Map<String, String> keyMap) {
-        for(short i = 0; i < s.length; i++){s[i] = i;} // Generate sequencial s
+        for(short i = 0; i < s.length; i++){s[i] = i;} // Generate sequential s
         if(keyMap.get("is_key_random").equalsIgnoreCase("false")){
             k = calculateKArray(keyMap.get("key"));
         }
