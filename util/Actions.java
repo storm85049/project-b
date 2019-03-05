@@ -4,8 +4,8 @@ public class Actions {
 
 
 
-    public static final String ACTION_LOGIN_REQUEST = "action_login_request";
-    public static final String ACTION_LOGIN_RESPONSE = "action_login_response";
+    public static final String ACTION_INIT_LOGIN = "action_init_login";
+    public static final String ACTION_INIT_LOGIN_RESPONSE = "action_init_login_response";
     public static final String ACTION_LOGIN_GRANTED = "action_login_granted";
     public static final String ACTION_LOGIN_FAILED = "action_login_failed";
     public static final String ACTION_CLOSE_APPLICATION = "action_close_application";
@@ -15,6 +15,30 @@ public class Actions {
     public static final String ACTION_RECEIVING= "action_receiving";
     public static final String ACTION_SENDING= "action_sending";
     public static final String ACTION_SEND_ASYMMETRIC_KEYS= "action_send_asymmetric_keys";
+    public static final String ACTION_SEND_LOGIN_REQUEST_NAME= "action_send_login_request_name";
+    public static final String ACTION_INIT_ENCRYPTED_CHAT_REQUEST= "action_init_encrypted_chat_request";
+
+
+    public static final String MODE_AFFINE = "mode_affine";
+    public static final String MODE_VIGENERE = "mode_vigenere";
+    public static final String MODE_RC4 = "mode_rc4";
+    public static final String MODE_DES = "mode_des";
+
+    public static final String MODE_HILL = "mode_hill";
+    public static final String MODE_RSA = "rsa";
+    public static final String MODE_ELGAMAL = "elgamal";
+
+    public static final String REFERRER_CREATE = "create";
+    public static final String REFERRER_UPDATE = "update";
+
+
+
+    public static final String LOG_INIT_CHAT = "log_init_chat";
+    public static final String LOG_OFFLINE  = "log_offline";
+    public static final String LOG_ONLINE  = "log_online";
+    public static final String LOG_REMOTE_MESSAGE  = "log_remote_message";
+    public static final String LOG_SELF_MESSAGE  = "log_self_message";
+
 
 
 }

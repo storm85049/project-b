@@ -20,7 +20,7 @@ public class ObjectIOSingleton extends Observable{
 
     public void init(){
         try{
-            socket = new Socket("141.22.64.167", ServerMain.PORT);
+            socket = new Socket("localhost", ServerMain.PORT);
             this.out = new ObjectOutputStream(socket.getOutputStream());
         new Thread(()->{
             try {
@@ -43,7 +43,6 @@ public class ObjectIOSingleton extends Observable{
             e.printStackTrace();
         }
     }
-
     public void notifyControllerObservers(Object o){
         JSONObject json = (JSONObject)o;
         setChanged();

@@ -35,17 +35,37 @@
    -fx-border-color: #ccc;
    -fx-border-width: 0px 0px 0px 5px;
 } 
- 
+
+
+
+.button-with-margin {
+	-fx-padding: 20px;
+	-fx-border-insets: 20px;
+	-fx-background-insets: 20px;
+
+}
 .textfield:focused{
     -fx-faint-focus-color: transparent;
     -fx-focus-color:rgba(255,0,0,0.2);
 }
 .textfield{
 	-fx-background-insets:0px;
+	-fx-background-color: #dadada;
 }
 .lightgrey{
 	-fx-background-color: #999;
 }
 .roundBorder{
 	-fx-background-radius: 20 20 20 0;
+}
+
+.log-background{
+	-fx-background-color: #111;
+}
+.log-text-color{
+	-fx-background-color: #2438bf;
+}
+
+.background-fit-to-log{
+	-fx-background-color: #111;
 }

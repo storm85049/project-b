@@ -102,6 +102,11 @@ public class RC4 implements ISymmetricEncryption{
         scrambleSeed(s);
     }
 
+    @Override
+    public String getModeSpecificKey() {
+        return this.keyMap.get("key");
+    }
+
     private short[] calculateKArray(String key){
         // Transforms a String into a short binary array.
         short[] k = new short[SIZE];

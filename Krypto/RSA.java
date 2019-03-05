@@ -1,4 +1,6 @@
 package Krypto;
+import util.Actions;
+
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
@@ -133,4 +135,8 @@ public class RSA implements IAsymmetricEncryption {
     @Override
     public void addExternalKeys(String keyJ) {}
 
+    @Override
+    public String toString() {
+        return Actions.MODE_RSA;
+    }
 }

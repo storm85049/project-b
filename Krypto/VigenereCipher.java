@@ -1,5 +1,7 @@
 package Krypto;
 
+import util.Actions;
+
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +33,12 @@ public class VigenereCipher implements ISymmetricEncryption {
     private String key;
     private String mode;
     private Map<String, String> keyMap = new HashMap<>();
+
+    /**
+     *
+     * @param key
+     * @param mode
+     */
     public VigenereCipher(String key, String mode){ // Mode should be: ASCII or ABC
         setAlphabetMode(mode);
         this.key = key;
@@ -149,11 +157,21 @@ public class VigenereCipher implements ISymmetricEncryption {
         // Random word from a chart? Random ASCII values with a random length?
     }
 
+    @Override
+    public String getModeSpecificKey() {
+        return this.key;
+    }
+
     private int checkModifiers(char character){
             if ((int) character >= 97 && (int) character <= 122) {
                 return 97;
             } else {
                 return 65;
             }
+    }
+
+    @Override
+    public String toString() {
+        return Actions.MODE_VIGENERE;
     }
 }

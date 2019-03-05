@@ -57,7 +57,7 @@
       </VBox>
    </left>
    <right>
-      <VBox prefHeight="400.0" prefWidth="250.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="250.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
             <HBox alignment="CENTER" maxHeight="50.0" minHeight="70.0" minWidth="70.0" prefHeight="48.0" prefWidth="250.0" styleClass="lightBlue" stylesheets="@css/style.css">
                <children>
@@ -68,6 +68,15 @@
                   </Text>
                </children>
             </HBox>
+            <BorderPane prefHeight="1000.0" prefWidth="200.0">
+               <center>
+                  <ScrollPane fx:id="log" fitToHeight="true" fitToWidth="true" pannable="true" prefHeight="200.0" prefWidth="200.0" stylesheets="@css/style.css" BorderPane.alignment="CENTER">
+                     <content>
+                        <VBox fx:id="logPane" alignment="CENTER" prefHeight="0.0" prefWidth="0.0" styleClass="log-background" />
+                     </content>
+                  </ScrollPane>
+               </center>
+            </BorderPane>
          </children>
          <BorderPane.margin>
             <Insets />
@@ -77,15 +86,57 @@
    <center>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="CENTER" maxHeight="50.0" minHeight="70.0" minWidth="70.0" prefHeight="48.0" prefWidth="250.0" styleClass="mediumBlue" stylesheets="@css/style.css">
+            <AnchorPane>
                <children>
-                  <Text fx:id="topName" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="active chat">
-                     <font>
-                        <Font name="Agency FB" size="28.0" />
-                     </font>
-                  </Text>
+                  <HBox alignment="CENTER" maxHeight="50.0" minHeight="70.0" minWidth="70.0" prefHeight="48.0" prefWidth="250.0" styleClass="mediumBlue" stylesheets="@css/style.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <children>
+                        <VBox visible="false">
+                           <children>
+                              <Button disable="true" mnemonicParsing="false" text="placeholder">
+                                 <styleClass>
+                                    <String fx:value="btn" />
+                                    <String fx:value="lightBlue" />
+                                 </styleClass>
+                              </Button>
+                           </children>
+                        </VBox>
+                        <Text fx:id="topName" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="active chat">
+                           <font>
+                              <Font name="Agency FB" size="28.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Text>
+                        <VBox fillWidth="false" HBox.hgrow="NEVER">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <children>
+                              <Button fx:id="encryptionOptionsOpen" mnemonicParsing="false" prefWidth="80.0" text="encryption">
+                                 <styleClass>
+                                    <String fx:value="btn" />
+                                    <String fx:value="lightBlue" />
+                                 </styleClass>
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" top="5.0" />
+                                 </VBox.margin>
+                              </Button>
+                              <Button fx:id="infoBtn" mnemonicParsing="false" prefWidth="80.0" text="information">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" top="5.0" />
+                                 </VBox.margin>
+                                 <styleClass>
+                                    <String fx:value="btn" />
+                                    <String fx:value="lightBlue" />
+                                 </styleClass>
+                              </Button>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
                </children>
-            </HBox>
+            </AnchorPane>
             <BorderPane prefHeight="1000.0" prefWidth="200.0">
                <center>
                   <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" pannable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
@@ -97,7 +148,10 @@
                                     <Font name="Agency FB" size="14.0" />
                                  </font>
                               </Text>
-                           </children></VBox>
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets></VBox>
                      </content>
                   </ScrollPane>
                </center>

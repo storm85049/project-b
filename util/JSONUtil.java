@@ -14,14 +14,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+
 public class JSONUtil {
 
-
-    public static JSONObject getLoginResponseJSON(String name, String id,
-                                                  String status, ArrayList<ConnectedClient>connectedClients){
+    public static JSONObject getLoginResponseJSON(String name, String id, ArrayList<ConnectedClient>connectedClients){
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("action",Actions.ACTION_LOGIN_RESPONSE);
-        jsonObject.put("status",status);
+        jsonObject.put("action",Actions.ACTION_INIT_LOGIN_RESPONSE);
         jsonObject.put("name",name);
         jsonObject.put("id",id);
 
@@ -54,16 +52,76 @@ public class JSONUtil {
 
     }
 
+    /**
+     *
+     * @param t
+     * @param k
+     * @return
+     */
+    public static JSONObject affineKeyJson(String asymMode,String t, String k)
+    {
+        JSONObject json = new JSONObject();
+        JSONObject data = new JSONObject();
+        json.put("asymMode",asymMode);
+        json.put("symMode", Actions.MODE_AFFINE);
+        data.put("t",t);
+        data.put("k",k);
+        json.put("encryptionParams", data);
+        return  json;
+    }
+
+    /**
+     *
+     * @param key
+     * @return
+     */
+    public static JSONObject vigenereKeyJson(String asymMode, String key)
+    {
+        JSONObject json = new JSONObject();
+        JSONObject data = new JSONObject();
+        json.put("asymMode",asymMode);
+        json.put("symMode",Actions.MODE_VIGENERE);
+        data.put("key",key);
+        json.put("encryptionParams", data);
+        return  json;
+    }
+
+
+    public static JSONObject rc4KeyJson(String asymMode, String key)
+    {
+        JSONObject json = new JSONObject();
+        JSONObject data = new JSONObject();
+        json.put("asymMode",asymMode);
+        json.put("symMode",Actions.MODE_RC4);
+        data.put("key",key);
+        json.put("encryptionParams", data);
+        return  json;
+    }
+
+
+    public static JSONObject desKEYJson(String asymMode, Map<String,String> key)
+    {
+        JSONObject json = new JSONObject();
+        JSONObject data = new JSONObject();
+        json.put("asymMode",asymMode);
+        json.put("symMode",Actions.MODE_DES);
+        data.put("keymap",key);
+        json.put("encryptionParams", data);
+        return  json;
+    }
 
 
 
-    public static JSONObject getMessageSendingJSON(String message,String fromID, String toID)
+
+
+    public static JSONObject getMessageSendingJSON(String message, String fromID, String toID, String symmode)
     {
         JSONObject json = new JSONObject();
         json.put("action", Actions.ACTION_SEND_MESSAGE);
         json.put("message" , message);
         json.put("fromID" , fromID);
         json.put("toID" , toID);
+        json.put("symMode" ,symmode);
 
         Date date = new Date();
         String strDateFormat = "hh:mm:ss a";
@@ -98,6 +156,26 @@ public class JSONUtil {
 
 
 
+    public static JSONObject getLoginRequestNameJSON(String name)
+    {
+        JSONObject json = new JSONObject();
+        json.put("action", Actions.ACTION_SEND_LOGIN_REQUEST_NAME);
+        json.put("name",name);
+
+        return json;
+
+    }
+
+    public static JSONObject getLoginResponseNameJSON(String grantedOrNot)
+    {
+        JSONObject json = new JSONObject();
+        json.put("action",grantedOrNot);
+
+        return json;
+
+    }
+
+
 
 
     public static JSONObject getLoginRequestJSON(String name, Map<String,String> rsaPublicKeyMap, Map<String,String> elGamalPublicKeyMap ){
@@ -119,7 +197,7 @@ public class JSONUtil {
         }
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("action",Actions.ACTION_LOGIN_REQUEST);
+        jsonObject.put("action",Actions.ACTION_INIT_LOGIN);
         jsonObject.put("name",name);
         jsonObject.put("id",hexString.toString());
         jsonObject.put("ip",ip);
@@ -127,6 +205,26 @@ public class JSONUtil {
         jsonObject.put("publicElGamalKeyMap", elGamalPublicKeyMap);
         return jsonObject;
     }
+
+
+    public static JSONObject initEncryptedChatRequest(String from, String to, JSONObject encryptedData){
+
+        JSONObject json = new JSONObject();
+
+        json.put("action", Actions.ACTION_INIT_ENCRYPTED_CHAT_REQUEST);
+        json.put("from", from);
+        json.put("to", to);
+        json.put("encryptionParams", encryptedData);
+
+
+        return json;
+    }
+
+
+
+
+
+
 
 
     public static JSONObject shutDownConnectionJSON(String id){
@@ -138,5 +236,15 @@ public class JSONUtil {
     }
 
 
+
+
+    public static JSONObject getEncryptionOptions(String asymmetricEncryptionMode, String symmetricEncryptionMode, JSONObject symmetricEncryptionParameters /*, String OperationMode */) {
+        JSONObject encryptionObject = new JSONObject();
+        encryptionObject.put("asymmetricEncryptionMode", asymmetricEncryptionMode);
+        encryptionObject.put("symmetricEncryptionMode", symmetricEncryptionMode);
+        encryptionObject.put("symmetricEncryptionParameters", symmetricEncryptionParameters);
+        System.out.println(asymmetricEncryptionMode + ", " + symmetricEncryptionMode + ", " + symmetricEncryptionParameters);
+        return encryptionObject;
+    }
 
 }

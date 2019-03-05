@@ -10,4 +10,11 @@ public interface ISymmetricEncryption {
     public Map<String, String> getKeyMap();
     public String getMode();
     public void generateRandomKey();
+
+    /**
+     * this method makes it easier for the frontend to retreive the currently
+     * set keys in a READABLE form without having to check which mode it actually is.
+     */
+    public String getModeSpecificKey();
+
 }
