@@ -4,7 +4,7 @@ import animatefx.animation.Flash;
 import client.ClientData;
 import client.ObjectIOSingleton;
 import client.RemoteClient;
-import com.sun.deploy.util.StringUtils;
+import util.StringUtils;
 import com.sun.org.apache.bcel.internal.generic.InstructionConstants;
 import com.sun.org.apache.xml.internal.utils.StringBufferPool;
 import controller.logger.Logger;
@@ -266,6 +266,17 @@ public class ChatController implements Initializable, Observer, IController {
                     e.printStackTrace();
                 }
                 break;
+
+            case(Actions.MODE_HILL):
+                JSONParser parser = new JSONParser();
+                try {
+                    JSONObject hillJson = (JSONObject) parser.parse(decryptedKey);
+                    actualEncryptedKeys.put("key", JSONUtil.objectifyHillString(hillJson));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+
         }
 
         String referrer =  (remoteClient.getRequestedEncryptionData() == null) ?  Actions.REFERRER_CREATE : Actions.REFERRER_UPDATE;

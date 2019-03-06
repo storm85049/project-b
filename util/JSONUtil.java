@@ -98,6 +98,19 @@ public class JSONUtil {
         return  json;
     }
 
+    public static JSONObject hillKeyJson(String asymMode, String[][] key)
+    {
+
+
+        JSONObject json = new JSONObject();
+        JSONObject data = new JSONObject();
+        json.put("asymMode",asymMode);
+        json.put("symMode",Actions.MODE_HILL);
+        data.put("key",key);
+        json.put("encryptionParams", data);
+        return  json;
+    }
+
 
     public static JSONObject desKEYJson(String asymMode, Map<String,String> key)
     {
@@ -111,6 +124,58 @@ public class JSONUtil {
     }
 
 
+    public static String stringifyHillKeys(String[][] keys)
+    {
+        JSONObject toParse = new JSONObject();
+
+        int counter = 0;
+        for (int i = 0; i < keys.length; i++){
+            for(int j = 0; j < keys[i].length; j++){
+                toParse.put("h"+counter,keys[i][j]);
+                counter++;
+            }
+        }
+        return toParse.toJSONString();
+    }
+
+
+    public static String[][] objectifyHillString(JSONObject json)
+    {
+        boolean small = false;
+        if(json.size() == 4){
+            small = true;
+        }else if (json.size() == 9){
+            small = false;
+        }
+
+        //super geiler dynamischer code !!! extrem geil !! (nicht)
+
+        String[][] smallKeys = new String[2][2];
+        String[][] largeKeys = new String[3][3];
+
+        for(int i = 0; i < json.size();i++){
+            String value = (String) json.get("h"+i);
+            if (small){
+                if(i == 0 ) smallKeys[0][0] = value;
+                if(i == 1 ) smallKeys[0][1] = value;
+                if(i == 2 ) smallKeys[1][0] = value;
+                if(i == 3 ) smallKeys[1][1] = value;
+            }else{
+                if(i == 0 ) largeKeys[0][0] = value;
+                if(i == 1 ) largeKeys[0][1] = value;
+                if(i == 2 ) largeKeys[0][2] = value;
+                if(i == 3 ) largeKeys[1][0] = value;
+                if(i == 4 ) largeKeys[1][1] = value;
+                if(i == 5 ) largeKeys[1][2] = value;
+                if(i == 6 ) largeKeys[2][0] = value;
+                if(i == 7 ) largeKeys[2][1] = value;
+                if(i == 8 ) largeKeys[2][2] = value;
+            }
+        }
+
+        return small ? smallKeys : largeKeys;
+
+    }
 
 
 

@@ -5,7 +5,7 @@ import Krypto.ElGamal;
 import Krypto.RSA;
 import client.ClientData;
 import client.ObjectIOSingleton;
-import com.sun.deploy.util.StringUtils;
+import util.StringUtils;
 import com.sun.security.ntlm.Client;
 import controller.logger.Logger;
 import javafx.application.Platform;

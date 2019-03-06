@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox fx:id="mainPane" alignment="CENTER" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HillGuiController">
+   <children>
+      <VBox alignment="CENTER" stylesheets="@../css/style.css">
+         <children>
+            <Label text="Matrix Type" textFill="WHITE">
+               <font>
+                  <Font name="Agency FB" size="20.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="hillTypeBox" prefWidth="100.0">
+               <styleClass>
+                  <String fx:value="edgy" />
+                  <String fx:value="lightgrey" />
+               </styleClass>
+            </ComboBox>
+         </children>
+         <HBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </HBox.margin>
+      </VBox>
+   </children>
+</HBox>

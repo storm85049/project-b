@@ -33,6 +33,8 @@ public class MainViewController  implements Initializable, IController{
     public static  String ENCRYPTION_DIALOG_RC4 = ENCRYPTION_DIALOG + "rc4.fxml";
     public static  String ENCRYPTION_DIALOG_DES = ENCRYPTION_DIALOG + "des.fxml";
     public static  String ENCRYPTION_DIALOG_HILL = ENCRYPTION_DIALOG + "hill.fxml";
+    public static  String ENCRYPTION_HILL_2x2 = BASEPATH + "2x2Hill.fxml";
+    public static  String ENCRYPTION_HILL_3x3 = BASEPATH+ "3x3Hill.fxml";
 
     @FXML
     public AnchorPane mainAnchorPane;
