@@ -202,7 +202,14 @@ public class Logger {
         String symMode = (String) data.get("symMode");
         JSONObject encryptionParams = (JSONObject) data.get("encryptionParams");
         String encryptedKey = (String) encryptionParams.get("encryptedKey");
-        String key = (String)encryptionParams.get("key");
+        String key = "";
+
+        if(symMode.equals(Actions.MODE_HILL)){
+            key = remoteClient.getSymEncryption().getModeSpecificKey();
+
+        }else{
+            key = (String)encryptionParams.get("key");
+        }
 
         if(key == null){
             key = remoteClient.getSymEncryption().getModeSpecificKey();

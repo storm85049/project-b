@@ -1,6 +1,7 @@
 package Krypto;
 
 import jdk.nashorn.internal.runtime.regexp.joni.Regex;
+import org.json.simple.JSONObject;
 
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -317,6 +318,15 @@ public class HillCipher implements ISymmetricEncryption {
 
     @Override
     public String getModeSpecificKey() {
-        return null;
+        String result = "\n";
+        for (int i = 0; i < this.key.length; i++){
+            for(int j = 0; j < this.key[i].length; j++){
+                result += " ["+this.key[i][j]+"] ";
+            }
+            result += "\n" ;
+        }
+        return result;
     }
+
+
 }

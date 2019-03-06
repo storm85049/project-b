@@ -4,6 +4,7 @@ import Krypto.*;
 import controller.EncryptionController;
 import org.json.simple.JSONObject;
 import util.Actions;
+import util.JSONUtil;
 
 import java.net.InetAddress;
 import java.text.DateFormat;
@@ -154,6 +155,12 @@ public class RemoteClient {
             Map<String,String> keyMap =(Map<String,String>)keys.get("keymap");
             this.setSymEncryption(new DES(keyMap));
             this.setSymEncryptionString(Actions.MODE_DES);
+        }else if (symMode.equals(Actions.MODE_HILL)){
+            String[][] keyArray =(String[][])keys.get("key");
+            try{
+                this.setSymEncryption(new HillCipher(keyArray,"ASCII"));
+            }catch(Exception e){};
+            this.setSymEncryptionString(Actions.MODE_HILL);
         }
 
         this.requestedEncryptionData = requestedEncryptionData;
@@ -195,7 +202,11 @@ public class RemoteClient {
             json.put("keymap",keymap);
             keys.put("encryptedKey", this.getEncryptedStringForCurrentAsymMode(asymMode, json.toString()));
             requestedEncryptionData.put("encryptionParams", keys);
-
+        }else if(symMode.equals(Actions.MODE_HILL)){
+            String [][] keyArray = (String[][]) keys.get("key");
+            keys.remove("key");
+            keys.put("encryptedKey", this.getEncryptedStringForCurrentAsymMode(asymMode,JSONUtil.stringifyHillKeys(keyArray)));
+            requestedEncryptionData.put("encryptionParams", keys);
         }
 
 
