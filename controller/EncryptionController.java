@@ -23,6 +23,7 @@ import org.json.simple.JSONObject;
 import util.Actions;
 import util.ChatViewUtil;
 import util.JSONUtil;
+import util.ModalUtil;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -66,6 +67,10 @@ public class EncryptionController implements IController, Initializable {
 
     @FXML
     private ChoiceBox operationsMode;
+
+
+    @FXML
+    private Button encryptionwiki;
 
 
     //todo:was passiert wenn der geklickt wird ? modus muss ja zwangsweise ausgewählt werden.
@@ -183,6 +188,12 @@ public class EncryptionController implements IController, Initializable {
             mainPane.setCenter(center);
 
         }
+
+
+        encryptionwiki.setOnAction(e ->{
+            ModalUtil.showEncryptionWiki(this.getClass());
+        });
+
 
 
 

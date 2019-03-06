@@ -20,6 +20,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.omg.PortableInterceptor.ORBIdHelper;
 import util.ChatViewUtil;
+import util.ModalUtil;
 
 
 import java.io.IOException;
@@ -43,6 +44,9 @@ public class CryptoChatInfoController implements Initializable, IController {
     private HBox hboxDown;
     @FXML
     private Text logOrientationInfo;
+    @FXML
+    private Button encryptionwiki;
+
 
     private String url = "www.github.com/storm85049/project-b";
 
@@ -95,6 +99,10 @@ public class CryptoChatInfoController implements Initializable, IController {
             this.getPane().getScene().getWindow().hide();
         });
 
+
+        encryptionwiki.setOnAction(e ->{
+            ModalUtil.showEncryptionWiki(this.getClass());
+        });
 
     }
 

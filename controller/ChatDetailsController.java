@@ -15,6 +15,7 @@ import javafx.scene.layout.Pane;
 import org.json.simple.JSONObject;
 import util.Actions;
 import util.JSONUtil;
+import util.ModalUtil;
 import util.ModeMapper;
 
 import java.awt.event.MouseEvent;
@@ -56,6 +57,10 @@ public class ChatDetailsController implements Initializable, IController {
     private ImageView tooltipImageDecrypted;
     @FXML
     private ImageView tooltipImageEncrypted;
+
+    @FXML
+    private Button encryptionwiki;
+
 
 
 
@@ -125,14 +130,9 @@ public class ChatDetailsController implements Initializable, IController {
             this.getPane().getScene().getWindow().hide();
         });
 
-
-
-
-
-
-
-
-
+        encryptionwiki.setOnAction(e ->{
+            ModalUtil.showEncryptionWiki(this.getClass());
+        });
 
     }
 }
