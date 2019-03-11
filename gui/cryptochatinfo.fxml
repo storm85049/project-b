@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="mainPane" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="400.0" prefHeight="400.0" prefWidth="600.0" styleClass="lightBlue" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CryptoChatInfoController">
+<VBox fx:id="mainPane" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="400.0" prefHeight="400.0" prefWidth="600.0" styleClass="lightBlue" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CryptoChatInfoController">
    <children>
       <HBox>
          <VBox.margin>
@@ -75,6 +75,26 @@
                <HBox.margin>
                   <Insets bottom="20.0" right="20.0" />
                </HBox.margin>
+            </Button>
+            <Button fx:id="encryptionwiki" mnemonicParsing="false" prefHeight="38.0" prefWidth="29.0" textFill="WHITE">
+               <styleClass>
+                  <String fx:value="loginButton" />
+                  <String fx:value="edgy" />
+                  <String fx:value="darkBlue" />
+               </styleClass>
+               <font>
+                  <Font name="Agency FB" size="20.0" />
+               </font>
+               <HBox.margin>
+                  <Insets bottom="20.0" right="20.0" />
+               </HBox.margin>
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../img/feddich.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
             </Button>
             <Button fx:id="okBtn" mnemonicParsing="false" prefHeight="19.0" prefWidth="50.0" text="OK" textFill="WHITE">
                <styleClass>

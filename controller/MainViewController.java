@@ -26,6 +26,7 @@ public class MainViewController  implements Initializable, IController{
     public static  String ENCRYPTION_DIALOG_INFO_REQUEST = ENCRYPTION_DIALOG + "init_chat_request_popup.fxml";
     public static  String CHAT_INFO = ENCRYPTION_DIALOG + "information.fxml";
     public static  String CRYPTO_CHAT_INFO = BASEPATH + "cryptochatinfo.fxml";
+    public static  String ENCRYPTION_WIKI= BASEPATH + "modedescriptions.fxml";
 
 
     public static  String ENCRYPTION_DIALOG_AFFIN = ENCRYPTION_DIALOG + "affine.fxml";
@@ -33,6 +34,8 @@ public class MainViewController  implements Initializable, IController{
     public static  String ENCRYPTION_DIALOG_RC4 = ENCRYPTION_DIALOG + "rc4.fxml";
     public static  String ENCRYPTION_DIALOG_DES = ENCRYPTION_DIALOG + "des.fxml";
     public static  String ENCRYPTION_DIALOG_HILL = ENCRYPTION_DIALOG + "hill.fxml";
+    public static  String ENCRYPTION_HILL_2x2 = BASEPATH + "2x2Hill.fxml";
+    public static  String ENCRYPTION_HILL_3x3 = BASEPATH+ "3x3Hill.fxml";
 
     @FXML
     public AnchorPane mainAnchorPane;

@@ -21,6 +21,7 @@ import util.Actions;
 import util.ModalUtil;
 import util.ModeMapper;
 
+import javax.jws.WebParam;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -96,7 +97,7 @@ public class ChatInfoController implements Initializable, IController {
             encryptedKeyInfo.setText("Encrypted Key: " + encryptedKey);
         }
 
-        if(decryptedKey.length() >= 30){
+        if(decryptedKey.length() >= 30 && !remoteClient.getSymEncryptionString().equals(Actions.MODE_HILL)){
             keyInfo.setText("Decrypted Key: " + decryptedKey.substring(0,30)+ "...");
             tooltipImage.setVisible(true);
             tooltip2.setText(decryptedKey);

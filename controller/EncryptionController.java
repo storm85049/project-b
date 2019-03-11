@@ -1,9 +1,6 @@
 package controller;
 
-import Krypto.AffineCipher;
-import Krypto.DES;
-import Krypto.IAsymmetricEncryption;
-import Krypto.RSA;
+import Krypto.*;
 import animatefx.animation.Flash;
 import client.ClientData;
 import client.ObjectIOSingleton;
@@ -21,12 +18,12 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.util.Callback;
+
 import org.json.simple.JSONObject;
 import util.Actions;
 import util.ChatViewUtil;
 import util.JSONUtil;
+import util.ModalUtil;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -70,6 +67,10 @@ public class EncryptionController implements IController, Initializable {
 
     @FXML
     private ChoiceBox operationsMode;
+
+
+    @FXML
+    private Button encryptionwiki;
 
 
     //todo:was passiert wenn der geklickt wird ? modus muss ja zwangsweise ausgewählt werden.
@@ -133,7 +134,7 @@ public class EncryptionController implements IController, Initializable {
         encryptionMap.put(VIGENERE_CHIFFRE, MainViewController.ENCRYPTION_DIALOG_VIGENERE);
         encryptionMap.put(RC4_CHIFFRE, MainViewController.ENCRYPTION_DIALOG_RC4);
         encryptionMap.put(DES_CHIFFRE, MainViewController.ENCRYPTION_DIALOG_DES);
-        //encryptionMap.put(HILL_CHIFFRE, MainViewController.ENCRYPTION_DIALOG_HILL);   ---> fxml fehlt noch
+        encryptionMap.put(HILL_CHIFFRE, MainViewController.ENCRYPTION_DIALOG_HILL);
         symmetricEncryptionComboBox.setItems(symmetricEncryptionOptions);
         asymmetricEncryptionComboBox.setItems(asymmetricEncryptionOptions);
         symmetricEncryptionComboBox.setOnAction(event -> {
@@ -187,6 +188,12 @@ public class EncryptionController implements IController, Initializable {
             mainPane.setCenter(center);
 
         }
+
+
+        encryptionwiki.setOnAction(e ->{
+            ModalUtil.showEncryptionWiki(this.getClass());
+        });
+
 
 
 
@@ -273,6 +280,18 @@ public class EncryptionController implements IController, Initializable {
                     Map<String,String> keyMap = ClientData.getInstance().getInternalChosenDESKeyMap();
                     return JSONUtil.desKEYJson(mode,keyMap);
                 }break;
+
+            case(HILL_CHIFFRE):
+
+                ComboBox comboBox = (ComboBox) this.find("hillTypeBox");
+                String type  = (String) comboBox.getSelectionModel().getSelectedItem();
+                String[][] key = delegateHillCheck(type);
+                if(key != null){
+                    return JSONUtil.hillKeyJson(mode, key);
+                }else{
+                    flashInvalid((Label) this.find("hillWarning"));
+                }
+
         }
         return null;
     }
@@ -299,7 +318,54 @@ public class EncryptionController implements IController, Initializable {
 
 
 
+    private String[][] delegateHillCheck(String matrixType) {
 
+
+        String[][] key = new String[2][2];
+        String[][] key2 = new String[3][3];
+
+
+        switch (matrixType) {
+            case HillGuiController.twoTimesTwo:
+                key[0][0] = ((TextField) this.find("h0")).getText();
+                key[0][1] = ((TextField) this.find("h1")).getText();
+                key[1][0] = ((TextField) this.find("h2")).getText();
+                key[1][1] = ((TextField) this.find("h3")).getText();
+                break;
+            case HillGuiController.threeTimesThree:
+                key2[0][0] = ((TextField) this.find("h0")).getText();
+                key2[0][1] = ((TextField) this.find("h1")).getText();
+                key2[0][2] = ((TextField) this.find("h2")).getText();
+                key2[1][0] = ((TextField) this.find("h3")).getText();
+                key2[1][1] = ((TextField) this.find("h4")).getText();
+                key2[1][2] = ((TextField) this.find("h5")).getText();
+                key2[2][0] = ((TextField) this.find("h6")).getText();
+                key2[2][1] = ((TextField) this.find("h7")).getText();
+                key2[2][2] = ((TextField) this.find("h8")).getText();
+                break;
+        }
+        HillCipher hillCipher;
+        switch (matrixType) {
+            case (HillGuiController.twoTimesTwo):
+                try {
+                    hillCipher = new HillCipher(key, "ASCII");
+                    return key;
+                } catch (Exception e) {
+                    return null;
+                }
+
+            case (HillGuiController.threeTimesThree):
+                try {
+                    hillCipher = new HillCipher(key2, "ASCII");
+                    return key2;
+                } catch (Exception e) {
+                    return null;
+                }
+
+
+        }
+            return null;
+    }
 
 
 

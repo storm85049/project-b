@@ -46,6 +46,31 @@ public class ModalUtil{
 
 
 
+
+
+
+    public static void showEncryptionWiki(Class callingClass)
+    {
+        try {
+            Parent root = FXMLLoader.load(Objects.requireNonNull(callingClass.getClassLoader().getResource(MainViewController.ENCRYPTION_WIKI)));
+            Stage secondStage = new Stage();
+            Scene scene = new Scene(root);
+            secondStage.setScene(scene);
+            secondStage.setTitle("Encryption Wiki");
+            secondStage.initModality(Modality.WINDOW_MODAL);
+            secondStage.show();
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+
+
+
     public static void showEncryptionOptions(Class callingClass)
     {
         try {
