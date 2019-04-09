@@ -186,6 +186,18 @@ public class Logger {
     private  HBox  logInitChat(String from)
     {
 
+
+        //das flag flagt, ob die nachricht empfangen, oder gesendet wurde.
+        // ja es ist mega hässlich !
+
+        boolean flag = true;
+
+        if(from.contains("|received|")){
+            from = from.replace("|received|","");
+            flag = false;
+        }
+
+
         RemoteClient remoteClient = ClientData.getInstance().getRemoteClientById(from);
         Text text = null;
 
@@ -229,14 +241,40 @@ public class Logger {
 
 
         text = setStyle(text,Color.WHITE);
-        Text text2 =new Text(TAB + ModeMapper.map(symMode) + " key '" + key +"' encrypted with your public " + ModeMapper.map(asymMode) + " key" + LB);
-        Text text3 =new Text(TAB + "your public " + ModeMapper.map(asymMode) +" key: ");
-        Text text7 = new Text(this.readable(70,enc.getPublicKey())+ LB);
+
+        Text text2;
+        if(flag)
+            text2 =new Text(TAB + ModeMapper.map(symMode) + " key '" + key +"' encrypted with your public " + ModeMapper.map(asymMode) + " key" + LB);
+        else
+            text2 =new Text(TAB + ModeMapper.map(symMode) + " key '" + key +"' encrypted with "+remoteClient.getName()+"'s public " + ModeMapper.map(asymMode) + " key" + LB);
+
+
+        Text text3;
+        if(flag)
+            text3 =new Text(TAB + "your public " + ModeMapper.map(asymMode) +" key: ");
+        else
+            text3 =new Text(TAB + remoteClient.getName()+"'s public " + ModeMapper.map(asymMode) +" key: ");
+
+        Text text7;
+        if(flag){
+            text7 = new Text(this.readable(70,enc.getPublicKey())+ LB);
+        } else{
+            text7 = new Text(this.readable(70,asymMode.equals(Actions.MODE_ELGAMAL )
+                    ? remoteClient.getPublicElGamalKeyMap().get("public_key") :
+                    remoteClient.getPublicRSAKeyMap().get("public_key") )+ LB);
+
+        }
+
 
         Text text4 =new Text(TAB + "resulting encrypted key: " );
         Text text8 =new Text( this.readable(30,encryptedKey) + LB);
 
-        Text text5 =new Text(TAB + "decrypted with your private " + ModeMapper.map(asymMode) + " key: ");
+        Text text5;
+        if(flag)
+            text5 =new Text(TAB + "decrypted with your private " + ModeMapper.map(asymMode) + " key: ");
+        else
+            text5 =new Text(TAB + "decrypted with "+ remoteClient.getName()+ "'s private " + ModeMapper.map(asymMode) + " key ");
+
         Text text9 =new Text(this.readable(70,enc.getPrivateKey() )+ LB);
 
         Text text6 =new Text(TAB + TAB + "results in decrypted key '" + key +"'" + LB);
@@ -252,7 +290,11 @@ public class Logger {
         text10 = setStyle(text10, Color.GREEN);
 
         TextFlow tempFlow = new TextFlow();
-        tempFlow.getChildren().addAll(text,text2,text3,text7,text4,text8,text5,text9,text6, text10);
+        if(flag)
+            tempFlow.getChildren().addAll(text,text2,text3,text7,text4,text8,text5,text9,text6, text10);
+        else
+            tempFlow.getChildren().addAll(text,text2,text3,text7,text4,text8,text5,text6, text10);
+
         TextFlow flow=new TextFlow(tempFlow);
         HBox hbox=new HBox(12);
 

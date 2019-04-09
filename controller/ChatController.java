@@ -37,6 +37,7 @@ import util.ChatViewUtil;
 import util.JSONUtil;
 import util.ModalUtil;
 
+import java.lang.management.PlatformManagedObject;
 import java.net.InetAddress;
 import java.net.URL;
 import java.rmi.Remote;

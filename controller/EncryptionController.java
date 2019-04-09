@@ -166,7 +166,8 @@ public class EncryptionController implements IController, Initializable {
 
             Platform.runLater(()->{
                 Logger.getInstance().setReferrer(referrer);
-                Logger.getInstance().log(Actions.LOG_INIT_CHAT, to);
+                //quickfix für den ich mich in 20 jahren noch schämen werde
+                Logger.getInstance().log(Actions.LOG_INIT_CHAT, to + "|received|");
             });
 
 
