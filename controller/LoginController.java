@@ -77,6 +77,7 @@ public class LoginController  implements Initializable, Observer, IController {
                     String publicEG = elGamal.getPublicKey().substring(0, maxVisibleLengthOfKeys) + "...";
                     updateMessage("EL Gamal Private Key: " + privateEG);
                     updateTitle("EL Gamal Public Key: " + publicEG);
+                    Thread.sleep(1000);
                     updateMessage("Generating RSA Key");
                     updateTitle("");
                     RSA rsa = new RSA();
@@ -86,13 +87,12 @@ public class LoginController  implements Initializable, Observer, IController {
 
                     updateMessage("RSA Private Key: " + privatersa);
                     updateTitle("RSA Public Key: " + publicrsa);
-                    //Thread.sleep(1000);
+                    Thread.sleep(1000);
                     updateMessage("Launching App...");
                     updateTitle("");
                     json = JSONUtil.getLoginRequestJSON(name, rsa.getPublicKeyMap(), elGamal.getPublicKeyMap());
 
                 }
-                //Thread.sleep(1000);
 
 
                 if (testUmgebung) {
