@@ -2,7 +2,7 @@
 
 This desktop application lets you start a server and (multiple) client jar files.
 You can then write messages between the clients which are sent through the server application.
-This all happens with self writte end-to-end encryption. You're also able to see what happens under the hood in a seperate log window. 
+This all happens with self written end-to-end encryption. You're also able to see what happens under the hood in a seperate log window. 
 
 
 ## How to use
